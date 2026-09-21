@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const { MongoClient, ObjectId } = require('mongodb');
 const { verifyToken } = require('./auth');
 
@@ -6,6 +7,7 @@ const DB_NAME = process.env.MONGODB_DB || 'enxoval';
 const SUGGESTIONS_COLL = process.env.MONGODB_SUGGESTIONS || 'suggestions';
 const MAX_ATTEMPTS = 3;
 const WINDOW_MS = 30 * 60 * 1000;
+const STATUSES = ['new', 'reviewing', 'planned', 'in_progress', 'completed'];
 
 let cachedClient = null;
 const attempts = new Map();
@@ -39,9 +41,34 @@ function clean(value, maxLength) {
   return String(value || '').trim().replace(/\s+/g, ' ').slice(0, maxLength);
 }
 
+function publicSuggestion(item) {
+  return {
+    code: item.code,
+    nome: item.nome || '',
+    titulo: item.titulo,
+    mensagem: item.mensagem,
+    status: STATUSES.includes(item.status) ? item.status : 'new',
+    resposta: item.resposta || '',
+    created_at: item.created_at,
+    updated_at: item.updated_at || item.created_at
+  };
+}
+
+function adminSuggestion(item) {
+  return { id: String(item._id), ...publicSuggestion(item) };
+}
+
+async function createTrackingCode(collection) {
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    const code = `JARDIM-${crypto.randomBytes(6).toString('hex').toUpperCase()}`;
+    if (!await collection.findOne({ code })) return code;
+  }
+  throw new Error('Não foi possível criar o código de acompanhamento. Tente novamente.');
+}
+
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', process.env.ALLOWED_ORIGIN || '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-admin-token');
   res.setHeader('Cache-Control', 'no-store');
 
@@ -58,27 +85,51 @@ module.exports = async (req, res) => {
       }
 
       const nome = clean(req.body && req.body.nome, 60);
-      const mensagem = clean(req.body && req.body.mensagem, 500);
-      if (mensagem.length < 10) {
-        return res.status(400).json({ error: 'Escreva uma sugestão com pelo menos 10 caracteres.' });
+      const titulo = clean(req.body && req.body.titulo, 120);
+      const mensagem = clean(req.body && req.body.mensagem, 1200);
+      if (!titulo || mensagem.length < 10) {
+        return res.status(400).json({ error: 'Informe um assunto e uma sugestão com pelo menos 10 caracteres.' });
       }
 
-      await collection.insertOne({ nome, mensagem, created_at: new Date() });
-      return res.status(201).json({ success: true });
+      const now = new Date();
+      const code = await createTrackingCode(collection);
+      const suggestion = { nome, titulo, mensagem, code, status: 'new', resposta: '', created_at: now, updated_at: now };
+      await collection.insertOne(suggestion);
+      return res.status(201).json(publicSuggestion(suggestion));
     }
 
-    if (!verifyToken(req.headers['x-admin-token'])) {
-      return res.status(401).json({ error: 'Sessão de admin inválida ou expirada.' });
+    const isAdmin = verifyToken(req.headers['x-admin-token']);
+
+    if (req.method === 'GET' && isAdmin) {
+      const suggestions = await collection.find({}).sort({ updated_at: -1, created_at: -1 }).limit(100).toArray();
+      return res.status(200).json(suggestions.map(adminSuggestion));
     }
 
     if (req.method === 'GET') {
-      const suggestions = await collection.find({}).sort({ created_at: -1 }).limit(100).toArray();
-      return res.status(200).json(suggestions.map(item => ({
-        id: String(item._id),
-        nome: item.nome || '',
-        mensagem: item.mensagem,
-        created_at: item.created_at
-      })));
+      const url = new URL(req.url, 'http://localhost');
+      const code = clean(url.searchParams.get('code'), 30).toUpperCase();
+      if (!code) return res.status(400).json({ error: 'Informe o código de acompanhamento.' });
+      const suggestion = await collection.findOne({ code });
+      if (!suggestion) return res.status(404).json({ error: 'Não encontramos uma sugestão com esse código.' });
+      return res.status(200).json(publicSuggestion(suggestion));
+    }
+
+    if (!isAdmin) return res.status(401).json({ error: 'Sessão de admin inválida ou expirada.' });
+
+    if (req.method === 'PUT') {
+      const id = req.body && req.body.id;
+      const status = req.body && req.body.status;
+      const resposta = clean(req.body && req.body.resposta, 1200);
+      if (!ObjectId.isValid(id) || !STATUSES.includes(status)) {
+        return res.status(400).json({ error: 'Sugestão ou status inválido.' });
+      }
+      const result = await collection.findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        { $set: { status, resposta, updated_at: new Date() } },
+        { returnDocument: 'after' }
+      );
+      if (!result) return res.status(404).json({ error: 'Sugestão não encontrada.' });
+      return res.status(200).json(adminSuggestion(result));
     }
 
     if (req.method === 'DELETE') {

@@ -39,8 +39,9 @@ const CONFIG = {
     avisoEntrega: "O item escolhido deve ser levado no dia do chá.",
     reservando:   "Guardando o seu item",
     reservandoSub:"Só um instante enquanto confirmamos a disponibilidade. Em seguida abrimos o WhatsApp para você.",
-    sugestaoTitulo:"Ajude a gente a melhorar",
-    sugestaoTexto: "Esta é a primeira versão da nossa lista. Sentiu falta de algo ou encontrou um detalhe que podemos melhorar?"
+    sugestaoTitulo:"Sugestões para o nosso cantinho",
+    sugestaoTexto: "Tem uma ideia para deixar nossa lista ainda melhor? Envie para a gente e acompanhe por aqui.",
+    sugestaoRodape:"Este espaço é temporário, enquanto nossa lista ainda está crescendo."
   },
 
   // Recurso temporário da primeira versão. Troque para false para escondê-lo.
@@ -67,8 +68,9 @@ const CONFIG = {
 
   // Chaves de armazenamento local (troque o sufixo a cada projeto novo)
   chaves: {
-    tema:  "jardim_tema_clebson_keila",
-    sessao:"jardim_admin_clebson_keila"
+    tema:       "jardim_tema_clebson_keila",
+    sessao:     "jardim_admin_clebson_keila",
+    sugestoes:  "jardim_sugestoes_clebson_keila"
   }
 };
 </script>
@@ -377,23 +379,42 @@ footer { text-align: center; padding: 2.5rem 0 3.5rem; border-top: 1px solid var
 footer p { font-size: .85rem; color: var(--texto3); line-height: 1.7; }
 footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--casca); }
 
-.convite-sugestao {
-  max-width: 38rem; margin: 0 auto 2.5rem; padding: 1.4rem 1.5rem;
-  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 1rem;
-  text-align: left; background: var(--superficie); border: 1px solid var(--linha);
-  border-radius: var(--raio-g);
+.modulo-sugestoes {
+  max-width: 46rem; margin: 0 auto 2.8rem; overflow: hidden;
+  background: var(--superficie); border: 1px solid var(--linha); border-radius: var(--raio-g);
+  box-shadow: 0 12px 32px var(--sombra);
 }
-.convite-sugestao .folhinha { font-size: 1.4rem; }
-.convite-sugestao h2 { font-family: 'Fraunces', serif; font-size: 1.08rem; font-weight: 500; color: var(--musgo); }
-.convite-sugestao p { margin-top: .25rem; font-size: .84rem; line-height: 1.55; color: var(--texto2); }
-.convite-sugestao button {
-  white-space: nowrap; padding: .65rem 1rem; font: 500 .84rem inherit; color: var(--musgo);
-  background: transparent; border: 1px solid var(--salvia); border-radius: 999px; cursor: pointer;
+.sugestoes-destaque {
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 1.1rem;
+  padding: 1.5rem; background: linear-gradient(120deg, var(--papel-baixo), var(--superficie)); text-align: left;
 }
-.convite-sugestao button:hover { background: var(--papel-baixo); }
+.sugestoes-destaque .folhinha { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 50%; background: var(--superficie); font-size: 1.45rem; }
+.sugestoes-destaque h2 { font-family: 'Fraunces', serif; font-size: 1.22rem; font-weight: 500; color: var(--musgo); }
+.sugestoes-destaque p { margin-top: .28rem; font-size: .88rem; line-height: 1.55; color: var(--texto2); }
+.sugestoes-destaque button, .acompanhar-sugestao button {
+  white-space: nowrap; padding: .68rem 1rem; font: 500 .84rem inherit; color: var(--papel);
+  background: var(--musgo); border: 1px solid var(--musgo); border-radius: 999px; cursor: pointer;
+}
+[data-theme="dark"] .sugestoes-destaque button, [data-theme="dark"] .acompanhar-sugestao button { color: var(--papel-baixo); }
+.sugestoes-destaque button:hover, .acompanhar-sugestao button:hover { background: var(--folha); }
+.acompanhar-sugestao {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.5rem;
+  border-top: 1px solid var(--linha); text-align: left;
+}
+.acompanhar-sugestao p { font-size: .82rem; line-height: 1.5; color: var(--texto2); }
+.acompanhar-sugestao p b { display: block; color: var(--texto); }
+.acompanhar-sugestao button { color: var(--musgo); background: transparent; border-color: var(--salvia); }
+.acompanhar-sugestao button:hover { color: var(--musgo); background: var(--papel-baixo); }
+.mini-acompanhamentos { display: grid; gap: .65rem; padding: 0 1.5rem 1.35rem; }
+.mini-acompanhamentos:empty { display: none; }
+.mini-sugestao { display: flex; align-items: center; justify-content: space-between; gap: .8rem; padding: .75rem .9rem; background: var(--papel); border-radius: var(--raio); text-align: left; }
+.mini-sugestao .mini-titulo { min-width: 0; font-size: .85rem; color: var(--texto); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mini-sugestao button { flex-shrink: 0; padding: 0; font: inherit; font-size: .76rem; color: var(--terracota); background: none; border: 0; cursor: pointer; }
 @media (max-width: 620px) {
-  .convite-sugestao { grid-template-columns: auto 1fr; }
-  .convite-sugestao button { grid-column: 1 / -1; width: 100%; }
+  .sugestoes-destaque { grid-template-columns: auto 1fr; }
+  .sugestoes-destaque button { grid-column: 1 / -1; width: 100%; }
+  .acompanhar-sugestao { align-items: flex-start; flex-direction: column; }
+  .acompanhar-sugestao button { width: 100%; }
 }
 
 .semente {
@@ -452,6 +473,27 @@ footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--c
 .retorno-sugestao { min-height: 1.2rem; margin-top: .7rem; font-size: .82rem; color: var(--texto2); }
 .retorno-sugestao.sucesso { color: var(--folha); }
 .retorno-sugestao.falha { color: var(--terracota); }
+.codigo-sugestao { display: inline-block; margin: .4rem 0; padding: .55rem .8rem; font: 600 .95rem 'Karla', sans-serif; letter-spacing: .08em; color: var(--musgo); background: var(--papel-baixo); border: 1px dashed var(--salvia); border-radius: var(--raio); }
+.resultado-acompanhamento { margin-top: 1.2rem; padding-top: 1.1rem; border-top: 1px solid var(--linha); text-align: left; }
+.resultado-acompanhamento:empty { display: none; }
+.status-sugestao { display: inline-flex; align-items: center; gap: .35rem; padding: .28rem .6rem; border-radius: 999px; font-size: .72rem; color: var(--texto2); background: var(--papel-baixo); }
+.status-sugestao::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--texto3); }
+.status-sugestao.em-analise { color: var(--casca); background: #F3E6C7; }
+.status-sugestao.em-analise::before { background: #B47A22; }
+.status-sugestao.planejada { color: #6B4E88; background: #EDE3F4; }
+.status-sugestao.planejada::before { background: #80609F; }
+.status-sugestao.em-andamento { color: #356C75; background: #DCEEEF; }
+.status-sugestao.em-andamento::before { background: #438692; }
+.status-sugestao.concluida { color: var(--folha); background: #E4EEE1; }
+.status-sugestao.concluida::before { background: var(--folha); }
+[data-theme="dark"] .status-sugestao.em-analise { color: #E7C77C; background: rgba(180,122,34,.16); }
+[data-theme="dark"] .status-sugestao.planejada { color: #D6B7EB; background: rgba(128,96,159,.18); }
+[data-theme="dark"] .status-sugestao.em-andamento { color: #9ED3D8; background: rgba(67,134,146,.18); }
+[data-theme="dark"] .status-sugestao.concluida { color: #B9D6B3; background: rgba(70,101,79,.26); }
+.acompanhamento-titulo { margin: .65rem 0 .35rem; font-family: 'Fraunces', serif; font-size: 1.08rem; color: var(--texto); }
+.acompanhamento-texto { white-space: pre-wrap; font-size: .88rem; line-height: 1.6; color: var(--texto2); }
+.resposta-casal { margin-top: .9rem; padding: .85rem; background: var(--papel-baixo); border-left: 3px solid var(--terracota); border-radius: 0 var(--raio) var(--raio) 0; }
+.resposta-casal b { display: block; margin-bottom: .3rem; font-size: .76rem; color: var(--terracota); }
 .caixa input[type="password"] {
   width: 100%; padding: .8rem 1rem; text-align: center;
   font-family: inherit; font-size: 1rem; letter-spacing: .3em; color: var(--texto);
@@ -561,13 +603,19 @@ footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--c
 }
 .barra-admin button:hover { opacity: 1; }
 
-.painel-sugestoes { width: 100%; max-width: 42rem; max-height: 84vh; }
+.painel-sugestoes { width: 100%; max-width: 46rem; max-height: 84vh; }
 .painel-sugestoes .lista { max-height: 52vh; padding: 0; margin-top: 1rem; text-align: left; }
 .cartao-sugestao { padding: 1rem; background: var(--papel); border: 1px solid var(--linha); border-radius: var(--raio); }
 .cartao-sugestao + .cartao-sugestao { margin-top: .65rem; }
 .cartao-sugestao .meta { display: flex; justify-content: space-between; gap: 1rem; font-size: .74rem; color: var(--texto3); }
 .cartao-sugestao .mensagem { margin-top: .55rem; white-space: pre-wrap; font-size: .9rem; line-height: 1.55; color: var(--texto); }
+.cartao-sugestao .admin-atualizacao { display: grid; grid-template-columns: 10.5rem 1fr; gap: .65rem; margin-top: .9rem; }
+.cartao-sugestao select { width: 100%; padding: .62rem .7rem; font: inherit; font-size: .8rem; color: var(--texto); background: var(--superficie); border: 1px solid var(--linha); border-radius: var(--raio); }
+.cartao-sugestao textarea { width: 100%; min-height: 5.2rem; padding: .7rem; font: inherit; font-size: .84rem; line-height: 1.45; color: var(--texto); background: var(--superficie); border: 1px solid var(--linha); border-radius: var(--raio); resize: vertical; }
+.cartao-sugestao .salvar { margin-top: .65rem; padding: .48rem .8rem; font: 500 .78rem inherit; color: var(--papel); background: var(--musgo); border: 0; border-radius: 999px; cursor: pointer; }
+[data-theme="dark"] .cartao-sugestao .salvar { color: var(--papel-baixo); }
 .cartao-sugestao .excluir { margin-top: .7rem; padding: 0; font: inherit; font-size: .76rem; color: var(--terracota); background: none; border: 0; cursor: pointer; }
+@media (max-width: 520px) { .cartao-sugestao .admin-atualizacao { grid-template-columns: 1fr; } }
 
 /* ══════════════════════════════════════
    RESERVA (contagem regressiva)
@@ -706,13 +754,20 @@ footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--c
     <button type="button" onclick="limparFiltros()">Ver a lista inteira</button>
   </div>
 
-  <section class="convite-sugestao" id="convite-sugestao" hidden aria-labelledby="titulo-sugestao">
-    <span class="folhinha" aria-hidden="true">🌱</span>
-    <div>
-      <h2 id="titulo-sugestao" data-cfg="textos.sugestaoTitulo"></h2>
-      <p data-cfg="textos.sugestaoTexto"></p>
+  <section class="modulo-sugestoes" id="convite-sugestao" hidden aria-labelledby="titulo-sugestao">
+    <div class="sugestoes-destaque">
+      <span class="folhinha" aria-hidden="true">💡</span>
+      <div>
+        <h2 id="titulo-sugestao" data-cfg="textos.sugestaoTitulo"></h2>
+        <p data-cfg="textos.sugestaoTexto"></p>
+      </div>
+      <button type="button" onclick="abrirSugestao()">Enviar sugestão</button>
     </div>
-    <button type="button" onclick="abrirSugestao()">Deixar sugestão</button>
+    <div class="acompanhar-sugestao">
+      <p><b>Já enviou uma ideia?</b>Use seu código para acompanhar a análise e ler nossa resposta.</p>
+      <button type="button" onclick="abrirAcompanhamento()">Acompanhar sugestão</button>
+    </div>
+    <div class="mini-acompanhamentos" id="mini-acompanhamentos" aria-live="polite"></div>
   </section>
 
   <footer>
@@ -985,21 +1040,46 @@ function fecharPix() {
 }
 
 /* ═══════════════════════════════════════════
-   SUGESTÕES — recurso temporário da versão 1
+   SUGESTÕES — acompanhamento sem login
 ═══════════════════════════════════════════ */
+const STATUS_SUGESTAO = {
+  new: ["Recebida", ""],
+  reviewing: ["Em análise", "em-analise"],
+  planned: ["Planejada", "planejada"],
+  in_progress: ["Em andamento", "em-andamento"],
+  completed: ["Concluída", "concluida"]
+};
+
+function statusSugestao(status) {
+  const item = STATUS_SUGESTAO[status] || STATUS_SUGESTAO.new;
+  return `<span class="status-sugestao ${item[1]}">${item[0]}</span>`;
+}
+function dataSugestao(data) {
+  return new Date(data).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
+}
+function codigosSugestoes() {
+  try { return JSON.parse(localStorage.getItem(CONFIG.chaves.sugestoes) || "[]"); } catch (e) { return []; }
+}
+function guardarCodigoSugestao(code) {
+  const codigos = [code, ...codigosSugestoes().filter(c => c !== code)].slice(0, 8);
+  try { localStorage.setItem(CONFIG.chaves.sugestoes, JSON.stringify(codigos)); } catch (e) {}
+}
+
 function abrirSugestao() {
   const tela = document.createElement("div");
   tela.className = "veu";
   tela.id = "tela-sugestao";
   tela.innerHTML = `
     <form class="caixa" role="dialog" aria-modal="true" aria-labelledby="sugestao-modal-titulo" onsubmit="enviarSugestao(event)">
-      <h2 id="sugestao-modal-titulo">Sua ideia pode ajudar 🌱</h2>
-      <p class="sub">Conte o que sentiu falta ou o que deixaria esta lista mais fácil de usar.</p>
+      <h2 id="sugestao-modal-titulo">Cultive uma ideia 🌱</h2>
+      <p class="sub">Ela chega até ${escapar(CONFIG.casal.nomes)} e você poderá acompanhar o retorno depois.</p>
       <label for="sugestao-nome">Seu nome <span aria-hidden="true">(opcional)</span></label>
       <input type="text" id="sugestao-nome" maxlength="60" autocomplete="name" />
-      <label for="sugestao-mensagem">Sugestão</label>
-      <textarea id="sugestao-mensagem" minlength="10" maxlength="500" required oninput="atualizarContadorSugestao()"></textarea>
-      <span class="contador-texto" id="contador-sugestao">0 / 500</span>
+      <label for="sugestao-titulo">Qual é a sua ideia?</label>
+      <input type="text" id="sugestao-titulo" maxlength="120" required placeholder="Ex.: incluir mais itens para a cozinha" />
+      <label for="sugestao-mensagem">Conte um pouco mais</label>
+      <textarea id="sugestao-mensagem" minlength="10" maxlength="1200" required oninput="atualizarContadorSugestao()"></textarea>
+      <span class="contador-texto" id="contador-sugestao">0 / 1.200</span>
       <label class="campo-isca" for="sugestao-site">Não preencha este campo</label>
       <input class="campo-isca" type="text" id="sugestao-site" tabindex="-1" autocomplete="off" />
       <p class="retorno-sugestao" id="retorno-sugestao" aria-live="polite"></p>
@@ -1011,11 +1091,11 @@ function abrirSugestao() {
   tela.addEventListener("click", e => { if (e.target === tela) fecharSugestao(); });
   document.body.appendChild(tela);
   document.body.style.overflow = "hidden";
-  $("sugestao-mensagem").focus();
+  $("sugestao-titulo").focus();
 }
 
 function atualizarContadorSugestao() {
-  $("contador-sugestao").textContent = `${$("sugestao-mensagem").value.length} / 500`;
+  $("contador-sugestao").textContent = `${$("sugestao-mensagem").value.length.toLocaleString("pt-BR")} / 1.200`;
 }
 
 async function enviarSugestao(evento) {
@@ -1025,24 +1105,26 @@ async function enviarSugestao(evento) {
   botao.disabled = true;
   retorno.className = "retorno-sugestao";
   retorno.textContent = "Enviando…";
-
   try {
     const res = await fetch("/api/suggestions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         nome: $("sugestao-nome").value,
+        titulo: $("sugestao-titulo").value,
         mensagem: $("sugestao-mensagem").value,
         website: $("sugestao-site").value
       })
     });
     const dados = await res.json();
     if (!res.ok) throw new Error(dados.error || "Não foi possível enviar.");
+    guardarCodigoSugestao(dados.code);
     retorno.className = "retorno-sugestao sucesso";
-    retorno.textContent = "Obrigada! Sua sugestão chegou até a gente.";
-    evento.target.reset();
-    atualizarContadorSugestao();
-    setTimeout(fecharSugestao, 1800);
+    retorno.innerHTML = `Sugestão enviada! Seu código de acompanhamento é<br><strong class="codigo-sugestao">${escapar(dados.code)}</strong><br>Ele também ficou salvo neste aparelho.`;
+    botao.remove();
+    evento.target.querySelector(".voltar").textContent = "Ver acompanhamento";
+    evento.target.querySelector(".voltar").onclick = () => { fecharSugestao(); abrirAcompanhamento(dados.code); };
+    carregarMiniAcompanhamentos();
   } catch (erro) {
     retorno.className = "retorno-sugestao falha";
     retorno.textContent = erro.message || "Não foi possível enviar agora. Tente novamente.";
@@ -1056,14 +1138,87 @@ function fecharSugestao() {
   document.body.style.overflow = "";
 }
 
+function abrirAcompanhamento(codigo = "") {
+  const tela = document.createElement("div");
+  tela.className = "veu";
+  tela.id = "tela-acompanhamento";
+  tela.innerHTML = `
+    <form class="caixa" role="dialog" aria-modal="true" aria-labelledby="acompanhamento-titulo" onsubmit="buscarAcompanhamento(event)">
+      <h2 id="acompanhamento-titulo">Acompanhar sugestão</h2>
+      <p class="sub">Use o código que você recebeu ao enviar sua ideia.</p>
+      <label for="codigo-acompanhamento">Código de acompanhamento</label>
+      <input type="text" id="codigo-acompanhamento" maxlength="30" required value="${escapar(codigo)}" placeholder="JARDIM-..." autocomplete="off" />
+      <p class="retorno-sugestao" id="retorno-acompanhamento" aria-live="polite"></p>
+      <div class="resultado-acompanhamento" id="resultado-acompanhamento"></div>
+      <div class="acoes">
+        <button class="voltar" type="button" onclick="fecharAcompanhamento()">Fechar</button>
+        <button class="entrar" type="submit" id="btn-buscar-acompanhamento">Ver andamento</button>
+      </div>
+    </form>`;
+  tela.addEventListener("click", e => { if (e.target === tela) fecharAcompanhamento(); });
+  document.body.appendChild(tela);
+  document.body.style.overflow = "hidden";
+  $("codigo-acompanhamento").focus();
+}
+
+function renderAcompanhamento(sugestao) {
+  return `
+    <div>${statusSugestao(sugestao.status)} <span class="contador-texto" style="display:inline;margin-left:.35rem">Atualizada em ${escapar(dataSugestao(sugestao.updated_at))}</span></div>
+    <h3 class="acompanhamento-titulo">${escapar(sugestao.titulo)}</h3>
+    <p class="acompanhamento-texto">${escapar(sugestao.mensagem)}</p>
+    ${sugestao.resposta ? `<div class="resposta-casal"><b>Resposta de ${escapar(CONFIG.casal.nomes)}</b><p class="acompanhamento-texto">${escapar(sugestao.resposta)}</p></div>` : `<p class="retorno-sugestao">Ainda não há uma resposta, mas sua ideia já está com a gente.</p>`}`;
+}
+
+async function buscarAcompanhamento(evento) {
+  evento.preventDefault();
+  const codigo = $("codigo-acompanhamento").value.trim().toUpperCase();
+  const botao = $("btn-buscar-acompanhamento");
+  const retorno = $("retorno-acompanhamento");
+  const resultado = $("resultado-acompanhamento");
+  botao.disabled = true; retorno.className = "retorno-sugestao"; retorno.textContent = "Consultando…"; resultado.innerHTML = "";
+  try {
+    const res = await fetch(`/api/suggestions?code=${encodeURIComponent(codigo)}`);
+    const dados = await res.json();
+    if (!res.ok) throw new Error(dados.error || "Não foi possível consultar.");
+    guardarCodigoSugestao(dados.code);
+    retorno.textContent = "";
+    resultado.innerHTML = renderAcompanhamento(dados);
+    carregarMiniAcompanhamentos();
+  } catch (erro) {
+    retorno.className = "retorno-sugestao falha";
+    retorno.textContent = erro.message || "Não foi possível consultar agora.";
+  } finally { botao.disabled = false; }
+}
+
+function fecharAcompanhamento() {
+  const tela = $("tela-acompanhamento");
+  if (tela) tela.remove();
+  document.body.style.overflow = "";
+}
+
+async function carregarMiniAcompanhamentos() {
+  const painel = $("mini-acompanhamentos");
+  if (!painel || !CONFIG.sugestoesAtivas) return;
+  const codigos = codigosSugestoes();
+  if (!codigos.length) { painel.innerHTML = ""; return; }
+  const resultados = await Promise.all(codigos.map(async code => {
+    try { const res = await fetch(`/api/suggestions?code=${encodeURIComponent(code)}`); return res.ok ? await res.json() : null; } catch (e) { return null; }
+  }));
+  painel.innerHTML = resultados.filter(Boolean).map(s => `
+    <div class="mini-sugestao">
+      <div><div class="mini-titulo">${escapar(s.titulo)}</div>${statusSugestao(s.status)}</div>
+      <button type="button" data-code="${escapar(s.code)}" onclick="abrirAcompanhamento(this.dataset.code)">Ver</button>
+    </div>`).join("");
+}
+
 async function abrirSugestoesAdmin() {
   const tela = document.createElement("div");
   tela.className = "veu";
   tela.id = "tela-sugestoes-admin";
   tela.innerHTML = `
     <div class="caixa painel-sugestoes" role="dialog" aria-modal="true" aria-labelledby="painel-sugestoes-titulo">
-      <h2 id="painel-sugestoes-titulo">Sugestões recebidas</h2>
-      <p class="sub">Ideias enviadas por quem visitou a lista.</p>
+      <h2 id="painel-sugestoes-titulo">Jardim de ideias</h2>
+      <p class="sub">Atualize o andamento e deixe uma resposta para quem enviou a sugestão.</p>
       <div class="lista" id="lista-sugestoes"><p class="sub">Carregando…</p></div>
       <div class="acoes"><button class="voltar" type="button" onclick="fecharSugestoesAdmin()">Fechar</button></div>
     </div>`;
@@ -1082,13 +1237,46 @@ async function carregarSugestoesAdmin() {
     if (!res.ok) throw new Error();
     if (!sugestoes.length) { lista.innerHTML = `<p class="sub">Nenhuma sugestão recebida ainda.</p>`; return; }
     lista.innerHTML = sugestoes.map(s => `
-      <article class="cartao-sugestao">
-        <div class="meta"><strong>${escapar(s.nome || "Anônimo")}</strong><span>${escapar(new Date(s.created_at).toLocaleDateString("pt-BR"))}</span></div>
-        <p class="mensagem">${escapar(s.mensagem)}</p>
+      <article class="cartao-sugestao" data-id="${escapar(s.id)}">
+        <div class="meta"><strong>${escapar(s.nome || "Anônimo")}</strong><span>${escapar(dataSugestao(s.created_at))}</span></div>
+        ${statusSugestao(s.status)}
+        <h3 class="acompanhamento-titulo">${escapar(s.titulo || "Sugestão sem assunto")}</h3>
+        <p class="mensagem">${escapar(s.mensagem || "")}</p>
+        <div class="admin-atualizacao">
+          <select class="admin-status" aria-label="Andamento da sugestão">
+            <option value="new" ${s.status === "new" ? "selected" : ""}>Recebida</option>
+            <option value="reviewing" ${s.status === "reviewing" ? "selected" : ""}>Em análise</option>
+            <option value="planned" ${s.status === "planned" ? "selected" : ""}>Planejada</option>
+            <option value="in_progress" ${s.status === "in_progress" ? "selected" : ""}>Em andamento</option>
+            <option value="completed" ${s.status === "completed" ? "selected" : ""}>Concluída</option>
+          </select>
+          <textarea class="admin-resposta" maxlength="1200" placeholder="Resposta para quem enviou a ideia…">${escapar(s.resposta || "")}</textarea>
+        </div>
+        <button class="salvar" type="button" onclick="salvarSugestaoAdmin(event)">Salvar atualização</button>
         <button class="excluir" type="button" data-id="${escapar(s.id)}" onclick="excluirSugestao(event)">Excluir</button>
       </article>`).join("");
   } catch (e) {
     lista.innerHTML = `<p class="erro">Não foi possível carregar as sugestões.</p>`;
+  }
+}
+
+async function salvarSugestaoAdmin(evento) {
+  const botao = evento.currentTarget;
+  const cartao = botao.closest(".cartao-sugestao");
+  botao.disabled = true; botao.textContent = "Salvando…";
+  try {
+    const res = await fetch("/api/suggestions", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", "x-admin-token": tokenAdmin || "" },
+      body: JSON.stringify({ id: cartao.dataset.id, status: cartao.querySelector(".admin-status").value, resposta: cartao.querySelector(".admin-resposta").value })
+    });
+    if (res.status === 401) { fecharSugestoesAdmin(); sairAdmin(); alert("Sua sessão expirou."); return; }
+    const dados = await res.json();
+    if (!res.ok) throw new Error(dados.error || "Não foi possível salvar.");
+    await carregarSugestoesAdmin();
+  } catch (e) {
+    botao.disabled = false; botao.textContent = "Salvar atualização";
+    alert(e.message || "Não foi possível salvar a atualização.");
   }
 }
 
@@ -1097,20 +1285,11 @@ async function excluirSugestao(evento) {
   if (!confirm("Excluir esta sugestão?")) return;
   botao.disabled = true;
   try {
-    const res = await fetch("/api/suggestions", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json", "x-admin-token": tokenAdmin || "" },
-      body: JSON.stringify({ id: botao.dataset.id })
-    });
+    const res = await fetch("/api/suggestions", { method: "DELETE", headers: { "Content-Type": "application/json", "x-admin-token": tokenAdmin || "" }, body: JSON.stringify({ id: botao.dataset.id }) });
     if (res.status === 401) { fecharSugestoesAdmin(); sairAdmin(); alert("Sua sessão expirou."); return; }
     if (!res.ok) throw new Error();
-    botao.closest(".cartao-sugestao").remove();
-    if (!$("lista-sugestoes").querySelector(".cartao-sugestao"))
-      $("lista-sugestoes").innerHTML = `<p class="sub">Nenhuma sugestão recebida ainda.</p>`;
-  } catch (e) {
-    botao.disabled = false;
-    alert("Não foi possível excluir a sugestão.");
-  }
+    await carregarSugestoesAdmin();
+  } catch (e) { botao.disabled = false; alert("Não foi possível excluir a sugestão."); }
 }
 
 function fecharSugestoesAdmin() {
@@ -1300,6 +1479,7 @@ async function alternarItem(evento) {
     } catch (e) {}
 
     carregarItens();
+    if (CONFIG.sugestoesAtivas) carregarMiniAcompanhamentos();
   });
 })();
 </script>

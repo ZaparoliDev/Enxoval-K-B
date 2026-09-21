@@ -29,6 +29,7 @@ MONGODB_URI       obrigatória
 MONGODB_DB        opcional (padrão: enxoval)
 MONGODB_PRODUCTS  opcional (padrão: products)
 MONGODB_CLAIMED   opcional (padrão: claimed_items)
+MONGODB_SUGGESTIONS opcional (padrão: suggestions)
 ADMIN_PASSWORD    obrigatória — senha do painel
 ADMIN_SECRET      obrigatória — segredo para assinar o token de sessão
 ALLOWED_ORIGIN    opcional (padrão: *)
@@ -46,7 +47,8 @@ Database `enxoval` (ou o nome em `MONGODB_DB`), com três coleções:
 
 - **`products`** — `id`, `name` (ou `nome`), `categoria`, `emoji`
 - **`claimed_items`** — `item_id`, `claimed_at`
-- **`suggestions`** — `nome`, `mensagem`, `created_at` (criada automaticamente no primeiro envio)
+- **`suggestions`** — `code`, `nome`, `titulo`, `mensagem`, `status`, `resposta`,
+  `created_at`, `updated_at` (criada automaticamente no primeiro envio)
 
 O campo `bg` da versão antiga não é mais usado: a cor de fundo do ícone agora vem
 da categoria, definida em `CONFIG.categorias[].tint`. Isso evita que as cores
@@ -64,17 +66,20 @@ antigas briguem com a paleta nova.
 | `/api/products` | POST `{ item_id }` | Reserva pública: só marca o que está livre, nunca desmarca |
 | `/api/products` | POST `{ item_id, toggleAdmin: true }` | Marca ou libera. **Exige** header `x-admin-token` válido |
 | `/api/auth` | POST `{ password }` | Valida a senha e devolve um token assinado, válido por 6 h |
-| `/api/suggestions` | POST `{ nome?, mensagem }` | Recebe uma sugestão pública (máximo de 500 caracteres) |
-| `/api/suggestions` | GET | Lista as sugestões. **Exige** header `x-admin-token` válido |
+| `/api/suggestions` | POST `{ nome?, titulo, mensagem }` | Recebe uma sugestão pública e devolve um código privado de acompanhamento |
+| `/api/suggestions?code=JARDIM-...` | GET | Exibe o andamento e a resposta da sugestão correspondente |
+| `/api/suggestions` | GET | Lista as sugestões no painel. **Exige** header `x-admin-token` válido |
+| `/api/suggestions` | PUT `{ id, status, resposta }` | Atualiza o andamento e a resposta. **Exige** header `x-admin-token` válido |
 | `/api/suggestions` | DELETE `{ id }` | Exclui uma sugestão. **Exige** header `x-admin-token` válido |
 
 ## Sugestões da primeira versão
 
-O convite para sugestões é temporário e controlado por `CONFIG.sugestoesAtivas`, no
-`index.html`. Para escondê-lo quando o site estiver completo, troque o valor para
-`false`. As mensagens continuam salvas na coleção configurada por
-`MONGODB_SUGGESTIONS` e podem ser vistas ou excluídas pelo botão **Ver sugestões**
-no modo jardineiro.
+O módulo de sugestões é temporário e controlado por `CONFIG.sugestoesAtivas`, no
+`index.html`. Cada visitante recebe um código `JARDIM-...`, salvo também no seu
+navegador, para acompanhar o status e a resposta do casal. No modo jardineiro, o
+botão **Ver sugestões** permite atualizar o andamento, responder ou excluir uma
+ideia. Para esconder o módulo quando o site estiver completo, troque o valor para
+`false`.
 
 ## Segurança do painel
 
