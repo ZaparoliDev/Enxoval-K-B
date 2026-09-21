@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Carregando…</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=Karla:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<!-- ══════════════════════════════════════════════════════════════
+     CONFIG — tudo que muda de casal para casal está aqui.
+     Para um novo cliente, edite só este bloco (e as variáveis de
+     ambiente na Vercel). Nada de nome ou telefone espalhado no código.
+══════════════════════════════════════════════════════════════ -->
+<script>
+const CONFIG = {
+  casal: {
+    nomes:    "Clebson & Keila",
+    primeiro: "Clebson",
+    segunda:  "Keila"
+  },
+
+  evento: {
+    titulo:   "Enxoval de casa nova",
+    chamada:  "A nossa casa começa aqui"
+  },
+
+  contato: {
+    // Somente números, com DDI e DDD
+    whatsapp: "5511930322747"
+  },
+
+  textos: {
+    subtitulo:    "Escolha um item da lista e avise a gente pelo WhatsApp. Cada presente vira um pedaço da nossa casa nova.",
+    rodape:       "Feito com carinho para o nosso primeiro lar",
+    pixChamada:   "Não achou na cor certa?",
+    pixDetalhe:   "Você pode mandar o valor do presente no Pix.",
+    avisoEntrega: "O item escolhido deve ser levado no dia do chá.",
+    reservando:   "Guardando o seu item",
+    reservandoSub:"Só um instante enquanto confirmamos a disponibilidade. Em seguida abrimos o WhatsApp para você.",
+    sugestaoTitulo:"Ajude a gente a melhorar",
+    sugestaoTexto: "Esta é a primeira versão da nossa lista. Sentiu falta de algo ou encontrou um detalhe que podemos melhorar?"
+  },
+
+  // Recurso temporário da primeira versão. Troque para false para escondê-lo.
+  sugestoesAtivas: true,
+
+  paleta: [
+    { cor: "#2F4739", nome: "verde musgo" },
+    { cor: "#8FA98C", nome: "verde sálvia" },
+    { cor: "#B96A4E", nome: "terracota" },
+    { cor: "#F4F0E6", nome: "areia" }
+  ],
+
+  categorias: [
+    { id: "todos",    label: "Tudo",            tint: "#E6EBE3" },
+    { id: "cozinha",  label: "Cozinha",         tint: "#EFE4D2" },
+    { id: "quarto",   label: "Quarto",          tint: "#E4EAE3" },
+    { id: "banheiro", label: "Banheiro",        tint: "#DEE9E8" },
+    { id: "deco",     label: "Decoração",       tint: "#F1E2DA" },
+    { id: "servico",  label: "Área de serviço", tint: "#E9E8DD" }
+  ],
+
+  // Segundos do contador antes de abrir o WhatsApp
+  segundosReserva: 5,
+
+  // Chaves de armazenamento local (troque o sufixo a cada projeto novo)
+  chaves: {
+    tema:  "jardim_tema_clebson_keila",
+    sessao:"jardim_admin_clebson_keila"
+  }
+};
+</script>
+
+<style>
+/* ══════════════════════════════════════
+   TOKENS — direção botânica
+══════════════════════════════════════ */
+:root {
+  --papel:      #F4F0E6;
+  --papel-alto: #FBF8F1;
+  --papel-baixo:#EAE4D6;
+  --superficie: #FFFDF8;
+
+  --musgo:      #2F4739;
+  --folha:      #46654F;
+  --salvia:     #8FA98C;
+  --terracota:  #B96A4E;
+  --argila:     #D9A188;
+  --casca:      #6E5A46;
+
+  --texto:      #263A2F;
+  --texto2:     #556B5C;
+  --texto3:     #7E9186;
+
+  --linha:      rgba(47,71,57,0.16);
+  --linha-forte:rgba(47,71,57,0.30);
+  --sombra:     rgba(47,71,57,0.10);
+  --sombra-alta:rgba(47,71,57,0.18);
+  --veu:        rgba(244,240,230,0.92);
+
+  --raio:       14px;
+  --raio-g:     22px;
+  --transicao:  background-color .4s ease, color .4s ease, border-color .4s ease;
+}
+[data-theme="dark"] {
+  --papel:      #16201B;
+  --papel-alto: #1E2A23;
+  --papel-baixo:#111A15;
+  --superficie: #1E2A23;
+
+  --musgo:      #B9CFB6;
+  --folha:      #9DBA9A;
+  --salvia:     #7E9A7C;
+  --terracota:  #D98A6C;
+  --argila:     #E3AE95;
+  --casca:      #B59A7C;
+
+  --texto:      #E7E4D8;
+  --texto2:     #AFC0B2;
+  --texto3:     #7E9286;
+
+  --linha:      rgba(185,207,182,0.16);
+  --linha-forte:rgba(185,207,182,0.30);
+  --sombra:     rgba(0,0,0,0.40);
+  --sombra-alta:rgba(0,0,0,0.55);
+  --veu:        rgba(12,20,15,0.92);
+}
+
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Karla', system-ui, sans-serif;
+  background: var(--papel);
+  color: var(--texto);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  transition: var(--transicao);
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  opacity: .035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 120px 120px;
+}
+[data-theme="dark"] body::before { opacity: .05; }
+
+::selection { background: var(--salvia); color: var(--papel); }
+:focus-visible { outline: 2px solid var(--terracota); outline-offset: 3px; border-radius: 4px; }
+
+.envolve { position: relative; z-index: 1; max-width: 1140px; margin: 0 auto; padding: 0 1.25rem; }
+
+/* ══════════════════════════════════════
+   MOTIVO BOTÂNICO — ramos nos cantos
+══════════════════════════════════════ */
+.ramo { position: fixed; z-index: 0; pointer-events: none; opacity: .5; color: var(--salvia); }
+.ramo svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.1; }
+.ramo .folha { fill: currentColor; opacity: .22; stroke: none; }
+@media (max-width: 720px) { .ramo { display: none; } }
+
+/* ══════════════════════════════════════
+   TOPO
+══════════════════════════════════════ */
+.barra-topo {
+  display: flex; justify-content: flex-end; align-items: center;
+  gap: .5rem; padding: 1.1rem 0 0;
+}
+.btn-tema {
+  width: 38px; height: 38px; border-radius: 50%;
+  border: 1px solid var(--linha); background: transparent;
+  color: var(--texto2); cursor: pointer; display: grid; place-items: center;
+  transition: border-color .25s ease, color .25s ease, transform .25s ease;
+}
+.btn-tema:hover { border-color: var(--linha-forte); color: var(--musgo); transform: rotate(-12deg); }
+.btn-tema svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; }
+
+header { text-align: center; padding: 2.5rem 0 3rem; position: relative; }
+
+.broto-hero { display: block; margin: 0 auto 1.4rem; width: 54px; height: 66px; color: var(--folha); }
+.broto-hero path, .broto-hero line { fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; }
+.broto-hero .folha { fill: currentColor; stroke: none; opacity: .3; }
+.broto-hero .caule { stroke-dasharray: 70; stroke-dashoffset: 70; animation: crescer 1.5s cubic-bezier(.4,0,.2,1) .2s forwards; }
+.broto-hero .folha { opacity: 0; animation: brotar .7s ease forwards; }
+.broto-hero .f1 { animation-delay: 1.0s; }
+.broto-hero .f2 { animation-delay: 1.25s; }
+.broto-hero .f3 { animation-delay: 1.5s; }
+@keyframes crescer { to { stroke-dashoffset: 0; } }
+@keyframes brotar  { from { opacity: 0; transform: scale(.5); } to { opacity: .3; transform: scale(1); } }
+
+.titulo-evento {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 300; font-size: clamp(.78rem, 2vw, .9rem);
+  letter-spacing: .18em; color: var(--texto3);
+  font-variant: small-caps;
+}
+.nomes {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 400; font-optical-sizing: auto;
+  font-size: clamp(2.6rem, 8.5vw, 4.6rem);
+  line-height: 1.02; color: var(--musgo);
+  margin: .5rem 0 .2rem; letter-spacing: -.015em;
+}
+.nomes .e {
+  font-style: italic; font-weight: 300;
+  color: var(--terracota); font-size: .62em;
+  display: inline-block; margin: 0 .12em; vertical-align: .06em;
+}
+.chamada {
+  font-family: 'Fraunces', Georgia, serif;
+  font-style: italic; font-weight: 300;
+  font-size: clamp(1.05rem, 3vw, 1.3rem);
+  color: var(--casca); margin-bottom: 1.5rem;
+}
+.subtitulo {
+  max-width: 34rem; margin: 0 auto 1.8rem;
+  font-size: .95rem; line-height: 1.75; color: var(--texto2);
+}
+
+/* faixa de paleta */
+.paleta { display: inline-flex; align-items: center; gap: .55rem; margin-bottom: 1.8rem; }
+.paleta-rotulo {
+  font-family: 'Fraunces', serif; font-style: italic;
+  font-size: .82rem; color: var(--texto3); margin-right: .2rem;
+}
+.amostra {
+  width: 17px; height: 17px; border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.12);
+}
+
+/* números */
+.numeros { display: flex; justify-content: center; gap: 2.6rem; margin-bottom: 2rem; }
+.numero { text-align: center; }
+.numero b {
+  display: block; font-family: 'Fraunces', serif; font-weight: 400;
+  font-size: 2rem; color: var(--musgo); line-height: 1;
+}
+.numero.colhido b { color: var(--terracota); }
+.numero span {
+  display: block; margin-top: .3rem; font-size: .76rem;
+  letter-spacing: .07em; color: var(--texto3);
+}
+
+/* convite ao pix */
+.pix-convite {
+  display: flex; align-items: center; gap: 1rem; text-align: left;
+  max-width: 32rem; margin: 0 auto;
+  padding: 1rem 1.2rem; cursor: pointer;
+  background: var(--superficie);
+  border: 1px solid var(--linha); border-radius: var(--raio-g);
+  transition: border-color .25s ease, transform .25s ease, box-shadow .25s ease;
+}
+.pix-convite:hover { border-color: var(--salvia); transform: translateY(-2px); box-shadow: 0 8px 22px var(--sombra); }
+.pix-convite .icone { flex-shrink: 0; width: 34px; height: 34px; color: var(--terracota); }
+.pix-convite .icone svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.3; }
+.pix-convite p { font-size: .88rem; line-height: 1.5; }
+.pix-convite p b { font-family: 'Fraunces', serif; font-weight: 500; display: block; color: var(--musgo); }
+.pix-convite p span { color: var(--texto2); }
+.pix-convite .seta { margin-left: auto; color: var(--salvia); font-size: 1.1rem; }
+
+/* ══════════════════════════════════════
+   FILTROS
+══════════════════════════════════════ */
+.busca { position: relative; max-width: 26rem; margin: 0 auto 1.4rem; }
+.busca svg {
+  position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);
+  width: 16px; height: 16px; stroke: var(--texto3); fill: none; stroke-width: 1.6;
+}
+.busca input {
+  width: 100%; padding: .85rem 1rem .85rem 2.6rem;
+  font-family: inherit; font-size: .92rem; color: var(--texto);
+  background: var(--superficie);
+  border: 1px solid var(--linha); border-radius: 999px;
+  transition: border-color .25s ease;
+}
+.busca input::placeholder { color: var(--texto3); }
+.busca input:focus { border-color: var(--salvia); outline: none; }
+
+.categorias {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: .5rem; margin-bottom: 1.8rem;
+}
+.cat {
+  padding: .45rem 1rem; font-family: inherit; font-size: .84rem;
+  color: var(--texto2); background: transparent;
+  border: 1px solid var(--linha); border-radius: 999px;
+  cursor: pointer; transition: all .22s ease;
+}
+.cat:hover { border-color: var(--salvia); color: var(--musgo); }
+.cat.ativa { background: var(--musgo); border-color: var(--musgo); color: var(--papel); }
+[data-theme="dark"] .cat.ativa { color: var(--papel-baixo); }
+
+.contagem {
+  display: flex; align-items: center; gap: 1rem;
+  margin-bottom: 1.4rem; font-size: .8rem; color: var(--texto3);
+}
+.contagem .risco { flex: 1; height: 1px; background: var(--linha); }
+
+/* ══════════════════════════════════════
+   GRADE DE ITENS
+══════════════════════════════════════ */
+.grade {
+  display: grid; gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(178px, 1fr));
+  padding-bottom: 3rem;
+}
+.item {
+  position: relative; display: flex; flex-direction: column;
+  padding: 1.4rem 1rem 1.1rem; text-align: center;
+  background: var(--superficie);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio-g);
+  transition: transform .28s cubic-bezier(.34,1.3,.64,1), box-shadow .28s ease, border-color .28s ease;
+}
+.item:hover { transform: translateY(-4px); border-color: var(--salvia); box-shadow: 0 10px 26px var(--sombra); }
+.item .medalha {
+  width: 62px; height: 62px; margin: 0 auto .85rem;
+  border-radius: 50%; display: grid; place-items: center;
+  font-size: 1.6rem; line-height: 1;
+}
+.item .nome {
+  font-family: 'Fraunces', serif; font-weight: 400;
+  font-size: .98rem; line-height: 1.35; color: var(--texto);
+  margin-bottom: .9rem; flex: 1;
+}
+.botao {
+  display: inline-flex; align-items: center; justify-content: center; gap: .45rem;
+  width: 100%; padding: .6rem .8rem;
+  font-family: inherit; font-size: .82rem; font-weight: 500;
+  color: var(--papel); background: var(--musgo);
+  border: none; border-radius: 999px; cursor: pointer;
+  transition: background-color .22s ease, transform .18s ease;
+}
+[data-theme="dark"] .botao { color: var(--papel-baixo); }
+.botao:hover { background: var(--folha); transform: scale(1.03); }
+.botao svg { width: 14px; height: 14px; fill: currentColor; }
+.botao.admin { background: transparent; color: var(--terracota); border: 1px solid var(--terracota); }
+.botao.admin:hover { background: var(--terracota); color: var(--papel); }
+
+.item.colhido { border-style: dashed; border-color: var(--linha-forte); }
+.item.colhido .medalha, .item.colhido .nome { opacity: .42; filter: saturate(.4); }
+.selo {
+  position: absolute; top: .7rem; right: .7rem;
+  display: inline-flex; align-items: center; gap: .3rem;
+  padding: .28rem .6rem; font-size: .68rem; letter-spacing: .04em;
+  color: var(--terracota); background: var(--papel-baixo);
+  border-radius: 999px; transform: rotate(4deg);
+}
+.selo svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+/* esqueleto */
+.esqueleto { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(178px, 1fr)); }
+.esqueleto div {
+  height: 186px; border-radius: var(--raio-g);
+  background: linear-gradient(100deg, var(--papel-baixo) 30%, var(--papel-alto) 50%, var(--papel-baixo) 70%);
+  background-size: 220% 100%;
+  animation: onda 1.5s ease-in-out infinite;
+}
+@keyframes onda { from { background-position: 180% 0; } to { background-position: -40% 0; } }
+
+.vazio { text-align: center; padding: 4rem 1rem; }
+.vazio svg { width: 46px; height: 46px; stroke: var(--salvia); fill: none; stroke-width: 1.2; margin-bottom: 1rem; }
+.vazio p { font-family: 'Fraunces', serif; font-style: italic; color: var(--texto2); margin-bottom: 1rem; }
+.vazio button {
+  font-family: inherit; font-size: .84rem; color: var(--terracota);
+  background: none; border: none; border-bottom: 1px solid var(--terracota);
+  cursor: pointer; padding-bottom: 2px;
+}
+
+/* ══════════════════════════════════════
+   RODAPÉ + PORTÃO SECRETO
+══════════════════════════════════════ */
+footer { text-align: center; padding: 2.5rem 0 3.5rem; border-top: 1px solid var(--linha); }
+footer p { font-size: .85rem; color: var(--texto3); line-height: 1.7; }
+footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--casca); }
+
+.convite-sugestao {
+  max-width: 38rem; margin: 0 auto 2.5rem; padding: 1.4rem 1.5rem;
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 1rem;
+  text-align: left; background: var(--superficie); border: 1px solid var(--linha);
+  border-radius: var(--raio-g);
+}
+.convite-sugestao .folhinha { font-size: 1.4rem; }
+.convite-sugestao h2 { font-family: 'Fraunces', serif; font-size: 1.08rem; font-weight: 500; color: var(--musgo); }
+.convite-sugestao p { margin-top: .25rem; font-size: .84rem; line-height: 1.55; color: var(--texto2); }
+.convite-sugestao button {
+  white-space: nowrap; padding: .65rem 1rem; font: 500 .84rem inherit; color: var(--musgo);
+  background: transparent; border: 1px solid var(--salvia); border-radius: 999px; cursor: pointer;
+}
+.convite-sugestao button:hover { background: var(--papel-baixo); }
+@media (max-width: 620px) {
+  .convite-sugestao { grid-template-columns: auto 1fr; }
+  .convite-sugestao button { grid-column: 1 / -1; width: 100%; }
+}
+
+.semente {
+  position: relative; display: grid; place-items: center;
+  width: 46px; height: 46px; margin: 0 auto 1.1rem;
+  background: none; border: none; cursor: pointer;
+  color: var(--salvia); -webkit-tap-highlight-color: transparent;
+}
+.semente svg.icone { width: 20px; height: 20px; fill: currentColor; transition: transform .3s ease; }
+.semente:hover svg.icone { transform: rotate(-10deg) scale(1.08); }
+.semente .anel { position: absolute; inset: 0; width: 46px; height: 46px; transform: rotate(-90deg); }
+.semente .anel circle {
+  fill: none; stroke-width: 1.6;
+  stroke-dasharray: 132; stroke-dashoffset: 132;
+}
+.semente .anel .trilho { stroke: var(--linha); stroke-dashoffset: 0; opacity: 0; transition: opacity .2s ease; }
+.semente .anel .fio    { stroke: var(--folha); }
+.semente.germinando .anel .trilho { opacity: 1; }
+.semente.germinando .anel .fio { animation: germinar 1.2s linear forwards; }
+.semente.germinando svg.icone { animation: tremular 1.2s ease-in-out; }
+@keyframes germinar { to { stroke-dashoffset: 0; } }
+@keyframes tremular { 0%,100% { transform: scale(1); } 50% { transform: scale(1.22); } }
+
+/* ══════════════════════════════════════
+   MODAIS
+══════════════════════════════════════ */
+.veu {
+  position: fixed; inset: 0; z-index: 900;
+  background: var(--veu); backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center; padding: 1.25rem;
+  animation: surgir .3s ease;
+}
+@keyframes surgir { from { opacity: 0; } to { opacity: 1; } }
+.caixa {
+  width: 100%; max-width: 25rem; padding: 2rem 1.75rem;
+  text-align: center; background: var(--superficie);
+  border: 1px solid var(--linha); border-radius: var(--raio-g);
+  box-shadow: 0 24px 60px var(--sombra-alta);
+  animation: subir .38s cubic-bezier(.34,1.2,.64,1);
+}
+@keyframes subir { from { opacity: 0; transform: translateY(18px) scale(.97); } to { opacity: 1; transform: none; } }
+.caixa h2 {
+  font-family: 'Fraunces', serif; font-weight: 400; font-size: 1.45rem;
+  color: var(--musgo); margin-bottom: .4rem;
+}
+.caixa p.sub { font-size: .85rem; color: var(--texto2); line-height: 1.6; margin-bottom: 1.3rem; }
+.caixa label { display: block; margin: .9rem 0 .35rem; text-align: left; font-size: .8rem; color: var(--texto2); }
+.caixa input[type="text"], .caixa textarea {
+  width: 100%; padding: .8rem 1rem; font: inherit; font-size: .92rem; color: var(--texto);
+  background: var(--papel); border: 1px solid var(--linha); border-radius: var(--raio);
+}
+.caixa textarea { min-height: 8.5rem; resize: vertical; line-height: 1.5; }
+.caixa input[type="text"]:focus, .caixa textarea:focus { border-color: var(--salvia); outline: none; }
+.campo-isca { position: absolute !important; left: -9999px !important; }
+.contador-texto { display: block; margin-top: .35rem; text-align: right; font-size: .75rem; color: var(--texto3); }
+.retorno-sugestao { min-height: 1.2rem; margin-top: .7rem; font-size: .82rem; color: var(--texto2); }
+.retorno-sugestao.sucesso { color: var(--folha); }
+.retorno-sugestao.falha { color: var(--terracota); }
+.caixa input[type="password"] {
+  width: 100%; padding: .8rem 1rem; text-align: center;
+  font-family: inherit; font-size: 1rem; letter-spacing: .3em; color: var(--texto);
+  background: var(--papel); border: 1px solid var(--linha); border-radius: var(--raio);
+  transition: border-color .25s ease;
+}
+.caixa input[type="password"]:focus { border-color: var(--salvia); outline: none; }
+.caixa input.errado { border-color: var(--terracota); animation: negar .4s ease; }
+@keyframes negar { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-7px); } 75% { transform: translateX(7px); } }
+.erro { margin-top: .7rem; font-size: .8rem; color: var(--terracota); }
+.acoes { display: flex; gap: .6rem; margin-top: 1.3rem; }
+.acoes button {
+  flex: 1; padding: .72rem; font-family: inherit; font-size: .86rem; font-weight: 500;
+  border-radius: 999px; cursor: pointer; transition: all .2s ease;
+}
+.acoes .voltar { color: var(--texto2); background: transparent; border: 1px solid var(--linha); }
+.acoes .voltar:hover { border-color: var(--linha-forte); }
+.acoes .entrar { color: var(--papel); background: var(--musgo); border: none; }
+[data-theme="dark"] .acoes .entrar { color: var(--papel-baixo); }
+.acoes .entrar:hover { background: var(--folha); }
+.acoes .entrar:disabled { opacity: .55; cursor: wait; }
+
+/* canteiro que cresce enquanto a senha é digitada */
+.canteiro { width: 128px; height: 104px; margin: 0 auto 1rem; color: var(--folha); }
+.canteiro .vaso { fill: none; stroke: var(--casca); stroke-width: 1.5; stroke-linecap: round; }
+.canteiro .terra { stroke: var(--casca); stroke-width: 1.5; stroke-linecap: round; opacity: .5; }
+.canteiro .caule {
+  fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round;
+  stroke-dasharray: 60; stroke-dashoffset: 60;
+  transition: stroke-dashoffset .45s cubic-bezier(.4,0,.2,1);
+}
+.canteiro .broto {
+  fill: currentColor; opacity: 0; transform-box: fill-box; transform-origin: 0 50%;
+  transform: scale(0); transition: opacity .35s ease, transform .45s cubic-bezier(.34,1.5,.64,1);
+}
+.canteiro .broto.viva { opacity: .75; transform: scale(1); }
+.canteiro .flor {
+  fill: var(--terracota); opacity: 0; transform-box: fill-box; transform-origin: center;
+  transform: scale(0); transition: opacity .4s ease, transform .5s cubic-bezier(.34,1.6,.64,1);
+}
+.canteiro.floriu .flor { opacity: 1; transform: scale(1); }
+.canteiro.murchou { animation: murchar .6s ease; }
+@keyframes murchar { 0% { transform: rotate(0); } 35% { transform: rotate(-7deg) translateY(4px); } 100% { transform: rotate(0); } }
+
+/* bandeja do pix */
+.bandeja {
+  width: 100%; max-width: 28rem; max-height: 82vh;
+  display: flex; flex-direction: column;
+  background: var(--superficie); border: 1px solid var(--linha);
+  border-radius: var(--raio-g); overflow: hidden;
+  animation: subir .38s cubic-bezier(.34,1.2,.64,1);
+}
+@media (max-width: 560px) {
+  .veu.pix { align-items: flex-end; padding: 0; }
+  .bandeja { max-width: none; border-radius: var(--raio-g) var(--raio-g) 0 0; max-height: 88vh; }
+}
+.bandeja header {
+  padding: 1.4rem 1.5rem 1rem; text-align: left;
+  border-bottom: 1px solid var(--linha); position: relative;
+}
+.bandeja header h2 { font-family: 'Fraunces', serif; font-weight: 400; font-size: 1.2rem; color: var(--musgo); }
+.bandeja header p { margin-top: .3rem; font-size: .82rem; color: var(--texto2); line-height: 1.5; }
+.fechar {
+  position: absolute; top: 1rem; right: 1rem; width: 30px; height: 30px;
+  border-radius: 50%; border: 1px solid var(--linha); background: transparent;
+  color: var(--texto2); cursor: pointer; font-size: .9rem; line-height: 1;
+}
+.fechar:hover { border-color: var(--linha-forte); }
+.lista { flex: 1; overflow-y: auto; padding: .8rem; display: flex; flex-direction: column; gap: .4rem; }
+.linha-item {
+  display: flex; align-items: center; gap: .75rem;
+  padding: .7rem .9rem; cursor: pointer;
+  border: 1px solid transparent; border-radius: var(--raio);
+  transition: background-color .18s ease, border-color .18s ease;
+}
+.linha-item:hover { background: var(--papel); }
+.linha-item.escolhido { border-color: var(--salvia); background: var(--papel); }
+.linha-item .marca {
+  width: 18px; height: 18px; flex-shrink: 0; border-radius: 50%;
+  border: 1px solid var(--linha-forte); display: grid; place-items: center;
+  font-size: .62rem; color: transparent;
+}
+.linha-item.escolhido .marca { background: var(--musgo); border-color: var(--musgo); color: var(--papel); }
+.linha-item .emoji { font-size: 1.1rem; }
+.linha-item .rotulo { font-size: .88rem; color: var(--texto); }
+.bandeja footer {
+  padding: 1rem 1.25rem 1.25rem; border-top: 1px solid var(--linha); text-align: left;
+}
+.bandeja footer .previa { font-size: .8rem; color: var(--texto2); margin-bottom: .75rem; }
+.bandeja footer .previa b { font-family: 'Fraunces', serif; font-weight: 500; color: var(--musgo); }
+
+/* ══════════════════════════════════════
+   BARRA ADMIN
+══════════════════════════════════════ */
+.barra-admin {
+  position: sticky; top: 0; z-index: 800;
+  display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+  gap: .4rem 1rem; padding: .7rem 1.25rem;
+  background: var(--musgo); color: var(--papel); font-size: .82rem;
+}
+[data-theme="dark"] .barra-admin { color: var(--papel-baixo); }
+.barra-admin b { font-family: 'Fraunces', serif; font-weight: 500; }
+.barra-admin button {
+  font-family: inherit; font-size: .78rem; color: inherit;
+  background: transparent; border: 1px solid currentColor;
+  border-radius: 999px; padding: .28rem .85rem; cursor: pointer; opacity: .8;
+}
+.barra-admin button:hover { opacity: 1; }
+
+.painel-sugestoes { width: 100%; max-width: 42rem; max-height: 84vh; }
+.painel-sugestoes .lista { max-height: 52vh; padding: 0; margin-top: 1rem; text-align: left; }
+.cartao-sugestao { padding: 1rem; background: var(--papel); border: 1px solid var(--linha); border-radius: var(--raio); }
+.cartao-sugestao + .cartao-sugestao { margin-top: .65rem; }
+.cartao-sugestao .meta { display: flex; justify-content: space-between; gap: 1rem; font-size: .74rem; color: var(--texto3); }
+.cartao-sugestao .mensagem { margin-top: .55rem; white-space: pre-wrap; font-size: .9rem; line-height: 1.55; color: var(--texto); }
+.cartao-sugestao .excluir { margin-top: .7rem; padding: 0; font: inherit; font-size: .76rem; color: var(--terracota); background: none; border: 0; cursor: pointer; }
+
+/* ══════════════════════════════════════
+   RESERVA (contagem regressiva)
+══════════════════════════════════════ */
+.reserva {
+  position: fixed; inset: 0; z-index: 950;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: .9rem; padding: 2rem 1.5rem; text-align: center;
+  background: var(--veu); backdrop-filter: blur(10px);
+  animation: surgir .3s ease;
+}
+.reserva .relogio { position: relative; width: 92px; height: 92px; }
+.reserva .relogio svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.reserva .relogio circle { fill: none; stroke-width: 2.5; }
+.reserva .relogio .trilho { stroke: var(--linha); }
+.reserva .relogio .fio { stroke: var(--folha); stroke-linecap: round; stroke-dasharray: 264; }
+.reserva .relogio span {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font-family: 'Fraunces', serif; font-size: 1.9rem; color: var(--musgo);
+}
+.reserva h3 { font-family: 'Fraunces', serif; font-weight: 400; font-size: 1.3rem; color: var(--musgo); }
+.reserva .item-nome {
+  font-family: 'Fraunces', serif; font-style: italic;
+  font-size: 1.05rem; color: var(--terracota);
+}
+.reserva .aviso-sub { max-width: 22rem; font-size: .84rem; color: var(--texto2); line-height: 1.65; }
+.reserva .lembrete {
+  max-width: 21rem; margin-top: .4rem; padding: .75rem 1.1rem;
+  font-size: .8rem; line-height: 1.6; color: var(--casca);
+  background: var(--papel-baixo); border-radius: var(--raio);
+}
+@keyframes girar { to { stroke-dashoffset: 0; } }
+@keyframes pular { 0% { transform: scale(.6); opacity: 0; } 45% { transform: scale(1.15); opacity: 1; } 100% { transform: scale(1); } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ramos decorativos -->
+<div class="ramo" style="top:-10px;left:-10px;width:170px;height:170px">
+  <svg viewBox="0 0 170 170">
+    <path d="M0 8 C50 14 88 42 112 84"/>
+    <ellipse class="folha" cx="34" cy="20" rx="15" ry="7" transform="rotate(22 34 20)"/>
+    <ellipse class="folha" cx="66" cy="40" rx="15" ry="7" transform="rotate(38 66 40)"/>
+    <ellipse class="folha" cx="94" cy="66" rx="13" ry="6" transform="rotate(52 94 66)"/>
+    <path d="M0 40 C34 48 56 70 68 100"/>
+    <ellipse class="folha" cx="26" cy="48" rx="12" ry="5.5" transform="rotate(28 26 48)"/>
+  </svg>
+</div>
+<div class="ramo" style="top:-10px;right:-10px;width:170px;height:170px;transform:scaleX(-1)">
+  <svg viewBox="0 0 170 170">
+    <path d="M0 8 C50 14 88 42 112 84"/>
+    <ellipse class="folha" cx="34" cy="20" rx="15" ry="7" transform="rotate(22 34 20)"/>
+    <ellipse class="folha" cx="66" cy="40" rx="15" ry="7" transform="rotate(38 66 40)"/>
+    <ellipse class="folha" cx="94" cy="66" rx="13" ry="6" transform="rotate(52 94 66)"/>
+  </svg>
+</div>
+<div class="ramo" style="bottom:-10px;left:-10px;width:140px;height:140px;transform:scaleY(-1)">
+  <svg viewBox="0 0 140 140">
+    <path d="M0 10 C42 16 74 40 96 76"/>
+    <ellipse class="folha" cx="30" cy="20" rx="13" ry="6" transform="rotate(24 30 20)"/>
+    <ellipse class="folha" cx="60" cy="40" rx="13" ry="6" transform="rotate(40 60 40)"/>
+  </svg>
+</div>
+
+<!-- barra admin -->
+<div class="barra-admin" id="barra-admin" hidden>
+  <b>Modo jardineiro</b>
+  <span id="admin-resumo"></span>
+  <button type="button" onclick="abrirSugestoesAdmin()">Ver sugestões</button>
+  <button type="button" onclick="sairAdmin()">Sair</button>
+</div>
+
+<div class="envolve">
+
+  <div class="barra-topo">
+    <button class="btn-tema" id="btn-tema" type="button" onclick="alternarTema()" aria-label="Alternar tema"></button>
+  </div>
+
+  <header>
+    <svg class="broto-hero" viewBox="0 0 54 66" aria-hidden="true">
+      <path class="caule" d="M27 64 C27 44 27 30 27 6"/>
+      <ellipse class="folha f1" cx="15" cy="44" rx="13" ry="6" transform="rotate(-22 15 44)"/>
+      <ellipse class="folha f2" cx="39" cy="33" rx="13" ry="6" transform="rotate(22 39 33)"/>
+      <ellipse class="folha f3" cx="17" cy="22" rx="11" ry="5" transform="rotate(-28 17 22)"/>
+    </svg>
+
+    <p class="titulo-evento" data-cfg="evento.titulo"></p>
+    <h1 class="nomes" id="nomes"></h1>
+    <p class="chamada" data-cfg="evento.chamada"></p>
+    <p class="subtitulo" data-cfg="textos.subtitulo"></p>
+
+    <div class="paleta" id="paleta"><span class="paleta-rotulo">Nossa paleta</span></div>
+
+    <div class="numeros">
+      <div class="numero"><b id="n-livres">—</b><span>ainda livres</span></div>
+      <div class="numero colhido"><b id="n-colhidos">—</b><span>já escolhidos</span></div>
+    </div>
+
+    <div class="pix-convite" role="button" tabindex="0" onclick="abrirPix()" onkeydown="if(event.key==='Enter')abrirPix()">
+      <span class="icone">
+        <svg viewBox="0 0 24 24"><path d="M12 3v18M7 8l5-5 5 5M7 16l5 5 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <p>
+        <b data-cfg="textos.pixChamada"></b>
+        <span data-cfg="textos.pixDetalhe"></span>
+      </p>
+      <span class="seta">→</span>
+    </div>
+  </header>
+
+  <div class="busca">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4" stroke-linecap="round"/></svg>
+    <input type="search" id="busca" placeholder="Procurar um item…" oninput="desenharGrade()" aria-label="Procurar um item" />
+  </div>
+
+  <div class="categorias" id="categorias"></div>
+
+  <div class="contagem">
+    <span id="rotulo-contagem">Preparando a lista…</span>
+    <span class="risco"></span>
+  </div>
+
+  <div class="esqueleto" id="esqueleto">
+    <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+  </div>
+
+  <div class="grade" id="grade" hidden></div>
+
+  <div class="vazio" id="vazio" hidden>
+    <svg viewBox="0 0 24 24"><path d="M12 20c-4-2-7-5-7-9a7 7 0 0114 0c0 4-3 7-7 9z" stroke-linejoin="round"/><path d="M12 20V9" stroke-linecap="round"/></svg>
+    <p>Nada por aqui com esse filtro.</p>
+    <button type="button" onclick="limparFiltros()">Ver a lista inteira</button>
+  </div>
+
+  <section class="convite-sugestao" id="convite-sugestao" hidden aria-labelledby="titulo-sugestao">
+    <span class="folhinha" aria-hidden="true">🌱</span>
+    <div>
+      <h2 id="titulo-sugestao" data-cfg="textos.sugestaoTitulo"></h2>
+      <p data-cfg="textos.sugestaoTexto"></p>
+    </div>
+    <button type="button" onclick="abrirSugestao()">Deixar sugestão</button>
+  </section>
+
+  <footer>
+    <!-- Portão secreto: segure a semente para entrar no modo jardineiro -->
+    <button class="semente" id="semente" type="button" aria-label="Semente">
+      <svg class="anel" viewBox="0 0 46 46" aria-hidden="true">
+        <circle class="trilho" cx="23" cy="23" r="21"></circle>
+        <circle class="fio" cx="23" cy="23" r="21"></circle>
+      </svg>
+      <svg class="icone" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 21c-4.5 0-8-3.2-8-7.6C4 8.4 8.2 4 12 3c3.8 1 8 5.4 8 10.4C20 17.8 16.5 21 12 21z" opacity=".55"/>
+      </svg>
+    </button>
+    <p><span data-cfg="textos.rodape"></span><br><em id="rodape-nomes"></em></p>
+  </footer>
+
+</div>
+
+<script>
+/* ═══════════════════════════════════════════
+   ESTADO
+═══════════════════════════════════════════ */
+let itens = [];
+let categoriaAtiva = "todos";
+let tokenAdmin = null;
+
+const $ = id => document.getElementById(id);
+
+/* ═══════════════════════════════════════════
+   HIDRATAÇÃO DO CONFIG
+═══════════════════════════════════════════ */
+function ler(caminho) {
+  return caminho.split(".").reduce((o, k) => (o || {})[k], CONFIG) ?? "";
+}
+function hidratar() {
+  document.title = `${CONFIG.evento.titulo} — ${CONFIG.casal.nomes}`;
+  document.querySelectorAll("[data-cfg]").forEach(el => { el.textContent = ler(el.dataset.cfg); });
+
+  $("nomes").innerHTML =
+    `${CONFIG.casal.primeiro}<span class="e">&amp;</span>${CONFIG.casal.segunda}`;
+  $("rodape-nomes").textContent = CONFIG.casal.nomes;
+  $("convite-sugestao").hidden = !CONFIG.sugestoesAtivas;
+
+  $("paleta").insertAdjacentHTML("beforeend", CONFIG.paleta.map(p =>
+    `<span class="amostra" style="background:${p.cor}" title="${p.nome}"></span>`).join(""));
+}
+
+/* ═══════════════════════════════════════════
+   TEMA
+═══════════════════════════════════════════ */
+const SOL = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.2 4.2l1.5 1.5M18.3 18.3l1.5 1.5M2 12h2M20 12h2M4.2 19.8l1.5-1.5M18.3 5.7l1.5-1.5"/></svg>`;
+const LUA = `<svg viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 019.5 4a8.5 8.5 0 1010.5 10.5z" stroke-linejoin="round"/></svg>`;
+
+function aplicarTema(tema) {
+  document.documentElement.setAttribute("data-theme", tema);
+  $("btn-tema").innerHTML = tema === "dark" ? SOL : LUA;
+  try { localStorage.setItem(CONFIG.chaves.tema, tema); } catch (e) {}
+}
+function alternarTema() {
+  aplicarTema(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark");
+}
+
+/* ═══════════════════════════════════════════
+   DADOS
+═══════════════════════════════════════════ */
+async function carregarItens() {
+  try {
+    const res = await fetch("/api/products");
+    if (!res.ok) throw new Error("Resposta inválida");
+    itens = await res.json();
+    $("esqueleto").hidden = true;
+    atualizarNumeros();
+    desenharCategorias();
+    desenharGrade();
+  } catch (err) {
+    $("esqueleto").hidden = true;
+    $("rotulo-contagem").textContent = "Não foi possível carregar a lista. Atualize a página.";
+  }
+}
+
+function tintDaCategoria(cat) {
+  const achou = CONFIG.categorias.find(c => c.id === cat);
+  return (achou && achou.id !== "todos" ? achou.tint : CONFIG.categorias[0].tint);
+}
+function categoriaDe(p) { return (p.categoria || p.category || "").toLowerCase().trim(); }
+function nomeDe(p)      { return p.name || p.nome || "Item sem nome"; }
+function escapar(t)     { return String(t).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c])); }
+
+/* ═══════════════════════════════════════════
+   RENDER
+═══════════════════════════════════════════ */
+function atualizarNumeros() {
+  const colhidos = itens.filter(p => p.isClaimed).length;
+  $("n-livres").textContent   = itens.length - colhidos;
+  $("n-colhidos").textContent = colhidos;
+  if (tokenAdmin) $("admin-resumo").textContent = `${colhidos} de ${itens.length} itens marcados`;
+}
+
+function desenharCategorias() {
+  $("categorias").innerHTML = CONFIG.categorias.map(c =>
+    `<button type="button" class="cat${c.id === categoriaAtiva ? " ativa" : ""}" onclick="filtrarPor('${c.id}')">${c.label}</button>`
+  ).join("");
+}
+function filtrarPor(id) { categoriaAtiva = id; desenharCategorias(); desenharGrade(); }
+function limparFiltros() { $("busca").value = ""; categoriaAtiva = "todos"; desenharCategorias(); desenharGrade(); }
+
+const ZAP = `<svg viewBox="0 0 24 24"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.46-2.4-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.91-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.03 1.02-1.03 2.48s1.06 2.87 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.7.3 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2-1.42.25-.69.25-1.28.18-1.41-.08-.12-.28-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 01-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 01-1.51-5.26c0-5.45 4.44-9.89 9.89-9.89 2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 012.89 6.99c0 5.45-4.43 9.89-9.88 9.89m8.41-18.3A11.82 11.82 0 0012.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 005.69 1.45c6.55 0 11.88-5.32 11.88-11.88a11.85 11.85 0 00-3.48-8.41"/></svg>`;
+const SELO_SVG = `<svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+function desenharGrade() {
+  const busca = $("busca").value.toLowerCase().trim();
+  const grade = $("grade");
+
+  const filtrados = itens.filter(p => {
+    const bateCategoria = categoriaAtiva === "todos" || categoriaDe(p) === categoriaAtiva;
+    return bateCategoria && nomeDe(p).toLowerCase().includes(busca);
+  });
+
+  $("rotulo-contagem").textContent =
+    `${filtrados.length} ${filtrados.length === 1 ? "item" : "itens"}`;
+
+  if (!filtrados.length) {
+    grade.hidden = true; $("vazio").hidden = false;
+    return;
+  }
+  grade.hidden = false; $("vazio").hidden = true;
+
+  grade.innerHTML = filtrados.map(p => {
+    const id    = escapar(p.id);
+    const nome  = escapar(nomeDe(p));
+    const tint  = tintDaCategoria(categoriaDe(p));
+    const emoji = p.emoji || "🌿";
+
+    const rodapeCartao = p.isClaimed
+      ? (tokenAdmin
+          ? `<button type="button" class="botao admin" data-id="${id}" onclick="alternarItem(event)">Devolver à lista</button>`
+          : `<div style="height:34px"></div>`)
+      : (tokenAdmin
+          ? `<button type="button" class="botao admin" data-id="${id}" onclick="alternarItem(event)">Marcar escolhido</button>`
+          : `<button type="button" class="botao" data-id="${id}" onclick="irParaWhatsApp(event)">${ZAP} Quero presentear</button>`);
+
+    return `
+      <article class="item${p.isClaimed ? " colhido" : ""}">
+        ${p.isClaimed ? `<span class="selo">${SELO_SVG} escolhido</span>` : ""}
+        <div class="medalha" style="background:${tint}">${emoji}</div>
+        <h3 class="nome">${nome}</h3>
+        ${rodapeCartao}
+      </article>`;
+  }).join("");
+}
+
+/* ═══════════════════════════════════════════
+   WHATSAPP — contagem regressiva antes do redirect.
+   location.href (e não window.open) para não ser
+   bloqueado no iOS Safari e no navegador da Samsung.
+═══════════════════════════════════════════ */
+function montarLink(texto) {
+  return "https://wa.me/" + CONFIG.contato.whatsapp + "?text=" + encodeURIComponent(texto);
+}
+
+function irParaWhatsApp(evento) {
+  evento.stopPropagation();
+  const id = evento.currentTarget.dataset.id;
+  const item = itens.find(p => String(p.id) === id);
+  if (!item) return;
+
+  const nome = nomeDe(item);
+  const link = montarLink(
+    `Olá, ${CONFIG.casal.nomes}!\n\nQuero presentear vocês com este item da lista:\n\n*${nome}*\n\nMe confirmem se ainda está disponível.`
+  );
+
+  mostrarReserva(nome, link);
+}
+
+function mostrarReserva(nome, link) {
+  const segundos = CONFIG.segundosReserva;
+  const tela = document.createElement("div");
+  tela.className = "reserva";
+  tela.innerHTML = `
+    <div class="relogio">
+      <svg viewBox="0 0 92 92"><circle class="trilho" cx="46" cy="46" r="42"></circle><circle class="fio" cx="46" cy="46" r="42" style="animation: girar ${segundos}s linear forwards; stroke-dashoffset: 264"></circle></svg>
+      <span id="contador">${segundos}</span>
+    </div>
+    <h3>${escapar(CONFIG.textos.reservando)}</h3>
+    <p class="item-nome">${escapar(nome)}</p>
+    <p class="aviso-sub">${escapar(CONFIG.textos.reservandoSub)}</p>
+    <p class="lembrete">${escapar(CONFIG.textos.avisoEntrega)}</p>`;
+  document.body.appendChild(tela);
+  document.body.style.overflow = "hidden";
+
+  const contador = tela.querySelector("#contador");
+  let resta = segundos;
+  const timer = setInterval(() => {
+    resta--;
+    if (resta <= 0) {
+      clearInterval(timer);
+      tela.remove();
+      document.body.style.overflow = "";
+      window.location.href = link;
+      return;
+    }
+    contador.textContent = resta;
+    contador.style.animation = "none";
+    void contador.offsetWidth;
+    contador.style.animation = "pular .35s cubic-bezier(.34,1.56,.64,1)";
+  }, 1000);
+}
+
+/* ═══════════════════════════════════════════
+   PIX
+═══════════════════════════════════════════ */
+let pixEscolhido = null;
+
+function abrirPix() {
+  const livres = itens.filter(p => !p.isClaimed);
+  if (!livres.length) { alert("Todos os itens já foram escolhidos."); return; }
+  pixEscolhido = null;
+
+  const tela = document.createElement("div");
+  tela.className = "veu pix";
+  tela.id = "tela-pix";
+  tela.innerHTML = `
+    <div class="bandeja">
+      <header>
+        <h2>Escolha o item do Pix</h2>
+        <p>Marque o item que você quer presentear. A gente responde com a chave e o valor.</p>
+        <button class="fechar" type="button" onclick="fecharPix()" aria-label="Fechar">✕</button>
+      </header>
+      <div class="lista">
+        ${livres.map(p => `
+          <div class="linha-item" data-id="${escapar(p.id)}" onclick="escolherPix(this)">
+            <span class="marca">✓</span>
+            <span class="emoji">${p.emoji || "🌿"}</span>
+            <span class="rotulo">${escapar(nomeDe(p))}</span>
+          </div>`).join("")}
+      </div>
+      <footer>
+        <p class="previa" id="pix-previa">Nenhum item marcado ainda.</p>
+        <div class="acoes" style="margin:0">
+          <button class="voltar" type="button" onclick="fecharPix()">Voltar</button>
+          <button class="entrar" type="button" id="pix-enviar" disabled onclick="enviarPix()">Avisar no WhatsApp</button>
+        </div>
+      </footer>
+    </div>`;
+  tela.addEventListener("click", e => { if (e.target === tela) fecharPix(); });
+  document.body.appendChild(tela);
+  document.body.style.overflow = "hidden";
+}
+
+function escolherPix(linha) {
+  document.querySelectorAll(".linha-item.escolhido").forEach(el => el.classList.remove("escolhido"));
+  linha.classList.add("escolhido");
+  pixEscolhido = itens.find(p => String(p.id) === linha.dataset.id);
+  $("pix-previa").innerHTML = `Item marcado: <b>${escapar(nomeDe(pixEscolhido))}</b>`;
+  $("pix-enviar").disabled = false;
+}
+
+function enviarPix() {
+  if (!pixEscolhido) return;
+  window.location.href = montarLink(
+    `Olá, ${CONFIG.casal.nomes}!\n\nQuero presentear vocês via Pix com este item:\n\n*${nomeDe(pixEscolhido)}*\n\nMe mandem a chave Pix e o valor.`
+  );
+  fecharPix();
+}
+
+function fecharPix() {
+  const tela = $("tela-pix");
+  if (tela) tela.remove();
+  document.body.style.overflow = "";
+}
+
+/* ═══════════════════════════════════════════
+   SUGESTÕES — recurso temporário da versão 1
+═══════════════════════════════════════════ */
+function abrirSugestao() {
+  const tela = document.createElement("div");
+  tela.className = "veu";
+  tela.id = "tela-sugestao";
+  tela.innerHTML = `
+    <form class="caixa" role="dialog" aria-modal="true" aria-labelledby="sugestao-modal-titulo" onsubmit="enviarSugestao(event)">
+      <h2 id="sugestao-modal-titulo">Sua ideia pode ajudar 🌱</h2>
+      <p class="sub">Conte o que sentiu falta ou o que deixaria esta lista mais fácil de usar.</p>
+      <label for="sugestao-nome">Seu nome <span aria-hidden="true">(opcional)</span></label>
+      <input type="text" id="sugestao-nome" maxlength="60" autocomplete="name" />
+      <label for="sugestao-mensagem">Sugestão</label>
+      <textarea id="sugestao-mensagem" minlength="10" maxlength="500" required oninput="atualizarContadorSugestao()"></textarea>
+      <span class="contador-texto" id="contador-sugestao">0 / 500</span>
+      <label class="campo-isca" for="sugestao-site">Não preencha este campo</label>
+      <input class="campo-isca" type="text" id="sugestao-site" tabindex="-1" autocomplete="off" />
+      <p class="retorno-sugestao" id="retorno-sugestao" aria-live="polite"></p>
+      <div class="acoes">
+        <button class="voltar" type="button" onclick="fecharSugestao()">Agora não</button>
+        <button class="entrar" type="submit" id="btn-enviar-sugestao">Enviar sugestão</button>
+      </div>
+    </form>`;
+  tela.addEventListener("click", e => { if (e.target === tela) fecharSugestao(); });
+  document.body.appendChild(tela);
+  document.body.style.overflow = "hidden";
+  $("sugestao-mensagem").focus();
+}
+
+function atualizarContadorSugestao() {
+  $("contador-sugestao").textContent = `${$("sugestao-mensagem").value.length} / 500`;
+}
+
+async function enviarSugestao(evento) {
+  evento.preventDefault();
+  const botao = $("btn-enviar-sugestao");
+  const retorno = $("retorno-sugestao");
+  botao.disabled = true;
+  retorno.className = "retorno-sugestao";
+  retorno.textContent = "Enviando…";
+
+  try {
+    const res = await fetch("/api/suggestions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nome: $("sugestao-nome").value,
+        mensagem: $("sugestao-mensagem").value,
+        website: $("sugestao-site").value
+      })
+    });
+    const dados = await res.json();
+    if (!res.ok) throw new Error(dados.error || "Não foi possível enviar.");
+    retorno.className = "retorno-sugestao sucesso";
+    retorno.textContent = "Obrigada! Sua sugestão chegou até a gente.";
+    evento.target.reset();
+    atualizarContadorSugestao();
+    setTimeout(fecharSugestao, 1800);
+  } catch (erro) {
+    retorno.className = "retorno-sugestao falha";
+    retorno.textContent = erro.message || "Não foi possível enviar agora. Tente novamente.";
+    botao.disabled = false;
+  }
+}
+
+function fecharSugestao() {
+  const tela = $("tela-sugestao");
+  if (tela) tela.remove();
+  document.body.style.overflow = "";
+}
+
+async function abrirSugestoesAdmin() {
+  const tela = document.createElement("div");
+  tela.className = "veu";
+  tela.id = "tela-sugestoes-admin";
+  tela.innerHTML = `
+    <div class="caixa painel-sugestoes" role="dialog" aria-modal="true" aria-labelledby="painel-sugestoes-titulo">
+      <h2 id="painel-sugestoes-titulo">Sugestões recebidas</h2>
+      <p class="sub">Ideias enviadas por quem visitou a lista.</p>
+      <div class="lista" id="lista-sugestoes"><p class="sub">Carregando…</p></div>
+      <div class="acoes"><button class="voltar" type="button" onclick="fecharSugestoesAdmin()">Fechar</button></div>
+    </div>`;
+  tela.addEventListener("click", e => { if (e.target === tela) fecharSugestoesAdmin(); });
+  document.body.appendChild(tela);
+  document.body.style.overflow = "hidden";
+  await carregarSugestoesAdmin();
+}
+
+async function carregarSugestoesAdmin() {
+  const lista = $("lista-sugestoes");
+  try {
+    const res = await fetch("/api/suggestions", { headers: { "x-admin-token": tokenAdmin || "" } });
+    if (res.status === 401) { fecharSugestoesAdmin(); sairAdmin(); alert("Sua sessão expirou."); return; }
+    const sugestoes = await res.json();
+    if (!res.ok) throw new Error();
+    if (!sugestoes.length) { lista.innerHTML = `<p class="sub">Nenhuma sugestão recebida ainda.</p>`; return; }
+    lista.innerHTML = sugestoes.map(s => `
+      <article class="cartao-sugestao">
+        <div class="meta"><strong>${escapar(s.nome || "Anônimo")}</strong><span>${escapar(new Date(s.created_at).toLocaleDateString("pt-BR"))}</span></div>
+        <p class="mensagem">${escapar(s.mensagem)}</p>
+        <button class="excluir" type="button" data-id="${escapar(s.id)}" onclick="excluirSugestao(event)">Excluir</button>
+      </article>`).join("");
+  } catch (e) {
+    lista.innerHTML = `<p class="erro">Não foi possível carregar as sugestões.</p>`;
+  }
+}
+
+async function excluirSugestao(evento) {
+  const botao = evento.currentTarget;
+  if (!confirm("Excluir esta sugestão?")) return;
+  botao.disabled = true;
+  try {
+    const res = await fetch("/api/suggestions", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json", "x-admin-token": tokenAdmin || "" },
+      body: JSON.stringify({ id: botao.dataset.id })
+    });
+    if (res.status === 401) { fecharSugestoesAdmin(); sairAdmin(); alert("Sua sessão expirou."); return; }
+    if (!res.ok) throw new Error();
+    botao.closest(".cartao-sugestao").remove();
+    if (!$("lista-sugestoes").querySelector(".cartao-sugestao"))
+      $("lista-sugestoes").innerHTML = `<p class="sub">Nenhuma sugestão recebida ainda.</p>`;
+  } catch (e) {
+    botao.disabled = false;
+    alert("Não foi possível excluir a sugestão.");
+  }
+}
+
+function fecharSugestoesAdmin() {
+  const tela = $("tela-sugestoes-admin");
+  if (tela) tela.remove();
+  document.body.style.overflow = "";
+}
+
+/* ═══════════════════════════════════════════
+   PORTÃO DO JARDIM — entrada do admin
+   A senha não existe no front. Ela é validada em
+   /api/auth, que devolve um token assinado de 6h.
+═══════════════════════════════════════════ */
+const SEGURAR_MS = 1200;
+let seguraTimer = null;
+
+function prepararSemente() {
+  const semente = $("semente");
+
+  const comecar = e => {
+    e.preventDefault();
+    if (tokenAdmin) { return; }
+    semente.classList.add("germinando");
+    seguraTimer = setTimeout(() => { semente.classList.remove("germinando"); abrirPortao(); }, SEGURAR_MS);
+  };
+  const cancelar = () => {
+    clearTimeout(seguraTimer);
+    semente.classList.remove("germinando");
+  };
+
+  semente.addEventListener("mousedown", comecar);
+  semente.addEventListener("touchstart", comecar, { passive: false });
+  ["mouseup", "mouseleave", "touchend", "touchcancel"].forEach(ev =>
+    semente.addEventListener(ev, cancelar));
+  semente.addEventListener("contextmenu", e => e.preventDefault());
+}
+
+function abrirPortao() {
+  const tela = document.createElement("div");
+  tela.className = "veu";
+  tela.id = "tela-portao";
+  tela.innerHTML = `
+    <div class="caixa">
+      <svg class="canteiro" id="canteiro" viewBox="0 0 128 104" aria-hidden="true">
+        <path class="vaso" d="M40 76 L44 98 H84 L88 76 Z"/>
+        <path class="terra" d="M40 76 H88"/>
+        <path class="caule" id="caule" d="M64 76 C64 60 64 48 64 28"/>
+        <ellipse class="broto" data-nivel="1" cx="50" cy="66" rx="12" ry="5" transform="rotate(-20 50 66)"/>
+        <ellipse class="broto" data-nivel="2" cx="78" cy="57" rx="12" ry="5" transform="rotate(20 78 57)"/>
+        <ellipse class="broto" data-nivel="3" cx="51" cy="47" rx="11" ry="4.6" transform="rotate(-24 51 47)"/>
+        <ellipse class="broto" data-nivel="4" cx="77" cy="39" rx="11" ry="4.6" transform="rotate(24 77 39)"/>
+        <circle class="flor" cx="64" cy="26" r="7"/>
+      </svg>
+      <h2>Portão do jardim</h2>
+      <p class="sub">Área de ${escapar(CONFIG.casal.nomes)}. Digite a senha para cuidar da lista.</p>
+      <input type="password" id="senha" inputmode="text" autocomplete="current-password" placeholder="••••••" />
+      <p class="erro" id="erro-senha" hidden></p>
+      <div class="acoes">
+        <button class="voltar" type="button" onclick="fecharPortao()">Voltar</button>
+        <button class="entrar" type="button" id="btn-entrar" onclick="entrarAdmin()">Entrar</button>
+      </div>
+    </div>`;
+  tela.addEventListener("click", e => { if (e.target === tela) fecharPortao(); });
+  document.body.appendChild(tela);
+  document.body.style.overflow = "hidden";
+
+  const senha = $("senha");
+  senha.focus();
+  senha.addEventListener("input", () => regarCanteiro(senha.value.length));
+  senha.addEventListener("keydown", e => { if (e.key === "Enter") entrarAdmin(); });
+}
+
+/* Cada caractere digitado faz o caule subir e um broto abrir. */
+function regarCanteiro(quantidade) {
+  const canteiro = $("canteiro");
+  if (!canteiro) return;
+  const progresso = Math.min(quantidade / 8, 1);
+  canteiro.querySelector("#caule").style.strokeDashoffset = String(60 - 60 * progresso);
+  canteiro.querySelectorAll(".broto").forEach(folha => {
+    folha.classList.toggle("viva", quantidade >= Number(folha.dataset.nivel) * 2);
+  });
+  canteiro.classList.remove("murchou");
+}
+
+async function entrarAdmin() {
+  const campo = $("senha");
+  const erro  = $("erro-senha");
+  const botao = $("btn-entrar");
+  if (!campo.value) return;
+
+  botao.disabled = true;
+  erro.hidden = true;
+  campo.classList.remove("errado");
+
+  try {
+    const res = await fetch("/api/auth", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password: campo.value })
+    });
+    const dados = await res.json();
+
+    if (!res.ok) {
+      campo.classList.add("errado");
+      campo.value = "";
+      regarCanteiro(0);
+      $("canteiro").classList.add("murchou");
+      erro.textContent = dados.error || "Não foi possível entrar.";
+      erro.hidden = false;
+      botao.disabled = false;
+      return;
+    }
+
+    tokenAdmin = dados.token;
+    try { sessionStorage.setItem(CONFIG.chaves.sessao, dados.token); } catch (e) {}
+
+    // floresce antes de fechar
+    $("canteiro").classList.add("floriu");
+    regarCanteiro(8);
+    setTimeout(() => { fecharPortao(); ligarModoAdmin(); }, 900);
+  } catch (e) {
+    erro.textContent = "Sem conexão com o servidor.";
+    erro.hidden = false;
+    botao.disabled = false;
+  }
+}
+
+function fecharPortao() {
+  const tela = $("tela-portao");
+  if (tela) tela.remove();
+  document.body.style.overflow = "";
+}
+
+function ligarModoAdmin() {
+  $("barra-admin").hidden = false;
+  $("semente").style.visibility = "hidden";
+  atualizarNumeros();
+  desenharGrade();
+}
+
+function sairAdmin() {
+  tokenAdmin = null;
+  try { sessionStorage.removeItem(CONFIG.chaves.sessao); } catch (e) {}
+  $("barra-admin").hidden = true;
+  $("semente").style.visibility = "visible";
+  desenharGrade();
+}
+
+async function alternarItem(evento) {
+  evento.stopPropagation();
+  const botao = evento.currentTarget;
+  botao.disabled = true;
+  try {
+    const res = await fetch("/api/products", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-admin-token": tokenAdmin || "" },
+      body: JSON.stringify({ item_id: botao.dataset.id, toggleAdmin: true })
+    });
+    if (res.status === 401) {
+      alert("Sua sessão expirou. Entre no portão do jardim de novo.");
+      sairAdmin();
+      return;
+    }
+    await carregarItens();
+  } catch (e) {
+    botao.disabled = false;
+    alert("Não foi possível alterar o item. Tente de novo.");
+  }
+}
+
+/* ═══════════════════════════════════════════
+   INÍCIO
+═══════════════════════════════════════════ */
+(function iniciar() {
+  let tema = "light";
+  try { tema = localStorage.getItem(CONFIG.chaves.tema) || "light"; } catch (e) {}
+
+  document.addEventListener("DOMContentLoaded", () => {
+    hidratar();
+    aplicarTema(tema);
+    desenharCategorias();
+    prepararSemente();
+
+    try {
+      const guardado = sessionStorage.getItem(CONFIG.chaves.sessao);
+      if (guardado) { tokenAdmin = guardado; ligarModoAdmin(); }
+    } catch (e) {}
+
+    carregarItens();
+  });
+})();
+</script>
+</body>
+</html>
