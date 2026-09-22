@@ -702,7 +702,6 @@ footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--c
 <div class="barra-admin" id="barra-admin" hidden>
   <b>Modo jardineiro</b>
   <span id="admin-resumo"></span>
-  <button type="button" onclick="abrirSugestoesAdmin()">Ver sugestões</button>
   <button type="button" onclick="sairAdmin()">Sair</button>
 </div>
 
@@ -794,7 +793,7 @@ footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--c
     </div>
     <div class="sugestoes-publicas">
       <div class="sugestoes-publicas-cabecalho">
-        <h3>Ideias da comunidade</h3>
+        <h3 id="titulo-lista-sugestoes">Ideias da comunidade</h3>
         <span>Veja o andamento de cada uma</span>
       </div>
       <div class="lista-publica-sugestoes" id="lista-publica-sugestoes" aria-live="polite"></div>
@@ -1329,6 +1328,7 @@ function renderSugestaoPublica(sugestao) {
 async function carregarSugestoesPublicas() {
   const lista = $("lista-publica-sugestoes");
   if (!lista || !CONFIG.sugestoesAtivas) return;
+  if (tokenAdmin) return carregarSugestoesAdmin(lista);
   lista.innerHTML = '<p class="vazio-sugestoes">Carregando ideias…</p>';
   try {
     const res = await fetch("/api/suggestions");
@@ -1340,28 +1340,12 @@ async function carregarSugestoesPublicas() {
   }
 }
 
-async function abrirSugestoesAdmin() {
-  const tela = document.createElement("div");
-  tela.className = "veu";
-  tela.id = "tela-sugestoes-admin";
-  tela.innerHTML = `
-    <div class="caixa painel-sugestoes" role="dialog" aria-modal="true" aria-labelledby="painel-sugestoes-titulo">
-      <h2 id="painel-sugestoes-titulo">Jardim de ideias</h2>
-      <p class="sub">Atualize o andamento e deixe uma resposta para quem enviou a sugestão.</p>
-      <div class="lista" id="lista-sugestoes"><p class="sub">Carregando…</p></div>
-      <div class="acoes"><button class="voltar" type="button" onclick="fecharSugestoesAdmin()">Fechar</button></div>
-    </div>`;
-  tela.addEventListener("click", e => { if (e.target === tela) fecharSugestoesAdmin(); });
-  document.body.appendChild(tela);
-  document.body.style.overflow = "hidden";
-  await carregarSugestoesAdmin();
-}
-
-async function carregarSugestoesAdmin() {
-  const lista = $("lista-sugestoes");
+async function carregarSugestoesAdmin(lista = $("lista-publica-sugestoes")) {
+  if (!lista) return;
+  lista.innerHTML = '<p class="vazio-sugestoes">Carregando sugestões para gerenciar…</p>';
   try {
     const res = await fetch("/api/suggestions", { headers: { "x-admin-token": tokenAdmin || "" } });
-    if (res.status === 401) { fecharSugestoesAdmin(); sairAdmin(); alert("Sua sessão expirou."); return; }
+    if (res.status === 401) { sairAdmin(); alert("Sua sessão expirou."); return; }
     const sugestoes = await res.json();
     if (!res.ok) throw new Error();
     if (!sugestoes.length) { lista.innerHTML = `<p class="sub">Nenhuma sugestão recebida ainda.</p>`; return; }
@@ -1399,10 +1383,9 @@ async function salvarSugestaoAdmin(evento) {
       headers: { "Content-Type": "application/json", "x-admin-token": tokenAdmin || "" },
       body: JSON.stringify({ id: cartao.dataset.id, status: cartao.querySelector(".admin-status").value, resposta: cartao.querySelector(".admin-resposta").value })
     });
-    if (res.status === 401) { fecharSugestoesAdmin(); sairAdmin(); alert("Sua sessão expirou."); return; }
+    if (res.status === 401) { sairAdmin(); alert("Sua sessão expirou."); return; }
     const dados = await res.json();
     if (!res.ok) throw new Error(dados.error || "Não foi possível salvar.");
-    carregarSugestoesPublicas();
     await carregarSugestoesAdmin();
   } catch (e) {
     botao.disabled = false; botao.textContent = "Salvar atualização";
@@ -1416,17 +1399,10 @@ async function excluirSugestao(evento) {
   botao.disabled = true;
   try {
     const res = await fetch("/api/suggestions", { method: "DELETE", headers: { "Content-Type": "application/json", "x-admin-token": tokenAdmin || "" }, body: JSON.stringify({ id: botao.dataset.id }) });
-    if (res.status === 401) { fecharSugestoesAdmin(); sairAdmin(); alert("Sua sessão expirou."); return; }
+    if (res.status === 401) { sairAdmin(); alert("Sua sessão expirou."); return; }
     if (!res.ok) throw new Error();
-    carregarSugestoesPublicas();
     await carregarSugestoesAdmin();
   } catch (e) { botao.disabled = false; alert("Não foi possível excluir a sugestão."); }
-}
-
-function fecharSugestoesAdmin() {
-  const tela = $("tela-sugestoes-admin");
-  if (tela) tela.remove();
-  document.body.style.overflow = "";
 }
 
 /* ═══════════════════════════════════════════
@@ -1557,8 +1533,10 @@ function fecharPortao() {
 function ligarModoAdmin() {
   $("barra-admin").hidden = false;
   $("semente").style.visibility = "hidden";
+  $("titulo-lista-sugestoes").textContent = "Gerenciar sugestões";
   atualizarNumeros();
   desenharGrade();
+  carregarSugestoesPublicas();
 }
 
 function sairAdmin() {
@@ -1566,7 +1544,9 @@ function sairAdmin() {
   try { sessionStorage.removeItem(CONFIG.chaves.sessao); } catch (e) {}
   $("barra-admin").hidden = true;
   $("semente").style.visibility = "visible";
+  $("titulo-lista-sugestoes").textContent = "Ideias da comunidade";
   desenharGrade();
+  carregarSugestoesPublicas();
 }
 
 async function alternarItem(evento) {
