@@ -47,7 +47,7 @@ Database `enxoval` (ou o nome em `MONGODB_DB`), com três coleções:
 
 - **`products`** — `id`, `name` (ou `nome`), `categoria`, `emoji`
 - **`claimed_items`** — `item_id`, `claimed_at`
-- **`suggestions`** — `code`, `nome`, `titulo`, `mensagem`, `status`, `resposta`,
+- **`suggestions`** — `nome`, `titulo`, `mensagem`, `status`, `resposta`,
   `created_at`, `updated_at` (criada automaticamente no primeiro envio)
 
 O campo `bg` da versão antiga não é mais usado: a cor de fundo do ícone agora vem
@@ -66,20 +66,18 @@ antigas briguem com a paleta nova.
 | `/api/products` | POST `{ item_id }` | Reserva pública: só marca o que está livre, nunca desmarca |
 | `/api/products` | POST `{ item_id, toggleAdmin: true }` | Marca ou libera. **Exige** header `x-admin-token` válido |
 | `/api/auth` | POST `{ password }` | Valida a senha e devolve um token assinado, válido por 6 h |
-| `/api/suggestions` | POST `{ nome?, titulo, mensagem }` | Recebe uma sugestão pública e devolve um código privado de acompanhamento |
-| `/api/suggestions?code=JARDIM-...` | GET | Exibe o andamento e a resposta da sugestão correspondente |
-| `/api/suggestions` | GET | Lista as sugestões no painel. **Exige** header `x-admin-token` válido |
+| `/api/suggestions` | POST `{ nome?, titulo, mensagem }` | Recebe uma sugestão pública e a adiciona ao mural |
+| `/api/suggestions` | GET | Lista publicamente as sugestões, seus andamentos e respostas |
 | `/api/suggestions` | PUT `{ id, status, resposta }` | Atualiza o andamento e a resposta. **Exige** header `x-admin-token` válido |
 | `/api/suggestions` | DELETE `{ id }` | Exclui uma sugestão. **Exige** header `x-admin-token` válido |
 
 ## Sugestões da primeira versão
 
 O módulo de sugestões é temporário e controlado por `CONFIG.sugestoesAtivas`, no
-`index.html`. Cada visitante recebe um código `JARDIM-...`, salvo também no seu
-navegador, para acompanhar o status e a resposta do casal. No modo jardineiro, o
-botão **Ver sugestões** permite atualizar o andamento, responder ou excluir uma
-ideia. Para esconder o módulo quando o site estiver completo, troque o valor para
-`false`.
+`index.html`. O mural é público: qualquer pessoa pode ver as ideias, os status e
+as respostas. No modo jardineiro, o botão **Ver sugestões** permite atualizar o
+andamento, responder ou excluir uma ideia. Para esconder o módulo quando o site
+estiver completo, troque o valor para `false`.
 
 ## Segurança do painel
 

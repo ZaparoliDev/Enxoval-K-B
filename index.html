@@ -391,30 +391,27 @@ footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--c
 .sugestoes-destaque .folhinha { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 50%; background: var(--superficie); font-size: 1.45rem; }
 .sugestoes-destaque h2 { font-family: 'Fraunces', serif; font-size: 1.22rem; font-weight: 500; color: var(--musgo); }
 .sugestoes-destaque p { margin-top: .28rem; font-size: .88rem; line-height: 1.55; color: var(--texto2); }
-.sugestoes-destaque button, .acompanhar-sugestao button {
+.sugestoes-destaque button {
   white-space: nowrap; padding: .68rem 1rem; font: 500 .84rem inherit; color: var(--papel);
   background: var(--musgo); border: 1px solid var(--musgo); border-radius: 999px; cursor: pointer;
 }
-[data-theme="dark"] .sugestoes-destaque button, [data-theme="dark"] .acompanhar-sugestao button { color: var(--papel-baixo); }
-.sugestoes-destaque button:hover, .acompanhar-sugestao button:hover { background: var(--folha); }
-.acompanhar-sugestao {
-  display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.5rem;
-  border-top: 1px solid var(--linha); text-align: left;
-}
-.acompanhar-sugestao p { font-size: .82rem; line-height: 1.5; color: var(--texto2); }
-.acompanhar-sugestao p b { display: block; color: var(--texto); }
-.acompanhar-sugestao button { color: var(--musgo); background: transparent; border-color: var(--salvia); }
-.acompanhar-sugestao button:hover { color: var(--musgo); background: var(--papel-baixo); }
-.mini-acompanhamentos { display: grid; gap: .65rem; padding: 0 1.5rem 1.35rem; }
-.mini-acompanhamentos:empty { display: none; }
-.mini-sugestao { display: flex; align-items: center; justify-content: space-between; gap: .8rem; padding: .75rem .9rem; background: var(--papel); border-radius: var(--raio); text-align: left; }
-.mini-sugestao .mini-titulo { min-width: 0; font-size: .85rem; color: var(--texto); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.mini-sugestao button { flex-shrink: 0; padding: 0; font: inherit; font-size: .76rem; color: var(--terracota); background: none; border: 0; cursor: pointer; }
+[data-theme="dark"] .sugestoes-destaque button { color: var(--papel-baixo); }
+.sugestoes-destaque button:hover { background: var(--folha); }
+.sugestoes-publicas { padding: 1.2rem 1.5rem 1.5rem; border-top: 1px solid var(--linha); text-align: left; }
+.sugestoes-publicas-cabecalho { display: flex; align-items: baseline; justify-content: space-between; gap: .75rem; margin-bottom: .8rem; }
+.sugestoes-publicas h3 { font-family: 'Fraunces', serif; font-size: 1.05rem; font-weight: 500; color: var(--musgo); }
+.sugestoes-publicas-cabecalho span { font-size: .75rem; color: var(--texto3); }
+.lista-publica-sugestoes { display: grid; gap: .7rem; }
+.lista-publica-sugestoes:empty { display: none; }
+.sugestao-publica { padding: 1rem; background: var(--papel); border: 1px solid var(--linha); border-radius: var(--raio); }
+.sugestao-publica-topo { display: flex; align-items: center; justify-content: space-between; gap: .7rem; }
+.sugestao-publica .meta { margin-top: 0; font-size: .75rem; color: var(--texto3); }
+.sugestao-publica .mensagem { margin-top: .45rem; white-space: pre-wrap; font-size: .88rem; line-height: 1.55; color: var(--texto2); }
+.sugestao-publica .resposta-casal { margin-bottom: 0; }
+.vazio-sugestoes { padding: .4rem 0; font-size: .85rem; color: var(--texto2); }
 @media (max-width: 620px) {
   .sugestoes-destaque { grid-template-columns: auto 1fr; }
   .sugestoes-destaque button { grid-column: 1 / -1; width: 100%; }
-  .acompanhar-sugestao { align-items: flex-start; flex-direction: column; }
-  .acompanhar-sugestao button { width: 100%; }
 }
 
 .semente {
@@ -473,9 +470,6 @@ footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--c
 .retorno-sugestao { min-height: 1.2rem; margin-top: .7rem; font-size: .82rem; color: var(--texto2); }
 .retorno-sugestao.sucesso { color: var(--folha); }
 .retorno-sugestao.falha { color: var(--terracota); }
-.codigo-sugestao { display: inline-block; margin: .4rem 0; padding: .55rem .8rem; font: 600 .95rem 'Karla', sans-serif; letter-spacing: .08em; color: var(--musgo); background: var(--papel-baixo); border: 1px dashed var(--salvia); border-radius: var(--raio); }
-.resultado-acompanhamento { margin-top: 1.2rem; padding-top: 1.1rem; border-top: 1px solid var(--linha); text-align: left; }
-.resultado-acompanhamento:empty { display: none; }
 .status-sugestao { display: inline-flex; align-items: center; gap: .35rem; padding: .28rem .6rem; border-radius: 999px; font-size: .72rem; color: var(--texto2); background: var(--papel-baixo); }
 .status-sugestao::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--texto3); }
 .status-sugestao.em-analise { color: var(--casca); background: #F3E6C7; }
@@ -763,11 +757,13 @@ footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--c
       </div>
       <button type="button" onclick="abrirSugestao()">Enviar sugestão</button>
     </div>
-    <div class="acompanhar-sugestao">
-      <p><b>Já enviou uma ideia?</b>Use seu código para acompanhar a análise e ler nossa resposta.</p>
-      <button type="button" onclick="abrirAcompanhamento()">Acompanhar sugestão</button>
+    <div class="sugestoes-publicas">
+      <div class="sugestoes-publicas-cabecalho">
+        <h3>Ideias da comunidade</h3>
+        <span>Veja o andamento de cada uma</span>
+      </div>
+      <div class="lista-publica-sugestoes" id="lista-publica-sugestoes" aria-live="polite"></div>
     </div>
-    <div class="mini-acompanhamentos" id="mini-acompanhamentos" aria-live="polite"></div>
   </section>
 
   <footer>
@@ -1040,7 +1036,7 @@ function fecharPix() {
 }
 
 /* ═══════════════════════════════════════════
-   SUGESTÕES — acompanhamento sem login
+   SUGESTÕES — mural público
 ═══════════════════════════════════════════ */
 const STATUS_SUGESTAO = {
   new: ["Recebida", ""],
@@ -1057,14 +1053,6 @@ function statusSugestao(status) {
 function dataSugestao(data) {
   return new Date(data).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
 }
-function codigosSugestoes() {
-  try { return JSON.parse(localStorage.getItem(CONFIG.chaves.sugestoes) || "[]"); } catch (e) { return []; }
-}
-function guardarCodigoSugestao(code) {
-  const codigos = [code, ...codigosSugestoes().filter(c => c !== code)].slice(0, 8);
-  try { localStorage.setItem(CONFIG.chaves.sugestoes, JSON.stringify(codigos)); } catch (e) {}
-}
-
 function abrirSugestao() {
   const tela = document.createElement("div");
   tela.className = "veu";
@@ -1072,8 +1060,8 @@ function abrirSugestao() {
   tela.innerHTML = `
     <form class="caixa" role="dialog" aria-modal="true" aria-labelledby="sugestao-modal-titulo" onsubmit="enviarSugestao(event)">
       <h2 id="sugestao-modal-titulo">Cultive uma ideia 🌱</h2>
-      <p class="sub">Ela chega até ${escapar(CONFIG.casal.nomes)} e você poderá acompanhar o retorno depois.</p>
-      <label for="sugestao-nome">Seu nome <span aria-hidden="true">(opcional)</span></label>
+      <p class="sub">Ela chega até ${escapar(CONFIG.casal.nomes)} e aparecerá no mural de ideias.</p>
+      <label for="sugestao-nome">Seu nome <span aria-hidden="true">(opcional e público)</span></label>
       <input type="text" id="sugestao-nome" maxlength="60" autocomplete="name" />
       <label for="sugestao-titulo">Qual é a sua ideia?</label>
       <input type="text" id="sugestao-titulo" maxlength="120" required placeholder="Ex.: incluir mais itens para a cozinha" />
@@ -1118,13 +1106,12 @@ async function enviarSugestao(evento) {
     });
     const dados = await res.json();
     if (!res.ok) throw new Error(dados.error || "Não foi possível enviar.");
-    guardarCodigoSugestao(dados.code);
     retorno.className = "retorno-sugestao sucesso";
-    retorno.innerHTML = `Sugestão enviada! Seu código de acompanhamento é<br><strong class="codigo-sugestao">${escapar(dados.code)}</strong><br>Ele também ficou salvo neste aparelho.`;
+    retorno.textContent = "Sugestão enviada! Ela já está no mural e em breve receberá uma atualização.";
     botao.remove();
-    evento.target.querySelector(".voltar").textContent = "Ver acompanhamento";
-    evento.target.querySelector(".voltar").onclick = () => { fecharSugestao(); abrirAcompanhamento(dados.code); };
-    carregarMiniAcompanhamentos();
+    evento.target.querySelector(".voltar").textContent = "Ver mural";
+    evento.target.querySelector(".voltar").onclick = () => { fecharSugestao(); carregarSugestoesPublicas(); document.getElementById("convite-sugestao").scrollIntoView({ behavior: "smooth", block: "center" }); };
+    carregarSugestoesPublicas();
   } catch (erro) {
     retorno.className = "retorno-sugestao falha";
     retorno.textContent = erro.message || "Não foi possível enviar agora. Tente novamente.";
@@ -1138,77 +1125,29 @@ function fecharSugestao() {
   document.body.style.overflow = "";
 }
 
-function abrirAcompanhamento(codigo = "") {
-  const tela = document.createElement("div");
-  tela.className = "veu";
-  tela.id = "tela-acompanhamento";
-  tela.innerHTML = `
-    <form class="caixa" role="dialog" aria-modal="true" aria-labelledby="acompanhamento-titulo" onsubmit="buscarAcompanhamento(event)">
-      <h2 id="acompanhamento-titulo">Acompanhar sugestão</h2>
-      <p class="sub">Use o código que você recebeu ao enviar sua ideia.</p>
-      <label for="codigo-acompanhamento">Código de acompanhamento</label>
-      <input type="text" id="codigo-acompanhamento" maxlength="30" required value="${escapar(codigo)}" placeholder="JARDIM-..." autocomplete="off" />
-      <p class="retorno-sugestao" id="retorno-acompanhamento" aria-live="polite"></p>
-      <div class="resultado-acompanhamento" id="resultado-acompanhamento"></div>
-      <div class="acoes">
-        <button class="voltar" type="button" onclick="fecharAcompanhamento()">Fechar</button>
-        <button class="entrar" type="submit" id="btn-buscar-acompanhamento">Ver andamento</button>
-      </div>
-    </form>`;
-  tela.addEventListener("click", e => { if (e.target === tela) fecharAcompanhamento(); });
-  document.body.appendChild(tela);
-  document.body.style.overflow = "hidden";
-  $("codigo-acompanhamento").focus();
-}
-
-function renderAcompanhamento(sugestao) {
+function renderSugestaoPublica(sugestao) {
   return `
-    <div>${statusSugestao(sugestao.status)} <span class="contador-texto" style="display:inline;margin-left:.35rem">Atualizada em ${escapar(dataSugestao(sugestao.updated_at))}</span></div>
-    <h3 class="acompanhamento-titulo">${escapar(sugestao.titulo)}</h3>
-    <p class="acompanhamento-texto">${escapar(sugestao.mensagem)}</p>
-    ${sugestao.resposta ? `<div class="resposta-casal"><b>Resposta de ${escapar(CONFIG.casal.nomes)}</b><p class="acompanhamento-texto">${escapar(sugestao.resposta)}</p></div>` : `<p class="retorno-sugestao">Ainda não há uma resposta, mas sua ideia já está com a gente.</p>`}`;
+    <article class="sugestao-publica">
+      <div class="sugestao-publica-topo">${statusSugestao(sugestao.status)} <span class="meta">${escapar(dataSugestao(sugestao.updated_at))}</span></div>
+      <h3 class="acompanhamento-titulo">${escapar(sugestao.titulo)}</h3>
+      <p class="meta">Por ${escapar(sugestao.nome || "alguém da comunidade")}</p>
+      <p class="mensagem">${escapar(sugestao.mensagem)}</p>
+      ${sugestao.resposta ? `<div class="resposta-casal"><b>Resposta de ${escapar(CONFIG.casal.nomes)}</b><p class="acompanhamento-texto">${escapar(sugestao.resposta)}</p></div>` : `<p class="retorno-sugestao">Ainda não há uma resposta, mas a ideia já está com a gente.</p>`}
+    </article>`;
 }
 
-async function buscarAcompanhamento(evento) {
-  evento.preventDefault();
-  const codigo = $("codigo-acompanhamento").value.trim().toUpperCase();
-  const botao = $("btn-buscar-acompanhamento");
-  const retorno = $("retorno-acompanhamento");
-  const resultado = $("resultado-acompanhamento");
-  botao.disabled = true; retorno.className = "retorno-sugestao"; retorno.textContent = "Consultando…"; resultado.innerHTML = "";
+async function carregarSugestoesPublicas() {
+  const lista = $("lista-publica-sugestoes");
+  if (!lista || !CONFIG.sugestoesAtivas) return;
+  lista.innerHTML = '<p class="vazio-sugestoes">Carregando ideias…</p>';
   try {
-    const res = await fetch(`/api/suggestions?code=${encodeURIComponent(codigo)}`);
-    const dados = await res.json();
-    if (!res.ok) throw new Error(dados.error || "Não foi possível consultar.");
-    guardarCodigoSugestao(dados.code);
-    retorno.textContent = "";
-    resultado.innerHTML = renderAcompanhamento(dados);
-    carregarMiniAcompanhamentos();
+    const res = await fetch("/api/suggestions");
+    const sugestoes = await res.json();
+    if (!res.ok) throw new Error();
+    lista.innerHTML = sugestoes.length ? sugestoes.map(renderSugestaoPublica).join("") : '<p class="vazio-sugestoes">Ainda não temos sugestões. Que tal deixar a primeira?</p>';
   } catch (erro) {
-    retorno.className = "retorno-sugestao falha";
-    retorno.textContent = erro.message || "Não foi possível consultar agora.";
-  } finally { botao.disabled = false; }
-}
-
-function fecharAcompanhamento() {
-  const tela = $("tela-acompanhamento");
-  if (tela) tela.remove();
-  document.body.style.overflow = "";
-}
-
-async function carregarMiniAcompanhamentos() {
-  const painel = $("mini-acompanhamentos");
-  if (!painel || !CONFIG.sugestoesAtivas) return;
-  const codigos = codigosSugestoes();
-  if (!codigos.length) { painel.innerHTML = ""; return; }
-  const resultados = await Promise.all(codigos.map(async code => {
-    try { const res = await fetch(`/api/suggestions?code=${encodeURIComponent(code)}`); return res.ok ? await res.json() : null; } catch (e) { return null; }
-  }));
-  painel.innerHTML = resultados.filter(Boolean).map(s => `
-    <div class="mini-sugestao">
-      <div><div class="mini-titulo">${escapar(s.titulo)}</div>${statusSugestao(s.status)}</div>
-      <button type="button" data-code="${escapar(s.code)}" onclick="abrirAcompanhamento(this.dataset.code)">Ver</button>
-    </div>`).join("");
+    lista.innerHTML = '<p class="vazio-sugestoes">Não foi possível carregar as sugestões agora.</p>';
+  }
 }
 
 async function abrirSugestoesAdmin() {
@@ -1273,6 +1212,7 @@ async function salvarSugestaoAdmin(evento) {
     if (res.status === 401) { fecharSugestoesAdmin(); sairAdmin(); alert("Sua sessão expirou."); return; }
     const dados = await res.json();
     if (!res.ok) throw new Error(dados.error || "Não foi possível salvar.");
+    carregarSugestoesPublicas();
     await carregarSugestoesAdmin();
   } catch (e) {
     botao.disabled = false; botao.textContent = "Salvar atualização";
@@ -1288,6 +1228,7 @@ async function excluirSugestao(evento) {
     const res = await fetch("/api/suggestions", { method: "DELETE", headers: { "Content-Type": "application/json", "x-admin-token": tokenAdmin || "" }, body: JSON.stringify({ id: botao.dataset.id }) });
     if (res.status === 401) { fecharSugestoesAdmin(); sairAdmin(); alert("Sua sessão expirou."); return; }
     if (!res.ok) throw new Error();
+    carregarSugestoesPublicas();
     await carregarSugestoesAdmin();
   } catch (e) { botao.disabled = false; alert("Não foi possível excluir a sugestão."); }
 }
@@ -1479,7 +1420,7 @@ async function alternarItem(evento) {
     } catch (e) {}
 
     carregarItens();
-    if (CONFIG.sugestoesAtivas) carregarMiniAcompanhamentos();
+    if (CONFIG.sugestoesAtivas) carregarSugestoesPublicas();
   });
 })();
 </script>

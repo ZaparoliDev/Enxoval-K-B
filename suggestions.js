@@ -1,4 +1,3 @@
-const crypto = require('crypto');
 const { MongoClient, ObjectId } = require('mongodb');
 const { verifyToken } = require('./auth');
 
@@ -43,7 +42,6 @@ function clean(value, maxLength) {
 
 function publicSuggestion(item) {
   return {
-    code: item.code,
     nome: item.nome || '',
     titulo: item.titulo,
     mensagem: item.mensagem,
@@ -56,14 +54,6 @@ function publicSuggestion(item) {
 
 function adminSuggestion(item) {
   return { id: String(item._id), ...publicSuggestion(item) };
-}
-
-async function createTrackingCode(collection) {
-  for (let attempt = 0; attempt < 5; attempt += 1) {
-    const code = `JARDIM-${crypto.randomBytes(6).toString('hex').toUpperCase()}`;
-    if (!await collection.findOne({ code })) return code;
-  }
-  throw new Error('Não foi possível criar o código de acompanhamento. Tente novamente.');
 }
 
 module.exports = async (req, res) => {
@@ -92,8 +82,7 @@ module.exports = async (req, res) => {
       }
 
       const now = new Date();
-      const code = await createTrackingCode(collection);
-      const suggestion = { nome, titulo, mensagem, code, status: 'new', resposta: '', created_at: now, updated_at: now };
+      const suggestion = { nome, titulo, mensagem, status: 'new', resposta: '', created_at: now, updated_at: now };
       await collection.insertOne(suggestion);
       return res.status(201).json(publicSuggestion(suggestion));
     }
@@ -106,12 +95,8 @@ module.exports = async (req, res) => {
     }
 
     if (req.method === 'GET') {
-      const url = new URL(req.url, 'http://localhost');
-      const code = clean(url.searchParams.get('code'), 30).toUpperCase();
-      if (!code) return res.status(400).json({ error: 'Informe o código de acompanhamento.' });
-      const suggestion = await collection.findOne({ code });
-      if (!suggestion) return res.status(404).json({ error: 'Não encontramos uma sugestão com esse código.' });
-      return res.status(200).json(publicSuggestion(suggestion));
+      const suggestions = await collection.find({}).sort({ updated_at: -1, created_at: -1 }).limit(100).toArray();
+      return res.status(200).json(suggestions.map(publicSuggestion));
     }
 
     if (!isAdmin) return res.status(401).json({ error: 'Sessão de admin inválida ou expirada.' });
