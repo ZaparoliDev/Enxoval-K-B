@@ -30,6 +30,7 @@ MONGODB_DB        opcional (padrão: enxoval)
 MONGODB_PRODUCTS  opcional (padrão: products)
 MONGODB_CLAIMED   opcional (padrão: claimed_items)
 MONGODB_SUGGESTIONS opcional (padrão: suggestions)
+MONGODB_PRESENCE   opcional (padrão: active_visitors)
 ADMIN_PASSWORD    obrigatória — senha do painel
 ADMIN_SECRET      obrigatória — segredo para assinar o token de sessão
 ALLOWED_ORIGIN    opcional (padrão: *)
@@ -45,7 +46,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 Database `enxoval` (ou o nome em `MONGODB_DB`), com três coleções:
 
-- **`products`** — `id`, `name` (ou `nome`), `categoria`, `emoji`
+- **`products`** — `id`, `name` (ou `nome`), `categoria`, `emoji`, `preco` e `imagem` opcionais
 - **`claimed_items`** — `item_id`, `claimed_at`
 - **`suggestions`** — `nome`, `titulo`, `mensagem`, `status`, `resposta`,
   `created_at`, `updated_at` (criada automaticamente no primeiro envio)
@@ -70,6 +71,7 @@ antigas briguem com a paleta nova.
 | `/api/suggestions` | GET | Lista publicamente as sugestões, seus andamentos e respostas |
 | `/api/suggestions` | PUT `{ id, status, resposta }` | Atualiza o andamento e a resposta. **Exige** header `x-admin-token` válido |
 | `/api/suggestions` | DELETE `{ id }` | Exclui uma sugestão. **Exige** header `x-admin-token` válido |
+| `/api/presence` | POST `{ id }` | Atualiza e devolve a quantidade aproximada de visitantes ativos |
 
 ## Sugestões da primeira versão
 
@@ -78,6 +80,17 @@ O módulo de sugestões é temporário e controlado por `CONFIG.sugestoesAtivas`
 as respostas. No modo jardineiro, o botão **Ver sugestões** permite atualizar o
 andamento, responder ou excluir uma ideia. Para esconder o módulo quando o site
 estiver completo, troque o valor para `false`.
+
+## Experiência da lista
+
+- Ao reservar um item, flores caem pela tela antes de abrir o WhatsApp.
+- A barra **Nosso jardim está crescendo** mostra o percentual de itens escolhidos.
+- Há ordenação por ordem da lista, mais recentes, mais baratos (quando o produto tem
+  `preco`) e categoria.
+- O contador de visitantes ativos é aproximado: uma visita é considerada ativa por
+  até 90 segundos após a última interação com a página.
+- Produtos podem continuar usando `emoji`; ao adicionar `imagem` (ou `image`) ao
+  documento do produto, o site passa a usar a foto com carregamento sob demanda.
 
 ## Segurança do painel
 

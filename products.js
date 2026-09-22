@@ -77,7 +77,7 @@ module.exports = async (req, res) => {
       // Reserva comum: só marca o que ainda está livre, nunca desmarca
       const alreadyClaimed = await db.collection(CLAIMED_COLL).findOne(query);
       if (alreadyClaimed) {
-        return res.status(200).json({ success: true, message: 'Item já estava reservado.' });
+        return res.status(200).json({ success: true, alreadyClaimed: true, message: 'Item já estava reservado.' });
       }
 
       await db.collection(CLAIMED_COLL).insertOne({ item_id, claimed_at: new Date() });
