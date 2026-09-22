@@ -1007,6 +1007,12 @@ async function irParaWhatsApp(evento) {
   if (!item) return;
 
   botao.disabled = true;
+  const nomePessoa = await pedirNomeParaReserva();
+  if (!nomePessoa) {
+    botao.disabled = false;
+    return;
+  }
+
   botao.textContent = "Reservando…";
   try {
     const res = await fetch("/api/products", {
@@ -1030,7 +1036,7 @@ async function irParaWhatsApp(evento) {
 
   const nome = nomeDe(item);
   const link = montarLink(
-    `Olá, ${CONFIG.casal.nomes}!\n\nQuero presentear vocês com este item da lista:\n\n*${nome}*\n\nMe confirmem se ainda está disponível.`
+    `Olá, ${CONFIG.casal.nomes}!\n\nEu sou *${nomePessoa}* e quero presentear vocês com este item da lista:\n\n*${nome}*\n\nMe confirmem se ainda está disponível.`
   );
 
   item.isClaimed = true;
@@ -1038,6 +1044,47 @@ async function irParaWhatsApp(evento) {
   desenharGrade();
   soltarPetalas();
   mostrarReserva(nome, link);
+}
+
+function pedirNomeParaReserva() {
+  return new Promise(resolve => {
+    const tela = document.createElement("div");
+    tela.className = "veu";
+    tela.innerHTML = `
+      <form class="caixa" novalidate>
+        <h2>Que alegria ter você aqui! 🌿</h2>
+        <p class="sub">Antes de reservar, informe seu nome para o casal saber quem escolheu o presente.</p>
+        <label for="nome-presenteador">Seu nome</label>
+        <input type="text" id="nome-presenteador" maxlength="60" autocomplete="name" required placeholder="Como podemos te chamar?" />
+        <p class="erro" id="erro-nome-presenteador" hidden></p>
+        <div class="acoes">
+          <button class="voltar" type="button">Agora não</button>
+          <button class="entrar" type="submit">Continuar</button>
+        </div>
+      </form>`;
+
+    const fechar = valor => {
+      tela.remove();
+      resolve(valor);
+    };
+    const campo = tela.querySelector("#nome-presenteador");
+    const erro = tela.querySelector("#erro-nome-presenteador");
+    tela.querySelector(".voltar").addEventListener("click", () => fechar(null));
+    tela.querySelector("form").addEventListener("submit", evento => {
+      evento.preventDefault();
+      const nome = campo.value.trim().replace(/\s+/g, " ");
+      if (nome.length < 2) {
+        erro.textContent = "Informe seu nome para continuar.";
+        erro.hidden = false;
+        campo.focus();
+        return;
+      }
+      fechar(nome);
+    });
+    tela.addEventListener("click", evento => { if (evento.target === tela) fechar(null); });
+    document.body.appendChild(tela);
+    campo.focus();
+  });
 }
 
 function soltarPetalas() {
