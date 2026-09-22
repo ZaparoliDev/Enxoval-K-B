@@ -654,6 +654,10 @@ footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--c
   font-size: .8rem; line-height: 1.6; color: var(--casca);
   background: var(--papel-baixo); border-radius: var(--raio);
 }
+.reserva .acoes-reserva { display: flex; flex-wrap: wrap; justify-content: center; gap: .65rem; margin-top: .25rem; }
+.reserva .acoes-reserva .botao { min-width: 9.5rem; }
+.reserva .acoes-reserva .secundario { background: transparent; color: var(--musgo); border: 1px solid var(--linha); }
+.reserva .acoes-reserva .secundario:hover { background: var(--papel-baixo); }
 @keyframes girar { to { stroke-dashoffset: 0; } }
 @keyframes pular { 0% { transform: scale(.6); opacity: 0; } 45% { transform: scale(1.15); opacity: 1; } 100% { transform: scale(1); } }
 .petalas { position: fixed; inset: 0; z-index: 1100; overflow: hidden; pointer-events: none; }
@@ -989,9 +993,7 @@ function desenharGrade() {
 }
 
 /* ═══════════════════════════════════════════
-   WHATSAPP — contagem regressiva antes do redirect.
-   location.href (e não window.open) para não ser
-   bloqueado no iOS Safari e no navegador da Samsung.
+   WHATSAPP — reserva, contagem e confirmação.
 ═══════════════════════════════════════════ */
 function montarLink(texto) {
   return "https://wa.me/" + CONFIG.contato.whatsapp + "?text=" + encodeURIComponent(texto);
@@ -1078,9 +1080,7 @@ function mostrarReserva(nome, link) {
     resta--;
     if (resta <= 0) {
       clearInterval(timer);
-      tela.remove();
-      document.body.style.overflow = "";
-      window.location.href = link;
+      pedirRedirecionamento(tela, link);
       return;
     }
     contador.textContent = resta;
@@ -1088,6 +1088,31 @@ function mostrarReserva(nome, link) {
     void contador.offsetWidth;
     contador.style.animation = "pular .35s cubic-bezier(.34,1.56,.64,1)";
   }, 1000);
+}
+
+function fecharReserva(tela) {
+  tela.remove();
+  document.body.style.overflow = "";
+}
+
+function pedirRedirecionamento(tela, link) {
+  tela.querySelector(".relogio").remove();
+  tela.querySelector("h3").textContent = "Item reservado com carinho!";
+  tela.querySelector(".aviso-sub").textContent = "Deseja ser redirecionado para o WhatsApp e avisar o casal?";
+  tela.querySelector(".lembrete").remove();
+
+  const acoes = document.createElement("div");
+  acoes.className = "acoes-reserva";
+  acoes.innerHTML = `
+    <button type="button" class="botao secundario">Agora não</button>
+    <button type="button" class="botao">${ZAP} Abrir WhatsApp</button>`;
+  const [cancelar, confirmar] = acoes.querySelectorAll("button");
+  cancelar.addEventListener("click", () => fecharReserva(tela));
+  confirmar.addEventListener("click", () => {
+    fecharReserva(tela);
+    window.location.href = link;
+  });
+  tela.appendChild(acoes);
 }
 
 /* ═══════════════════════════════════════════
