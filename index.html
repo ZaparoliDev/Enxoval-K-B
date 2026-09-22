@@ -644,8 +644,159 @@ footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--c
 @keyframes girar { to { stroke-dashoffset: 0; } }
 @keyframes pular { 0% { transform: scale(.6); opacity: 0; } 45% { transform: scale(1.15); opacity: 1; } 100% { transform: scale(1); } }
 
+/* ══════════════════════════════════════
+   MELHORIAS DE DINÂMICA E MICROINTERAÇÃO
+══════════════════════════════════════ */
+
+/* entrada suave da grade — cada cartão nasce com leve atraso escalonado */
+.grade .item {
+  opacity: 0;
+  animation: nascer .55s cubic-bezier(.22,.9,.32,1) forwards;
+  animation-delay: calc(var(--atraso, 0) * 1ms);
+}
+@keyframes nascer {
+  from { opacity: 0; transform: translateY(14px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* pressão tátil nos cartões — mais vivo ao toque/clique */
+.item { will-change: transform; }
+.item:active { transform: translateY(-1px) scale(.985); transition-duration: .12s; }
+
+/* brilho sutil ao passar o mouse na medalha do item */
+.item .medalha {
+  transition: transform .4s cubic-bezier(.34,1.4,.64,1), box-shadow .3s ease;
+}
+.item:hover .medalha { transform: scale(1.08) rotate(-4deg); box-shadow: 0 6px 16px var(--sombra); }
+.item.colhido:hover .medalha { transform: none; box-shadow: none; }
+
+/* selo de escolhido entra com uma pequena "carimbada" */
+.selo { animation: carimbar .4s cubic-bezier(.3,1.6,.5,1); }
+@keyframes carimbar {
+  0%   { opacity: 0; transform: rotate(4deg) scale(1.6); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: rotate(4deg) scale(1); }
+}
+
+/* botões — resposta mais viva ao clique, sem exagero */
+.botao:active { transform: scale(.96); }
+.botao {
+  position: relative; overflow: hidden;
+}
+.botao::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit;
+  background: radial-gradient(circle at var(--x,50%) var(--y,50%), rgba(255,255,255,.35), transparent 60%);
+  opacity: 0; transition: opacity .35s ease;
+  pointer-events: none;
+}
+.botao:hover::after { opacity: 1; }
+
+/* categorias — indicador de troca mais fluido */
+.cat { transform: translateZ(0); }
+.cat.ativa { box-shadow: 0 4px 14px var(--sombra); }
+.cat:active { transform: scale(.96); }
+
+/* números do topo — contagem "pulsa" suavemente quando atualiza */
+.numero b { transition: transform .3s cubic-bezier(.34,1.4,.64,1); display: inline-block; }
+.numero b.atualizou { animation: pulsarNumero .45s cubic-bezier(.34,1.4,.64,1); }
+@keyframes pulsarNumero {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+/* busca — foco com leve elevação */
+.busca input { transform: translateZ(0); transition: border-color .25s ease, box-shadow .25s ease; }
+.busca input:focus { box-shadow: 0 6px 18px var(--sombra); }
+.busca svg { transition: stroke .25s ease, transform .25s ease; }
+.busca input:focus ~ svg,
+.busca input:not(:placeholder-shown) ~ svg { stroke: var(--salvia); transform: translateY(-50%) scale(1.08); }
+
+/* botão de tema — giro completo e mais orgânico */
+.btn-tema { transition: border-color .25s ease, color .25s ease, transform .45s cubic-bezier(.34,1.2,.64,1); }
+.btn-tema:hover { transform: rotate(35deg) scale(1.06); }
+.btn-tema:active { transform: rotate(35deg) scale(.92); }
+.btn-tema svg { transition: opacity .25s ease, transform .35s ease; }
+.btn-tema.trocando svg { animation: girarTema .5s ease; }
+@keyframes girarTema {
+  0%   { opacity: 1; transform: rotate(0deg) scale(1); }
+  45%  { opacity: 0; transform: rotate(90deg) scale(.5); }
+  55%  { opacity: 0; transform: rotate(90deg) scale(.5); }
+  100% { opacity: 1; transform: rotate(180deg) scale(1); }
+}
+
+/* ramos decorativos — deriva muito sutil, como se balançassem ao vento */
+.ramo { animation: balancar 9s ease-in-out infinite; transform-origin: top center; }
+.ramo:nth-of-type(2) { animation-duration: 11s; animation-delay: -3s; }
+.ramo:nth-of-type(3) { animation-duration: 8s; animation-delay: -5s; }
+@keyframes balancar {
+  0%, 100% { transform: rotate(0deg); }
+  50%      { transform: rotate(.6deg); }
+}
+
+/* pix — ícone com leve "respiração" para chamar atenção sem ser intrusivo */
+.pix-convite .icone { transition: transform .3s cubic-bezier(.34,1.4,.64,1); }
+.pix-convite:hover .icone { transform: translateY(-2px) scale(1.08); }
+.pix-convite .seta { transition: transform .25s ease; }
+.pix-convite:hover .seta { transform: translateX(4px); }
+
+/* modais — saída suave além da entrada já existente */
+.veu.fechando { animation: sumir .22s ease forwards; }
+.veu.fechando .caixa,
+.veu.fechando .bandeja { animation: descer .22s cubic-bezier(.4,0,.6,1) forwards; }
+@keyframes sumir { to { opacity: 0; } }
+@keyframes descer { to { opacity: 0; transform: translateY(10px) scale(.98); } }
+
+/* linha de item no pix — leve deslize ao selecionar */
+.linha-item { transform: translateZ(0); }
+.linha-item .marca { transition: background-color .2s ease, border-color .2s ease, transform .25s cubic-bezier(.34,1.6,.64,1); }
+.linha-item.escolhido .marca { transform: scale(1.08); }
+
+/* cartão de sugestão pública — entra suavemente na lista */
+.sugestao-publica { animation: nascer .5s cubic-bezier(.22,.9,.32,1) both; }
+
+/* toast leve de confirmação, usado após enviar sugestão etc. */
+.toast-jardim {
+  position: fixed; left: 50%; bottom: 1.6rem; z-index: 1000;
+  transform: translate(-50%, 12px); opacity: 0;
+  display: flex; align-items: center; gap: .55rem;
+  padding: .8rem 1.15rem; max-width: calc(100vw - 2rem);
+  font-size: .85rem; color: var(--papel); background: var(--musgo);
+  border-radius: 999px; box-shadow: 0 14px 34px var(--sombra-alta);
+  transition: transform .35s cubic-bezier(.34,1.3,.64,1), opacity .3s ease;
+  pointer-events: none;
+}
+[data-theme="dark"] .toast-jardim { color: var(--papel-baixo); }
+.toast-jardim.mostrar { transform: translate(-50%, 0); opacity: 1; }
+.toast-jardim svg { width: 15px; height: 15px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* skeleton — leve profundidade extra para não parecer "chapado" */
+.esqueleto div { box-shadow: inset 0 0 0 1px var(--linha); }
+
+/* semente — leve respiração contínua convidando o toque, discreta */
+.semente svg.icone { animation: respirarSemente 4s ease-in-out infinite; }
+.semente:hover svg.icone,
+.semente.germinando svg.icone { animation: none; }
+@keyframes respirarSemente {
+  0%, 100% { opacity: .85; }
+  50%      { opacity: 1; transform: scale(1.04); }
+}
+
+/* transição de tema mais orgânica no corpo inteiro */
+body, .item, .caixa, .bandeja, .barra-admin, .cartao-sugestao, .sugestao-publica {
+  transition: var(--transicao), box-shadow .3s ease;
+}
+
+@media (hover: none) {
+  .item:hover { transform: none; box-shadow: none; }
+  .item:active { transform: scale(.98); box-shadow: 0 6px 16px var(--sombra); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  .grade .item { opacity: 1; animation: none; }
+  .semente svg.icone { animation: none; }
+  .ramo { animation: none; }
 }
 </style>
 </head>
@@ -823,6 +974,9 @@ function aplicarTema(tema) {
   try { localStorage.setItem(CONFIG.chaves.tema, tema); } catch (e) {}
 }
 function alternarTema() {
+  const botao = $("btn-tema");
+  botao.classList.add("trocando");
+  setTimeout(() => botao.classList.remove("trocando"), 500);
   aplicarTema(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark");
 }
 
@@ -857,9 +1011,43 @@ function escapar(t)     { return String(t).replace(/[&<>"']/g, c => ({ "&":"&amp
 ═══════════════════════════════════════════ */
 function atualizarNumeros() {
   const colhidos = itens.filter(p => p.isClaimed).length;
-  $("n-livres").textContent   = itens.length - colhidos;
-  $("n-colhidos").textContent = colhidos;
+  const livresEl = $("n-livres"), colhidosEl = $("n-colhidos");
+  const livresNovo = String(itens.length - colhidos), colhidosNovo = String(colhidos);
+
+  if (livresEl.textContent !== livresNovo && livresEl.textContent !== "—") {
+    livresEl.classList.remove("atualizou"); void livresEl.offsetWidth; livresEl.classList.add("atualizou");
+  }
+  if (colhidosEl.textContent !== colhidosNovo && colhidosEl.textContent !== "—") {
+    colhidosEl.classList.remove("atualizou"); void colhidosEl.offsetWidth; colhidosEl.classList.add("atualizou");
+  }
+
+  livresEl.textContent = livresNovo;
+  colhidosEl.textContent = colhidosNovo;
   if (tokenAdmin) $("admin-resumo").textContent = `${colhidos} de ${itens.length} itens marcados`;
+}
+
+/* pequeno toast de confirmação, reaproveitável em várias ações */
+const CHECK_SVG = `<svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>`;
+let toastTimer = null;
+function mostrarToast(mensagem) {
+  let toast = document.querySelector(".toast-jardim");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.className = "toast-jardim";
+    toast.innerHTML = `${CHECK_SVG}<span></span>`;
+    document.body.appendChild(toast);
+  }
+  toast.querySelector("span").textContent = mensagem;
+  clearTimeout(toastTimer);
+  requestAnimationFrame(() => toast.classList.add("mostrar"));
+  toastTimer = setTimeout(() => toast.classList.remove("mostrar"), 3200);
+}
+
+/* fecha um véu/modal com animação de saída antes de remover do DOM */
+function fecharComAnimacao(tela, aoFinal) {
+  if (!tela) { if (aoFinal) aoFinal(); return; }
+  tela.classList.add("fechando");
+  setTimeout(() => { tela.remove(); if (aoFinal) aoFinal(); }, 220);
 }
 
 function desenharCategorias() {
@@ -891,11 +1079,12 @@ function desenharGrade() {
   }
   grade.hidden = false; $("vazio").hidden = true;
 
-  grade.innerHTML = filtrados.map(p => {
+  grade.innerHTML = filtrados.map((p, i) => {
     const id    = escapar(p.id);
     const nome  = escapar(nomeDe(p));
     const tint  = tintDaCategoria(categoriaDe(p));
     const emoji = p.emoji || "🌿";
+    const atraso = Math.min(i, 14) * 40;
 
     const rodapeCartao = p.isClaimed
       ? (tokenAdmin
@@ -906,7 +1095,7 @@ function desenharGrade() {
           : `<button type="button" class="botao" data-id="${id}" onclick="irParaWhatsApp(event)">${ZAP} Quero presentear</button>`);
 
     return `
-      <article class="item${p.isClaimed ? " colhido" : ""}">
+      <article class="item${p.isClaimed ? " colhido" : ""}" style="--atraso:${atraso}">
         ${p.isClaimed ? `<span class="selo">${SELO_SVG} escolhido</span>` : ""}
         <div class="medalha" style="background:${tint}">${emoji}</div>
         <h3 class="nome">${nome}</h3>
@@ -914,6 +1103,15 @@ function desenharGrade() {
       </article>`;
   }).join("");
 }
+
+/* efeito radial no botão acompanha a posição do ponteiro/toque */
+document.addEventListener("pointermove", e => {
+  const botao = e.target.closest(".botao");
+  if (!botao) return;
+  const r = botao.getBoundingClientRect();
+  botao.style.setProperty("--x", `${((e.clientX - r.left) / r.width) * 100}%`);
+  botao.style.setProperty("--y", `${((e.clientY - r.top) / r.height) * 100}%`);
+});
 
 /* ═══════════════════════════════════════════
    WHATSAPP — contagem regressiva antes do redirect.
@@ -1030,9 +1228,7 @@ function enviarPix() {
 }
 
 function fecharPix() {
-  const tela = $("tela-pix");
-  if (tela) tela.remove();
-  document.body.style.overflow = "";
+  fecharComAnimacao($("tela-pix"), () => { document.body.style.overflow = ""; });
 }
 
 /* ═══════════════════════════════════════════
@@ -1108,6 +1304,7 @@ async function enviarSugestao(evento) {
     if (!res.ok) throw new Error(dados.error || "Não foi possível enviar.");
     retorno.className = "retorno-sugestao sucesso";
     retorno.textContent = "Sugestão enviada! Ela já está no mural e em breve receberá uma atualização.";
+    mostrarToast("Sugestão enviada com sucesso 🌱");
     botao.remove();
     evento.target.querySelector(".voltar").textContent = "Ver mural";
     evento.target.querySelector(".voltar").onclick = () => { fecharSugestao(); carregarSugestoesPublicas(); document.getElementById("convite-sugestao").scrollIntoView({ behavior: "smooth", block: "center" }); };
@@ -1120,9 +1317,7 @@ async function enviarSugestao(evento) {
 }
 
 function fecharSugestao() {
-  const tela = $("tela-sugestao");
-  if (tela) tela.remove();
-  document.body.style.overflow = "";
+  fecharComAnimacao($("tela-sugestao"), () => { document.body.style.overflow = ""; });
 }
 
 function renderSugestaoPublica(sugestao) {
@@ -1234,9 +1429,7 @@ async function excluirSugestao(evento) {
 }
 
 function fecharSugestoesAdmin() {
-  const tela = $("tela-sugestoes-admin");
-  if (tela) tela.remove();
-  document.body.style.overflow = "";
+  fecharComAnimacao($("tela-sugestoes-admin"), () => { document.body.style.overflow = ""; });
 }
 
 /* ═══════════════════════════════════════════
@@ -1359,9 +1552,7 @@ async function entrarAdmin() {
 }
 
 function fecharPortao() {
-  const tela = $("tela-portao");
-  if (tela) tela.remove();
-  document.body.style.overflow = "";
+  fecharComAnimacao($("tela-portao"), () => { document.body.style.overflow = ""; });
 }
 
 function ligarModoAdmin() {
