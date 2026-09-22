@@ -1,4 +1,4 @@
-# Lista de presentes — Clebson & Keila
+# Lista de presentes — Clebson & Keyla
 
 Site de lista de presentes de enxoval. Front-end estático em um único `index.html`,
 API serverless na Vercel e MongoDB Atlas como banco.
