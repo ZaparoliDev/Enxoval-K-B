@@ -34,11 +34,19 @@ module.exports = async (req, res) => {
       const products     = await db.collection(PRODUCTS_COLL).find({}).toArray();
       const claimedItems = await db.collection(CLAIMED_COLL).find({}).toArray();
 
-      const claimedIds = new Set(claimedItems.map(item => String(item.item_id).trim()));
+      const claimedById = new Map(claimedItems.map(item => [String(item.item_id).trim(), item]));
+      const isAdmin = verifyToken(req.headers['x-admin-token']);
 
       const productsWithStatus = products.map(product => {
         const id = product.id || product.item_id || product._id;
-        return { ...product, id, isClaimed: claimedIds.has(String(id).trim()) };
+        const claimed = claimedById.get(String(id).trim());
+        const base = { ...product, id, isClaimed: !!claimed };
+        // O nome de quem presenteou só é exposto para admins autenticados.
+        if (isAdmin && claimed) {
+          base.doadorNome = claimed.doador_nome || null;
+          base.claimedAt = claimed.claimed_at || null;
+        }
+        return base;
       });
 
       productsWithStatus.sort((a, b) => Number(a.id) - Number(b.id));
@@ -49,7 +57,7 @@ module.exports = async (req, res) => {
     // POST — reserva de item (público) ou liberar/marcar (admin)
     // ─────────────────────────────────────────────────────────────
     if (req.method === 'POST') {
-      const { item_id, toggleAdmin } = req.body || {};
+      const { item_id, toggleAdmin, doador_nome } = req.body || {};
 
       if (!item_id) {
         return res.status(400).json({ error: 'O item_id é obrigatório.' });
@@ -74,13 +82,21 @@ module.exports = async (req, res) => {
         return res.status(200).json({ success: true, message: 'Item marcado.' });
       }
 
-      // Reserva comum: só marca o que ainda está livre, nunca desmarca
+      // Reserva comum: só marca o que ainda está livre, nunca desmarca.
+      // O nome de quem presenteou é opcional, mas quando enviado fica
+      // guardado só para o painel admin — nunca aparece no mural público.
+      const nomeLimpo = typeof doador_nome === 'string' ? doador_nome.trim().slice(0, 80) : '';
+
       const alreadyClaimed = await db.collection(CLAIMED_COLL).findOne(query);
       if (alreadyClaimed) {
-        return res.status(200).json({ success: true, alreadyClaimed: true, message: 'Item já estava reservado.' });
+        return res.status(200).json({ success: true, message: 'Item já estava reservado.' });
       }
 
-      await db.collection(CLAIMED_COLL).insertOne({ item_id, claimed_at: new Date() });
+      await db.collection(CLAIMED_COLL).insertOne({
+        item_id,
+        claimed_at: new Date(),
+        doador_nome: nomeLimpo || null
+      });
       return res.status(200).json({ success: true });
     }
 
