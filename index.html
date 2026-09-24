@@ -48,19 +48,19 @@ const CONFIG = {
   sugestoesAtivas: true,
 
   paleta: [
-    { cor: "#2F4739", nome: "verde musgo" },
-    { cor: "#8FA98C", nome: "verde sálvia" },
-    { cor: "#B96A4E", nome: "terracota" },
-    { cor: "#F4F0E6", nome: "areia" }
+    { cor: "#111111", nome: "preto" },
+    { cor: "#4A4A4A", nome: "grafite" },
+    { cor: "#BDBDBD", nome: "cinza" },
+    { cor: "#FFFFFF", nome: "branco" }
   ],
 
   categorias: [
-    { id: "todos",    label: "Tudo",            tint: "#E6EBE3" },
-    { id: "cozinha",  label: "Cozinha",         tint: "#EFE4D2" },
-    { id: "quarto",   label: "Quarto",          tint: "#E4EAE3" },
-    { id: "banheiro", label: "Banheiro",        tint: "#DEE9E8" },
-    { id: "deco",     label: "Decoração",       tint: "#F1E2DA" },
-    { id: "servico",  label: "Área de serviço", tint: "#E9E8DD" }
+    { id: "todos",    label: "Tudo",            tint: "#F2F2F2" },
+    { id: "cozinha",  label: "Cozinha",         tint: "#E6E6E6" },
+    { id: "quarto",   label: "Quarto",          tint: "#DCDCDC" },
+    { id: "banheiro", label: "Banheiro",        tint: "#F5F5F5" },
+    { id: "deco",     label: "Decoração",       tint: "#CFCFCF" },
+    { id: "servico",  label: "Área de serviço", tint: "#EAEAEA" }
   ],
 
   // Segundos do contador antes de abrir o WhatsApp
@@ -70,64 +70,65 @@ const CONFIG = {
   chaves: {
     tema:       "jardim_tema_clebson_keila",
     sessao:     "jardim_admin_clebson_keila",
-    sugestoes:  "jardim_sugestoes_clebson_keila"
+    sugestoes:  "jardim_sugestoes_clebson_keila",
+    presenca:   "jardim_presenca_clebson_keyla"
   }
 };
 </script>
 
 <style>
 /* ══════════════════════════════════════
-   TOKENS — direção botânica
+   TOKENS — preto, branco e tons de cinza
 ══════════════════════════════════════ */
 :root {
-  --papel:      #F4F0E6;
-  --papel-alto: #FBF8F1;
-  --papel-baixo:#EAE4D6;
-  --superficie: #FFFDF8;
+  --papel:      #F6F6F6;
+  --papel-alto: #FFFFFF;
+  --papel-baixo:#E5E5E5;
+  --superficie: #FFFFFF;
 
-  --musgo:      #2F4739;
-  --folha:      #46654F;
-  --salvia:     #8FA98C;
-  --terracota:  #B96A4E;
-  --argila:     #D9A188;
-  --casca:      #6E5A46;
+  --musgo:      #111111;
+  --folha:      #2D2D2D;
+  --salvia:     #767676;
+  --terracota:  #4B4B4B;
+  --argila:     #B8B8B8;
+  --casca:      #5B5B5B;
 
-  --texto:      #263A2F;
-  --texto2:     #556B5C;
-  --texto3:     #7E9186;
+  --texto:      #161616;
+  --texto2:     #4D4D4D;
+  --texto3:     #777777;
 
-  --linha:      rgba(47,71,57,0.16);
-  --linha-forte:rgba(47,71,57,0.30);
-  --sombra:     rgba(47,71,57,0.10);
-  --sombra-alta:rgba(47,71,57,0.18);
-  --veu:        rgba(244,240,230,0.92);
+  --linha:      rgba(0,0,0,0.14);
+  --linha-forte:rgba(0,0,0,0.32);
+  --sombra:     rgba(0,0,0,0.10);
+  --sombra-alta:rgba(0,0,0,0.20);
+  --veu:        rgba(250,250,250,0.92);
 
   --raio:       14px;
   --raio-g:     22px;
   --transicao:  background-color .4s ease, color .4s ease, border-color .4s ease;
 }
 [data-theme="dark"] {
-  --papel:      #16201B;
-  --papel-alto: #1E2A23;
-  --papel-baixo:#111A15;
-  --superficie: #1E2A23;
+  --papel:      #111111;
+  --papel-alto: #1A1A1A;
+  --papel-baixo:#0A0A0A;
+  --superficie: #1C1C1C;
 
-  --musgo:      #B9CFB6;
-  --folha:      #9DBA9A;
-  --salvia:     #7E9A7C;
-  --terracota:  #D98A6C;
-  --argila:     #E3AE95;
-  --casca:      #B59A7C;
+  --musgo:      #F4F4F4;
+  --folha:      #D6D6D6;
+  --salvia:     #A1A1A1;
+  --terracota:  #C4C4C4;
+  --argila:     #888888;
+  --casca:      #B6B6B6;
 
-  --texto:      #E7E4D8;
-  --texto2:     #AFC0B2;
-  --texto3:     #7E9286;
+  --texto:      #F5F5F5;
+  --texto2:     #C5C5C5;
+  --texto3:     #969696;
 
-  --linha:      rgba(185,207,182,0.16);
-  --linha-forte:rgba(185,207,182,0.30);
+  --linha:      rgba(255,255,255,0.16);
+  --linha-forte:rgba(255,255,255,0.34);
   --sombra:     rgba(0,0,0,0.40);
   --sombra-alta:rgba(0,0,0,0.55);
-  --veu:        rgba(12,20,15,0.92);
+  --veu:        rgba(12,12,12,0.92);
 }
 
 *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -245,6 +246,14 @@ header { text-align: center; padding: 2.5rem 0 3rem; position: relative; }
   display: block; margin-top: .3rem; font-size: .76rem;
   letter-spacing: .07em; color: var(--texto3);
 }
+.jardim-progresso { max-width: 32rem; margin: 0 auto 1.1rem; text-align: left; }
+.jardim-progresso .legenda { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: .45rem; font-size: .77rem; color: var(--texto2); }
+.jardim-progresso .legenda b { font-family: 'Fraunces', serif; font-weight: 500; color: var(--musgo); }
+.trilho-jardim { position: relative; height: 11px; overflow: hidden; border-radius: 999px; background: var(--papel-baixo); border: 1px solid var(--linha); }
+.trilho-jardim span { display: block; width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--salvia), var(--folha)); transition: width .7s cubic-bezier(.34,1.2,.64,1); }
+.trilho-jardim::after { content: '✿'; position: absolute; top: 50%; left: var(--progresso, 0%); font-size: 1.05rem; color: var(--terracota); transform: translate(-35%, -54%); transition: left .7s cubic-bezier(.34,1.2,.64,1); }
+.presenca { display: inline-flex; align-items: center; gap: .42rem; margin: .1rem auto 0; font-size: .76rem; color: var(--texto3); }
+.presenca::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--folha); box-shadow: 0 0 0 3px rgba(0,0,0,.12); }
 
 /* convite ao pix */
 .pix-convite {
@@ -285,6 +294,9 @@ header { text-align: center; padding: 2.5rem 0 3rem; position: relative; }
   display: flex; flex-wrap: wrap; justify-content: center;
   gap: .5rem; margin-bottom: 1.8rem;
 }
+.controles-lista { display: flex; justify-content: flex-end; margin: -1rem 0 1rem; }
+.ordenacao { padding: .5rem .8rem; font: inherit; font-size: .8rem; color: var(--texto2); background: var(--superficie); border: 1px solid var(--linha); border-radius: 999px; cursor: pointer; }
+.ordenacao:focus { border-color: var(--salvia); outline: none; }
 .cat {
   padding: .45rem 1rem; font-family: inherit; font-size: .84rem;
   color: var(--texto2); background: transparent;
@@ -296,11 +308,10 @@ header { text-align: center; padding: 2.5rem 0 3rem; position: relative; }
 [data-theme="dark"] .cat.ativa { color: var(--papel-baixo); }
 
 .contagem {
-  display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  display: flex; align-items: center; gap: 1rem;
   margin-bottom: 1.4rem; font-size: .8rem; color: var(--texto3);
 }
-.contagem .risco { flex: 1; min-width: 24px; height: 1px; background: var(--linha); }
-.contagem .presenca-viva { margin-top: 0; flex-shrink: 0; }
+.contagem .risco { flex: 1; height: 1px; background: var(--linha); }
 
 /* ══════════════════════════════════════
    GRADE DE ITENS
@@ -324,18 +335,12 @@ header { text-align: center; padding: 2.5rem 0 3rem; position: relative; }
   border-radius: 50%; display: grid; place-items: center;
   font-size: 1.6rem; line-height: 1;
 }
+.item .medalha img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; display: block; filter: grayscale(1) contrast(1.05); }
 .item .nome {
   font-family: 'Fraunces', serif; font-weight: 400;
   font-size: .98rem; line-height: 1.35; color: var(--texto);
   margin-bottom: .9rem; flex: 1;
 }
-.item .doador-admin {
-  margin: -.5rem 0 .7rem; font-size: .74rem; color: var(--texto3);
-  background: var(--papel-baixo); border-radius: 8px; padding: .3rem .5rem;
-}
-[data-theme="dark"] .item .doador-admin { background: var(--superficie); }
-.item .doador-admin b { color: var(--musgo); }
-[data-theme="dark"] .item .doador-admin b { color: var(--salvia); }
 .botao {
   display: inline-flex; align-items: center; justify-content: center; gap: .45rem;
   width: 100%; padding: .6rem .8rem;
@@ -480,18 +485,18 @@ footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--c
 .retorno-sugestao.falha { color: var(--terracota); }
 .status-sugestao { display: inline-flex; align-items: center; gap: .35rem; padding: .28rem .6rem; border-radius: 999px; font-size: .72rem; color: var(--texto2); background: var(--papel-baixo); }
 .status-sugestao::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--texto3); }
-.status-sugestao.em-analise { color: var(--casca); background: #F3E6C7; }
-.status-sugestao.em-analise::before { background: #B47A22; }
-.status-sugestao.planejada { color: #6B4E88; background: #EDE3F4; }
-.status-sugestao.planejada::before { background: #80609F; }
-.status-sugestao.em-andamento { color: #356C75; background: #DCEEEF; }
-.status-sugestao.em-andamento::before { background: #438692; }
-.status-sugestao.concluida { color: var(--folha); background: #E4EEE1; }
+.status-sugestao.em-analise { color: #303030; background: #E2E2E2; }
+.status-sugestao.em-analise::before { background: #616161; }
+.status-sugestao.planejada { color: #252525; background: #D2D2D2; }
+.status-sugestao.planejada::before { background: #484848; }
+.status-sugestao.em-andamento { color: #1D1D1D; background: #C1C1C1; }
+.status-sugestao.em-andamento::before { background: #333333; }
+.status-sugestao.concluida { color: #383838; background: #ECECEC; }
 .status-sugestao.concluida::before { background: var(--folha); }
-[data-theme="dark"] .status-sugestao.em-analise { color: #E7C77C; background: rgba(180,122,34,.16); }
-[data-theme="dark"] .status-sugestao.planejada { color: #D6B7EB; background: rgba(128,96,159,.18); }
-[data-theme="dark"] .status-sugestao.em-andamento { color: #9ED3D8; background: rgba(67,134,146,.18); }
-[data-theme="dark"] .status-sugestao.concluida { color: #B9D6B3; background: rgba(70,101,79,.26); }
+[data-theme="dark"] .status-sugestao.em-analise { color: #E5E5E5; background: rgba(255,255,255,.16); }
+[data-theme="dark"] .status-sugestao.planejada { color: #F0F0F0; background: rgba(255,255,255,.23); }
+[data-theme="dark"] .status-sugestao.em-andamento { color: #FFFFFF; background: rgba(255,255,255,.31); }
+[data-theme="dark"] .status-sugestao.concluida { color: #DADADA; background: rgba(255,255,255,.12); }
 .acompanhamento-titulo { margin: .65rem 0 .35rem; font-family: 'Fraunces', serif; font-size: 1.08rem; color: var(--texto); }
 .acompanhamento-texto { white-space: pre-wrap; font-size: .88rem; line-height: 1.6; color: var(--texto2); }
 .resposta-casal { margin-top: .9rem; padding: .85rem; background: var(--papel-baixo); border-left: 3px solid var(--terracota); border-radius: 0 var(--raio) var(--raio) 0; }
@@ -649,279 +654,19 @@ footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--c
   font-size: .8rem; line-height: 1.6; color: var(--casca);
   background: var(--papel-baixo); border-radius: var(--raio);
 }
+.reserva .acoes-reserva { display: flex; flex-wrap: wrap; justify-content: center; gap: .65rem; margin-top: .25rem; }
+.reserva .acoes-reserva .botao { min-width: 9.5rem; }
+.reserva .acoes-reserva .secundario { background: transparent; color: var(--musgo); border: 1px solid var(--linha); }
+.reserva .acoes-reserva .secundario:hover { background: var(--papel-baixo); }
 @keyframes girar { to { stroke-dashoffset: 0; } }
 @keyframes pular { 0% { transform: scale(.6); opacity: 0; } 45% { transform: scale(1.15); opacity: 1; } 100% { transform: scale(1); } }
-
-/* ══════════════════════════════════════
-   MELHORIAS DE DINÂMICA E MICROINTERAÇÃO
-══════════════════════════════════════ */
-
-/* entrada suave da grade — cada cartão nasce com leve atraso escalonado */
-.grade .item {
-  opacity: 0;
-  animation: nascer .55s cubic-bezier(.22,.9,.32,1) forwards;
-  animation-delay: calc(var(--atraso, 0) * 1ms);
-}
-@keyframes nascer {
-  from { opacity: 0; transform: translateY(14px) scale(.97); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-/* pressão tátil nos cartões — mais vivo ao toque/clique */
-.item { will-change: transform; }
-.item:active { transform: translateY(-1px) scale(.985); transition-duration: .12s; }
-
-/* brilho sutil ao passar o mouse na medalha do item */
-.item .medalha {
-  transition: transform .4s cubic-bezier(.34,1.4,.64,1), box-shadow .3s ease;
-}
-.item:hover .medalha { transform: scale(1.08) rotate(-4deg); box-shadow: 0 6px 16px var(--sombra); }
-.item.colhido:hover .medalha { transform: none; box-shadow: none; }
-
-/* selo de escolhido entra com uma pequena "carimbada" */
-.selo { animation: carimbar .4s cubic-bezier(.3,1.6,.5,1); }
-@keyframes carimbar {
-  0%   { opacity: 0; transform: rotate(4deg) scale(1.6); }
-  60%  { opacity: 1; }
-  100% { opacity: 1; transform: rotate(4deg) scale(1); }
-}
-
-/* botões — resposta mais viva ao clique, sem exagero */
-.botao:active { transform: scale(.96); }
-.botao {
-  position: relative; overflow: hidden;
-}
-.botao::after {
-  content: ''; position: absolute; inset: 0; border-radius: inherit;
-  background: radial-gradient(circle at var(--x,50%) var(--y,50%), rgba(255,255,255,.35), transparent 60%);
-  opacity: 0; transition: opacity .35s ease;
-  pointer-events: none;
-}
-.botao:hover::after { opacity: 1; }
-
-/* categorias — indicador de troca mais fluido */
-.cat { transform: translateZ(0); }
-.cat.ativa { box-shadow: 0 4px 14px var(--sombra); }
-.cat:active { transform: scale(.96); }
-
-/* números do topo — contagem "pulsa" suavemente quando atualiza */
-.numero b { transition: transform .3s cubic-bezier(.34,1.4,.64,1); display: inline-block; }
-.numero b.atualizou { animation: pulsarNumero .45s cubic-bezier(.34,1.4,.64,1); }
-@keyframes pulsarNumero {
-  0%   { transform: scale(1); }
-  40%  { transform: scale(1.18); }
-  100% { transform: scale(1); }
-}
-
-/* busca — foco com leve elevação */
-.busca input { transform: translateZ(0); transition: border-color .25s ease, box-shadow .25s ease; }
-.busca input:focus { box-shadow: 0 6px 18px var(--sombra); }
-.busca svg { transition: stroke .25s ease, transform .25s ease; }
-.busca input:focus ~ svg,
-.busca input:not(:placeholder-shown) ~ svg { stroke: var(--salvia); transform: translateY(-50%) scale(1.08); }
-
-/* botão de tema — giro completo e mais orgânico */
-.btn-tema { transition: border-color .25s ease, color .25s ease, transform .45s cubic-bezier(.34,1.2,.64,1); }
-.btn-tema:hover { transform: rotate(35deg) scale(1.06); }
-.btn-tema:active { transform: rotate(35deg) scale(.92); }
-.btn-tema svg { transition: opacity .25s ease, transform .35s ease; }
-.btn-tema.trocando svg { animation: girarTema .5s ease; }
-@keyframes girarTema {
-  0%   { opacity: 1; transform: rotate(0deg) scale(1); }
-  45%  { opacity: 0; transform: rotate(90deg) scale(.5); }
-  55%  { opacity: 0; transform: rotate(90deg) scale(.5); }
-  100% { opacity: 1; transform: rotate(180deg) scale(1); }
-}
-
-/* ramos decorativos — deriva muito sutil, como se balançassem ao vento */
-.ramo { animation: balancar 9s ease-in-out infinite; transform-origin: top center; }
-.ramo:nth-of-type(2) { animation-duration: 11s; animation-delay: -3s; }
-.ramo:nth-of-type(3) { animation-duration: 8s; animation-delay: -5s; }
-@keyframes balancar {
-  0%, 100% { transform: rotate(0deg); }
-  50%      { transform: rotate(.6deg); }
-}
-
-/* pix — ícone com leve "respiração" para chamar atenção sem ser intrusivo */
-.pix-convite .icone { transition: transform .3s cubic-bezier(.34,1.4,.64,1); }
-.pix-convite:hover .icone { transform: translateY(-2px) scale(1.08); }
-.pix-convite .seta { transition: transform .25s ease; }
-.pix-convite:hover .seta { transform: translateX(4px); }
-
-/* modais — saída suave além da entrada já existente */
-.veu.fechando { animation: sumir .22s ease forwards; }
-.veu.fechando .caixa,
-.veu.fechando .bandeja { animation: descer .22s cubic-bezier(.4,0,.6,1) forwards; }
-@keyframes sumir { to { opacity: 0; } }
-@keyframes descer { to { opacity: 0; transform: translateY(10px) scale(.98); } }
-
-/* linha de item no pix — leve deslize ao selecionar */
-.linha-item { transform: translateZ(0); }
-.linha-item .marca { transition: background-color .2s ease, border-color .2s ease, transform .25s cubic-bezier(.34,1.6,.64,1); }
-.linha-item.escolhido .marca { transform: scale(1.08); }
-
-/* cartão de sugestão pública — entra suavemente na lista */
-.sugestao-publica { animation: nascer .5s cubic-bezier(.22,.9,.32,1) both; }
-
-/* toast leve de confirmação, usado após enviar sugestão etc. */
-.toast-jardim {
-  position: fixed; left: 50%; bottom: 1.6rem; z-index: 1000;
-  transform: translate(-50%, 12px); opacity: 0;
-  display: flex; align-items: center; gap: .55rem;
-  padding: .8rem 1.15rem; max-width: calc(100vw - 2rem);
-  font-size: .85rem; color: var(--papel); background: var(--musgo);
-  border-radius: 999px; box-shadow: 0 14px 34px var(--sombra-alta);
-  transition: transform .35s cubic-bezier(.34,1.3,.64,1), opacity .3s ease;
-  pointer-events: none;
-}
-[data-theme="dark"] .toast-jardim { color: var(--papel-baixo); }
-.toast-jardim.mostrar { transform: translate(-50%, 0); opacity: 1; }
-.toast-jardim svg { width: 15px; height: 15px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
-/* skeleton — leve profundidade extra para não parecer "chapado" */
-.esqueleto div { box-shadow: inset 0 0 0 1px var(--linha); }
-
-/* semente — leve respiração contínua convidando o toque, discreta */
-.semente svg.icone { animation: respirarSemente 4s ease-in-out infinite; }
-.semente:hover svg.icone,
-.semente.germinando svg.icone { animation: none; }
-@keyframes respirarSemente {
-  0%, 100% { opacity: .85; }
-  50%      { opacity: 1; transform: scale(1.04); }
-}
-
-/* transição de tema mais orgânica no corpo inteiro */
-body, .item, .caixa, .bandeja, .barra-admin, .cartao-sugestao, .sugestao-publica {
-  transition: var(--transicao), box-shadow .3s ease;
-}
-
-@media (hover: none) {
-  .item:hover { transform: none; box-shadow: none; }
-  .item:active { transform: scale(.98); box-shadow: 0 6px 16px var(--sombra); }
-}
+.petalas { position: fixed; inset: 0; z-index: 1100; overflow: hidden; pointer-events: none; }
+.petala { position: absolute; top: -3rem; font-size: clamp(1.1rem, 2vw, 1.65rem); animation: cair-petala 1.9s ease-in forwards; }
+@keyframes cair-petala { 0% { transform: translate3d(0,-3rem,0) rotate(0); opacity: 0; } 12% { opacity: 1; } 100% { transform: translate3d(var(--desvio),108vh,0) rotate(440deg); opacity: 0; } }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
-  .grade .item { opacity: 1; animation: none; }
-  .semente svg.icone { animation: none; }
-  .ramo { animation: none; }
 }
-
-/* ══════════════════════════════════════
-   BARRA DE PROGRESSO — "jardim crescendo"
-══════════════════════════════════════ */
-.progresso-jardim { width: 100%; max-width: 360px; margin: 1.1rem auto 0; }
-.progresso-jardim .trilha {
-  position: relative; height: 10px; border-radius: 999px;
-  background: var(--papel-baixo); overflow: hidden;
-  box-shadow: inset 0 0 0 1px var(--linha);
-}
-.progresso-jardim .crescimento {
-  position: absolute; inset: 0 auto 0 0; width: 0%;
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--salvia), var(--folha));
-  transition: width 1s cubic-bezier(.22,.9,.32,1);
-}
-.progresso-jardim .crescimento::after {
-  content: ''; position: absolute; right: -1px; top: 50%; translate: 0 -50%;
-  width: 16px; height: 16px; border-radius: 50%;
-  background: var(--musgo); box-shadow: 0 0 0 3px var(--papel);
-  font-size: 10px; display: flex; align-items: center; justify-content: center;
-}
-.progresso-legenda {
-  display: block; margin-top: .45rem; text-align: center;
-  font-size: .78rem; color: var(--texto3);
-}
-
-/* ══════════════════════════════════════
-   ORDENAÇÃO
-══════════════════════════════════════ */
-.linha-ordenar {
-  display: flex; align-items: center; justify-content: flex-end; gap: .5rem;
-  max-width: 46rem; margin: .6rem auto 0; padding: 0 1.25rem;
-  font-size: .82rem; color: var(--texto3);
-}
-.linha-ordenar select {
-  font: inherit; font-size: .82rem; color: var(--texto);
-  background: var(--superficie); border: 1px solid var(--linha);
-  border-radius: 10px; padding: .4rem .7rem; cursor: pointer;
-  transition: border-color .2s ease, box-shadow .2s ease;
-}
-.linha-ordenar select:hover,
-.linha-ordenar select:focus { border-color: var(--salvia); box-shadow: 0 4px 14px var(--sombra); outline: none; }
-
-/* ══════════════════════════════════════
-   BOTÃO COPIAR LINK DO ITEM
-══════════════════════════════════════ */
-.item { position: relative; }
-.botao-copiar {
-  position: absolute; top: .65rem; right: .65rem; z-index: 2;
-  width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
-  border-radius: 50%; border: 1px solid var(--linha); background: var(--superficie);
-  color: var(--texto3); cursor: pointer;
-  opacity: 0; transform: translateY(-4px);
-  transition: opacity .2s ease, transform .2s ease, border-color .2s ease, color .2s ease, background .2s ease;
-}
-.item:hover .botao-copiar,
-.item:focus-within .botao-copiar,
-.botao-copiar:focus-visible { opacity: 1; transform: translateY(0); }
-.botao-copiar:hover { border-color: var(--salvia); color: var(--musgo); }
-.botao-copiar svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.botao-copiar.copiado { color: var(--musgo); border-color: var(--salvia); }
-@media (hover: none) { .botao-copiar { opacity: 1; transform: none; top: .55rem; right: .55rem; } }
-
-/* ══════════════════════════════════════
-   CAMPO DE NOME DO DOADOR (dentro do modal de reserva)
-══════════════════════════════════════ */
-.campo-doador { width: 100%; margin: .9rem 0 .2rem; text-align: left; }
-.campo-doador label {
-  display: block; font-size: .78rem; color: var(--texto3); margin-bottom: .35rem;
-}
-.campo-doador input {
-  width: 100%; font: inherit; font-size: .92rem; color: var(--texto);
-  background: var(--superficie); border: 1px solid var(--linha);
-  border-radius: 12px; padding: .65rem .85rem;
-  transition: border-color .2s ease, box-shadow .2s ease;
-}
-.campo-doador input:focus { outline: none; border-color: var(--salvia); box-shadow: 0 6px 16px var(--sombra); }
-.campo-doador .dica { display: block; margin-top: .35rem; font-size: .72rem; color: var(--texto3); opacity: .85; }
-
-/* ══════════════════════════════════════
-   CONTADOR "AO VIVO" — presença discreta
-══════════════════════════════════════ */
-.presenca-viva {
-  display: inline-flex; align-items: center; gap: .4rem;
-  margin-top: .7rem; font-size: .76rem; color: var(--texto3);
-}
-.presenca-viva .ponto {
-  width: 7px; height: 7px; border-radius: 50%; background: var(--salvia);
-  box-shadow: 0 0 0 0 rgba(143,169,140,.6);
-  animation: pulsarPonto 2.2s ease-in-out infinite;
-}
-@keyframes pulsarPonto {
-  0%   { box-shadow: 0 0 0 0 rgba(143,169,140,.55); }
-  70%  { box-shadow: 0 0 0 6px rgba(143,169,140,0); }
-  100% { box-shadow: 0 0 0 0 rgba(143,169,140,0); }
-}
-
-/* ══════════════════════════════════════
-   CONFETE DE FOLHAS/PÉTALAS — reforço ao reservar
-══════════════════════════════════════ */
-.confete-camada {
-  position: fixed; inset: 0; z-index: 1200; pointer-events: none; overflow: hidden;
-}
-.petala {
-  position: absolute; top: -20px; font-size: 1.1rem; opacity: .9;
-  animation: cairPetala linear forwards;
-}
-@keyframes cairPetala {
-  0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity: 1; }
-  100% { transform: translateY(105vh) translateX(var(--deriva, 40px)) rotate(var(--giro, 220deg)); opacity: .15; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .confete-camada { display: none; }
-}
-
 </style>
 </head>
 <body>
@@ -957,7 +702,6 @@ body, .item, .caixa, .bandeja, .barra-admin, .cartao-sugestao, .sugestao-publica
 <div class="barra-admin" id="barra-admin" hidden>
   <b>Modo jardineiro</b>
   <span id="admin-resumo"></span>
-  <button type="button" onclick="abrirSugestoesAdmin()">Ver sugestões</button>
   <button type="button" onclick="sairAdmin()">Sair</button>
 </div>
 
@@ -987,12 +731,11 @@ body, .item, .caixa, .bandeja, .barra-admin, .cartao-sugestao, .sugestao-publica
       <div class="numero colhido"><b id="n-colhidos">—</b><span>já escolhidos</span></div>
     </div>
 
-    <div class="progresso-jardim" id="progresso-jardim" role="progressbar" aria-label="Progresso do enxoval" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-      <div class="trilha">
-        <div class="crescimento" id="progresso-barra"></div>
-      </div>
-      <span class="progresso-legenda" id="progresso-legenda">O nosso jardim ainda está brotando 🌱</span>
+    <div class="jardim-progresso" id="jardim-progresso" aria-label="Progresso do enxoval">
+      <div class="legenda"><b>Nosso jardim está crescendo</b><span id="progresso-texto">Preparando…</span></div>
+      <div class="trilho-jardim"><span id="progresso-barra"></span></div>
     </div>
+    <p class="presenca" id="presenca" aria-live="polite" hidden><span id="presenca-texto"></span></p>
 
     <div class="pix-convite" role="button" tabindex="0" onclick="abrirPix()" onkeydown="if(event.key==='Enter')abrirPix()">
       <span class="icone">
@@ -1013,14 +756,12 @@ body, .item, .caixa, .bandeja, .barra-admin, .cartao-sugestao, .sugestao-publica
 
   <div class="categorias" id="categorias"></div>
 
-  <div class="linha-ordenar">
-    <label for="ordenar">Ordenar por</label>
-    <select id="ordenar" onchange="desenharGrade()" aria-label="Ordenar itens">
-      <option value="padrao">Padrão</option>
-      <option value="az">Nome (A–Z)</option>
-      <option value="za">Nome (Z–A)</option>
-      <option value="livres">Livres primeiro</option>
-      <option value="escolhidos">Escolhidos primeiro</option>
+  <div class="controles-lista">
+    <select class="ordenacao" id="ordenacao" onchange="alterarOrdenacao(this.value)" aria-label="Ordenar itens">
+      <option value="padrao">Ordenar: ordem da lista</option>
+      <option value="recentes">Mais recentes</option>
+      <option value="preco">Mais baratos</option>
+      <option value="categoria">Por categoria</option>
     </select>
   </div>
 
@@ -1052,7 +793,7 @@ body, .item, .caixa, .bandeja, .barra-admin, .cartao-sugestao, .sugestao-publica
     </div>
     <div class="sugestoes-publicas">
       <div class="sugestoes-publicas-cabecalho">
-        <h3>Ideias da comunidade</h3>
+        <h3 id="titulo-lista-sugestoes">Ideias da comunidade</h3>
         <span>Veja o andamento de cada uma</span>
       </div>
       <div class="lista-publica-sugestoes" id="lista-publica-sugestoes" aria-live="polite"></div>
@@ -1082,6 +823,7 @@ body, .item, .caixa, .bandeja, .barra-admin, .cartao-sugestao, .sugestao-publica
 let itens = [];
 let categoriaAtiva = "todos";
 let tokenAdmin = null;
+let ordenacaoAtiva = "padrao";
 
 const $ = id => document.getElementById(id);
 
@@ -1116,9 +858,6 @@ function aplicarTema(tema) {
   try { localStorage.setItem(CONFIG.chaves.tema, tema); } catch (e) {}
 }
 function alternarTema() {
-  const botao = $("btn-tema");
-  botao.classList.add("trocando");
-  setTimeout(() => botao.classList.remove("trocando"), 500);
   aplicarTema(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark");
 }
 
@@ -1140,6 +879,33 @@ async function carregarItens() {
   }
 }
 
+function idDePresenca() {
+  try {
+    let id = localStorage.getItem(CONFIG.chaves.presenca);
+    if (!id) {
+      id = (window.crypto && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`).replace(/[^a-zA-Z0-9_-]/g, "");
+      localStorage.setItem(CONFIG.chaves.presenca, id);
+    }
+    return id;
+  } catch (e) { return null; }
+}
+
+async function atualizarPresenca() {
+  const id = idDePresenca();
+  if (!id || document.visibilityState === "hidden") return;
+  try {
+    const res = await fetch("/api/presence", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id })
+    });
+    const dados = await res.json();
+    if (!res.ok || !Number.isFinite(dados.online)) return;
+    $("presenca-texto").textContent = `${dados.online} ${dados.online === 1 ? "pessoa está" : "pessoas estão"} vendo a lista agora`;
+    $("presenca").hidden = false;
+  } catch (e) {}
+}
+
 function tintDaCategoria(cat) {
   const achou = CONFIG.categorias.find(c => c.id === cat);
   return (achou && achou.id !== "todos" ? achou.tint : CONFIG.categorias[0].tint);
@@ -1153,65 +919,13 @@ function escapar(t)     { return String(t).replace(/[&<>"']/g, c => ({ "&":"&amp
 ═══════════════════════════════════════════ */
 function atualizarNumeros() {
   const colhidos = itens.filter(p => p.isClaimed).length;
-  const livresEl = $("n-livres"), colhidosEl = $("n-colhidos");
-  const livresNovo = String(itens.length - colhidos), colhidosNovo = String(colhidos);
-
-  if (livresEl.textContent !== livresNovo && livresEl.textContent !== "—") {
-    livresEl.classList.remove("atualizou"); void livresEl.offsetWidth; livresEl.classList.add("atualizou");
-  }
-  if (colhidosEl.textContent !== colhidosNovo && colhidosEl.textContent !== "—") {
-    colhidosEl.classList.remove("atualizou"); void colhidosEl.offsetWidth; colhidosEl.classList.add("atualizou");
-  }
-
-  livresEl.textContent = livresNovo;
-  colhidosEl.textContent = colhidosNovo;
+  $("n-livres").textContent   = itens.length - colhidos;
+  $("n-colhidos").textContent = colhidos;
+  const percentual = itens.length ? Math.round((colhidos / itens.length) * 100) : 0;
+  $("progresso-texto").textContent = itens.length ? `${colhidos} de ${itens.length} escolhidos · ${percentual}%` : "Sem itens por enquanto";
+  $("progresso-barra").style.width = `${percentual}%`;
+  $("jardim-progresso").style.setProperty("--progresso", `${percentual}%`);
   if (tokenAdmin) $("admin-resumo").textContent = `${colhidos} de ${itens.length} itens marcados`;
-
-  atualizarProgresso(colhidos);
-}
-
-/* barra "o jardim crescendo" — reflete a % de itens já escolhidos */
-const FRASES_PROGRESSO = [
-  [0,   "O nosso jardim ainda está brotando 🌱"],
-  [25,  "As primeiras flores já apareceram 🌸"],
-  [50,  "O jardim está florescendo bonito 🌷"],
-  [75,  "Quase tudo florido por aqui 🌼"],
-  [99,  "Faltam só os últimos cantinhos 🌻"],
-  [100, "Nosso jardim está completo! 💐"]
-];
-function atualizarProgresso(colhidos) {
-  const barra = $("progresso-barra");
-  const wrap  = $("progresso-jardim");
-  if (!barra || !itens.length) return;
-  const pct = Math.round((colhidos / itens.length) * 100);
-  barra.style.width = pct + "%";
-  wrap.setAttribute("aria-valuenow", String(pct));
-  const frase = FRASES_PROGRESSO.filter(([limite]) => pct >= limite).pop();
-  $("progresso-legenda").textContent = frase ? frase[1] : FRASES_PROGRESSO[0][1];
-}
-
-/* pequeno toast de confirmação, reaproveitável em várias ações */
-const CHECK_SVG = `<svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>`;
-let toastTimer = null;
-function mostrarToast(mensagem) {
-  let toast = document.querySelector(".toast-jardim");
-  if (!toast) {
-    toast = document.createElement("div");
-    toast.className = "toast-jardim";
-    toast.innerHTML = `${CHECK_SVG}<span></span>`;
-    document.body.appendChild(toast);
-  }
-  toast.querySelector("span").textContent = mensagem;
-  clearTimeout(toastTimer);
-  requestAnimationFrame(() => toast.classList.add("mostrar"));
-  toastTimer = setTimeout(() => toast.classList.remove("mostrar"), 3200);
-}
-
-/* fecha um véu/modal com animação de saída antes de remover do DOM */
-function fecharComAnimacao(tela, aoFinal) {
-  if (!tela) { if (aoFinal) aoFinal(); return; }
-  tela.classList.add("fechando");
-  setTimeout(() => { tela.remove(); if (aoFinal) aoFinal(); }, 220);
 }
 
 function desenharCategorias() {
@@ -1221,6 +935,9 @@ function desenharCategorias() {
 }
 function filtrarPor(id) { categoriaAtiva = id; desenharCategorias(); desenharGrade(); }
 function limparFiltros() { $("busca").value = ""; categoriaAtiva = "todos"; desenharCategorias(); desenharGrade(); }
+function alterarOrdenacao(valor) { ordenacaoAtiva = valor; desenharGrade(); }
+function precoDe(p) { const texto = String(p.preco ?? p.price ?? p.valor ?? "").replace(/[^0-9,.-]/g, "").replace(",", "."); return texto ? Number(texto) : NaN; }
+function dataDe(p) { return new Date(p.created_at || p.createdAt || p.data || 0).getTime() || 0; }
 
 const ZAP = `<svg viewBox="0 0 24 24"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.46-2.4-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.91-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.03 1.02-1.03 2.48s1.06 2.87 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.7.3 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2-1.42.25-.69.25-1.28.18-1.41-.08-.12-.28-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 01-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 01-1.51-5.26c0-5.45 4.44-9.89 9.89-9.89 2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 012.89 6.99c0 5.45-4.43 9.89-9.88 9.89m8.41-18.3A11.82 11.82 0 0012.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 005.69 1.45c6.55 0 11.88-5.32 11.88-11.88a11.85 11.85 0 00-3.48-8.41"/></svg>`;
 const SELO_SVG = `<svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
@@ -1229,16 +946,16 @@ function desenharGrade() {
   const busca = $("busca").value.toLowerCase().trim();
   const grade = $("grade");
 
-  let filtrados = itens.filter(p => {
+  const filtrados = itens.filter(p => {
     const bateCategoria = categoriaAtiva === "todos" || categoriaDe(p) === categoriaAtiva;
     return bateCategoria && nomeDe(p).toLowerCase().includes(busca);
   });
-
-  const ordem = $("ordenar") ? $("ordenar").value : "padrao";
-  if (ordem === "az") filtrados = [...filtrados].sort((a, b) => nomeDe(a).localeCompare(nomeDe(b), "pt-BR"));
-  else if (ordem === "za") filtrados = [...filtrados].sort((a, b) => nomeDe(b).localeCompare(nomeDe(a), "pt-BR"));
-  else if (ordem === "livres") filtrados = [...filtrados].sort((a, b) => (a.isClaimed === b.isClaimed) ? 0 : a.isClaimed ? 1 : -1);
-  else if (ordem === "escolhidos") filtrados = [...filtrados].sort((a, b) => (a.isClaimed === b.isClaimed) ? 0 : a.isClaimed ? -1 : 1);
+  filtrados.sort((a, b) => {
+    if (ordenacaoAtiva === "recentes") return dataDe(b) - dataDe(a) || Number(b.id) - Number(a.id);
+    if (ordenacaoAtiva === "preco") return (Number.isFinite(precoDe(a)) ? precoDe(a) : Infinity) - (Number.isFinite(precoDe(b)) ? precoDe(b) : Infinity);
+    if (ordenacaoAtiva === "categoria") return categoriaDe(a).localeCompare(categoriaDe(b), "pt-BR") || nomeDe(a).localeCompare(nomeDe(b), "pt-BR");
+    return Number(a.id) - Number(b.id);
+  });
 
   $("rotulo-contagem").textContent =
     `${filtrados.length} ${filtrados.length === 1 ? "item" : "itens"}`;
@@ -1249,14 +966,12 @@ function desenharGrade() {
   }
   grade.hidden = false; $("vazio").hidden = true;
 
-  const LINK_SVG = `<svg viewBox="0 0 24 24"><path d="M9 12a3.5 3.5 0 005 0l3-3a3.5 3.5 0 00-5-5l-1 1"/><path d="M15 12a3.5 3.5 0 00-5 0l-3 3a3.5 3.5 0 005 5l1-1"/></svg>`;
-
-  grade.innerHTML = filtrados.map((p, i) => {
+  grade.innerHTML = filtrados.map(p => {
     const id    = escapar(p.id);
     const nome  = escapar(nomeDe(p));
     const tint  = tintDaCategoria(categoriaDe(p));
     const emoji = p.emoji || "🌿";
-    const atraso = Math.min(i, 14) * 40;
+    const imagem = p.imagem || p.image || "";
 
     const rodapeCartao = p.isClaimed
       ? (tokenAdmin
@@ -1266,149 +981,127 @@ function desenharGrade() {
           ? `<button type="button" class="botao admin" data-id="${id}" onclick="alternarItem(event)">Marcar escolhido</button>`
           : `<button type="button" class="botao" data-id="${id}" onclick="irParaWhatsApp(event)">${ZAP} Quero presentear</button>`);
 
-    // Nome de quem presenteou só é renderizado quando o backend o enviou
-    // (isso só acontece para admins autenticados — ver products.js).
-    const rotuloDoador = (tokenAdmin && p.isClaimed && p.doadorNome)
-      ? `<p class="doador-admin">Presente de: <b>${escapar(p.doadorNome)}</b></p>` : "";
-
     return `
-      <article class="item${p.isClaimed ? " colhido" : ""}" style="--atraso:${atraso}">
-        <button type="button" class="botao-copiar" data-id="${id}" onclick="copiarLinkItem(event)" title="Copiar link deste item" aria-label="Copiar link deste item">${LINK_SVG}</button>
+      <article class="item${p.isClaimed ? " colhido" : ""}">
         ${p.isClaimed ? `<span class="selo">${SELO_SVG} escolhido</span>` : ""}
-        <div class="medalha" style="background:${tint}">${emoji}</div>
+        <div class="medalha" style="background:${tint}">${imagem ? `<img loading="lazy" decoding="async" src="${escapar(imagem)}" alt="" />` : emoji}</div>
         <h3 class="nome">${nome}</h3>
-        ${rotuloDoador}
         ${rodapeCartao}
       </article>`;
   }).join("");
-
-  destacarItemDaUrl();
 }
-
-/* copia um link direto para o item (?item=ID) para compartilhar */
-function copiarLinkItem(evento) {
-  evento.stopPropagation();
-  const botao = evento.currentTarget;
-  const id = botao.dataset.id;
-  const url = `${location.origin}${location.pathname}?item=${encodeURIComponent(id)}`;
-
-  const aoCopiar = () => {
-    botao.classList.add("copiado");
-    mostrarToast("Link do item copiado!");
-    setTimeout(() => botao.classList.remove("copiado"), 1600);
-  };
-
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(url).then(aoCopiar).catch(() => prompt("Copie o link:", url));
-  } else {
-    prompt("Copie o link:", url);
-  }
-}
-
-/* se a página abrir com ?item=ID, realça o card correspondente */
-function destacarItemDaUrl() {
-  const params = new URLSearchParams(location.search);
-  const alvo = params.get("item");
-  if (!alvo) return;
-  const cartao = Array.from($("grade").children).find((el, idx) => {
-    const botao = el.querySelector(".botao-copiar");
-    return botao && botao.dataset.id === alvo;
-  });
-  if (cartao) {
-    cartao.scrollIntoView({ behavior: "smooth", block: "center" });
-    cartao.style.outline = "2px solid var(--salvia)";
-    cartao.style.outlineOffset = "3px";
-    setTimeout(() => { cartao.style.outline = ""; cartao.style.outlineOffset = ""; }, 2200);
-  }
-}
-
-/* efeito radial no botão acompanha a posição do ponteiro/toque */
-document.addEventListener("pointermove", e => {
-  const botao = e.target.closest(".botao");
-  if (!botao) return;
-  const r = botao.getBoundingClientRect();
-  botao.style.setProperty("--x", `${((e.clientX - r.left) / r.width) * 100}%`);
-  botao.style.setProperty("--y", `${((e.clientY - r.top) / r.height) * 100}%`);
-});
 
 /* ═══════════════════════════════════════════
-   WHATSAPP — pede o nome de quem presenteia,
-   registra a reserva de verdade na API e só
-   depois conta regressivamente para o redirect.
-   location.href (e não window.open) para não ser
-   bloqueado no iOS Safari e no navegador da Samsung.
+   WHATSAPP — reserva, contagem e confirmação.
 ═══════════════════════════════════════════ */
 function montarLink(texto) {
   return "https://wa.me/" + CONFIG.contato.whatsapp + "?text=" + encodeURIComponent(texto);
 }
 
-function irParaWhatsApp(evento) {
+async function irParaWhatsApp(evento) {
   evento.stopPropagation();
+  const botao = evento.currentTarget;
   const id = evento.currentTarget.dataset.id;
   const item = itens.find(p => String(p.id) === id);
   if (!item) return;
-  pedirNomeDoador(item);
-}
 
-/* pequeno modal pedindo o nome de quem está presenteando.
-   O nome é opcional, mas incentivado: fica visível só para os
-   noivos no painel admin, nunca em qualquer lugar público. */
-function pedirNomeDoador(item) {
-  const tela = document.createElement("div");
-  tela.className = "veu";
-  tela.innerHTML = `
-    <div class="caixa">
-      <button type="button" class="fechar" onclick="fecharComAnimacao(this.closest('.veu'), () => { document.body.style.overflow=''; })" aria-label="Fechar">✕</button>
-      <h3>Quase lá!</h3>
-      <p class="item-nome">${escapar(nomeDe(item))}</p>
-      <p class="aviso-sub">Como podemos te chamar? Assim o casal sabe quem presenteou — seu nome não aparece para outros visitantes.</p>
-      <form class="campo-doador" onsubmit="return false;">
-        <label for="input-doador">Seu nome (opcional)</label>
-        <input type="text" id="input-doador" maxlength="80" placeholder="Ex.: Ana e Marcos" autocomplete="name" />
-        <span class="dica">Só o casal vê essa informação.</span>
-      </form>
-      <button type="button" class="botao" id="btn-confirmar-doador">${ZAP} Continuar para o WhatsApp</button>
-    </div>`;
-  document.body.appendChild(tela);
-  document.body.style.overflow = "hidden";
-  setTimeout(() => tela.querySelector("#input-doador").focus(), 250);
+  botao.disabled = true;
+  const nomePessoa = await pedirNomeParaReserva();
+  if (!nomePessoa) {
+    botao.disabled = false;
+    return;
+  }
 
-  const confirmar = () => {
-    const nomeDoador = tela.querySelector("#input-doador").value.trim().slice(0, 80);
-    fecharComAnimacao(tela, () => {
-      document.body.style.overflow = "";
-      confirmarReserva(item, nomeDoador);
-    });
-  };
-  tela.querySelector("#btn-confirmar-doador").onclick = confirmar;
-  tela.querySelector("#input-doador").addEventListener("keydown", e => { if (e.key === "Enter") confirmar(); });
-}
-
-/* registra a reserva de verdade no backend (com o nome, se informado)
-   e só então mostra a contagem regressiva + confete + WhatsApp */
-async function confirmarReserva(item, nomeDoador) {
-  const nome = nomeDe(item);
-  const link = montarLink(
-    `Olá, ${CONFIG.casal.nomes}!\n\nQuero presentear vocês com este item da lista:\n\n*${nome}*\n\nMe confirmem se ainda está disponível.`
-  );
-
+  botao.textContent = "Reservando…";
   try {
     const res = await fetch("/api/products", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ item_id: item.id, doador_nome: nomeDoador || undefined })
+      body: JSON.stringify({ item_id: id })
     });
-    if (res.ok) {
-      item.isClaimed = true;
-      atualizarNumeros();
-      desenharGrade();
-      soltarConfete();
+    const dados = await res.json();
+    if (!res.ok) throw new Error(dados.error || "Não foi possível reservar este item.");
+    if (dados.alreadyClaimed) {
+      await carregarItens();
+      alert("Este item acabou de ser escolhido por outra pessoa.");
+      return;
     }
-  } catch (e) {
-    // Sem conexão: seguimos para o WhatsApp mesmo assim — o casal confirma por lá.
+  } catch (erro) {
+    botao.disabled = false;
+    botao.innerHTML = `${ZAP} Quero presentear`;
+    alert(erro.message || "Não foi possível reservar agora. Tente novamente.");
+    return;
   }
 
+  const nome = nomeDe(item);
+  const link = montarLink(
+    `Olá, ${CONFIG.casal.nomes}!\n\nEu sou *${nomePessoa}* e quero presentear vocês com este item da lista:\n\n*${nome}*\n\nMe confirmem se ainda está disponível.`
+  );
+
+  item.isClaimed = true;
+  atualizarNumeros();
+  desenharGrade();
+  soltarPetalas();
   mostrarReserva(nome, link);
+}
+
+function pedirNomeParaReserva() {
+  return new Promise(resolve => {
+    const tela = document.createElement("div");
+    tela.className = "veu";
+    tela.innerHTML = `
+      <form class="caixa" novalidate>
+        <h2>Que alegria ter você aqui! 🌿</h2>
+        <p class="sub">Antes de reservar, informe seu nome para o casal saber quem escolheu o presente.</p>
+        <label for="nome-presenteador">Seu nome</label>
+        <input type="text" id="nome-presenteador" maxlength="60" autocomplete="name" required placeholder="Como podemos te chamar?" />
+        <p class="erro" id="erro-nome-presenteador" hidden></p>
+        <div class="acoes">
+          <button class="voltar" type="button">Agora não</button>
+          <button class="entrar" type="submit">Continuar</button>
+        </div>
+      </form>`;
+
+    const fechar = valor => {
+      tela.remove();
+      resolve(valor);
+    };
+    const campo = tela.querySelector("#nome-presenteador");
+    const erro = tela.querySelector("#erro-nome-presenteador");
+    tela.querySelector(".voltar").addEventListener("click", () => fechar(null));
+    tela.querySelector("form").addEventListener("submit", evento => {
+      evento.preventDefault();
+      const nome = campo.value.trim().replace(/\s+/g, " ");
+      if (nome.length < 2) {
+        erro.textContent = "Informe seu nome para continuar.";
+        erro.hidden = false;
+        campo.focus();
+        return;
+      }
+      fechar(nome);
+    });
+    tela.addEventListener("click", evento => { if (evento.target === tela) fechar(null); });
+    document.body.appendChild(tela);
+    campo.focus();
+  });
+}
+
+function soltarPetalas() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const camada = document.createElement("div");
+  camada.className = "petalas";
+  const flores = ["✿", "❀", "✾", "🌸"];
+  for (let i = 0; i < 24; i += 1) {
+    const petala = document.createElement("span");
+    petala.className = "petala";
+    petala.textContent = flores[i % flores.length];
+    petala.style.left = `${Math.random() * 100}%`;
+    petala.style.setProperty("--desvio", `${-120 + Math.random() * 240}px`);
+    petala.style.animationDelay = `${Math.random() * .35}s`;
+    camada.appendChild(petala);
+  }
+  document.body.appendChild(camada);
+  setTimeout(() => camada.remove(), 2500);
 }
 
 function mostrarReserva(nome, link) {
@@ -1433,9 +1126,7 @@ function mostrarReserva(nome, link) {
     resta--;
     if (resta <= 0) {
       clearInterval(timer);
-      tela.remove();
-      document.body.style.overflow = "";
-      window.location.href = link;
+      pedirRedirecionamento(tela, link);
       return;
     }
     contador.textContent = resta;
@@ -1445,32 +1136,29 @@ function mostrarReserva(nome, link) {
   }, 1000);
 }
 
-/* chuva breve de folhinhas/pétalas para celebrar a reserva */
-const EMOJIS_CONFETE = ["🌿", "🌸", "🍃", "🌼", "🌷"];
-function soltarConfete() {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const camada = document.createElement("div");
-  camada.className = "confete-camada";
-  const total = 18;
-  for (let i = 0; i < total; i++) {
-    const petala = document.createElement("span");
-    petala.className = "petala";
-    petala.textContent = EMOJIS_CONFETE[i % EMOJIS_CONFETE.length];
-    const esquerda = Math.random() * 100;
-    const duracao = 2.4 + Math.random() * 1.6;
-    const atraso = Math.random() * .5;
-    const deriva = (Math.random() * 140 - 70) + "px";
-    const giro = (Math.random() * 360 + 120) + "deg";
-    petala.style.left = esquerda + "%";
-    petala.style.fontSize = (0.9 + Math.random() * 0.8) + "rem";
-    petala.style.animationDuration = duracao + "s";
-    petala.style.animationDelay = atraso + "s";
-    petala.style.setProperty("--deriva", deriva);
-    petala.style.setProperty("--giro", giro);
-    camada.appendChild(petala);
-  }
-  document.body.appendChild(camada);
-  setTimeout(() => camada.remove(), 4200);
+function fecharReserva(tela) {
+  tela.remove();
+  document.body.style.overflow = "";
+}
+
+function pedirRedirecionamento(tela, link) {
+  tela.querySelector(".relogio").remove();
+  tela.querySelector("h3").textContent = "Item reservado com carinho!";
+  tela.querySelector(".aviso-sub").textContent = "Deseja ser redirecionado para o WhatsApp e avisar o casal?";
+  tela.querySelector(".lembrete").remove();
+
+  const acoes = document.createElement("div");
+  acoes.className = "acoes-reserva";
+  acoes.innerHTML = `
+    <button type="button" class="botao secundario">Agora não</button>
+    <button type="button" class="botao">${ZAP} Abrir WhatsApp</button>`;
+  const [cancelar, confirmar] = acoes.querySelectorAll("button");
+  cancelar.addEventListener("click", () => fecharReserva(tela));
+  confirmar.addEventListener("click", () => {
+    fecharReserva(tela);
+    window.location.href = link;
+  });
+  tela.appendChild(acoes);
 }
 
 /* ═══════════════════════════════════════════
@@ -1531,7 +1219,9 @@ function enviarPix() {
 }
 
 function fecharPix() {
-  fecharComAnimacao($("tela-pix"), () => { document.body.style.overflow = ""; });
+  const tela = $("tela-pix");
+  if (tela) tela.remove();
+  document.body.style.overflow = "";
 }
 
 /* ═══════════════════════════════════════════
@@ -1607,7 +1297,6 @@ async function enviarSugestao(evento) {
     if (!res.ok) throw new Error(dados.error || "Não foi possível enviar.");
     retorno.className = "retorno-sugestao sucesso";
     retorno.textContent = "Sugestão enviada! Ela já está no mural e em breve receberá uma atualização.";
-    mostrarToast("Sugestão enviada com sucesso 🌱");
     botao.remove();
     evento.target.querySelector(".voltar").textContent = "Ver mural";
     evento.target.querySelector(".voltar").onclick = () => { fecharSugestao(); carregarSugestoesPublicas(); document.getElementById("convite-sugestao").scrollIntoView({ behavior: "smooth", block: "center" }); };
@@ -1620,7 +1309,9 @@ async function enviarSugestao(evento) {
 }
 
 function fecharSugestao() {
-  fecharComAnimacao($("tela-sugestao"), () => { document.body.style.overflow = ""; });
+  const tela = $("tela-sugestao");
+  if (tela) tela.remove();
+  document.body.style.overflow = "";
 }
 
 function renderSugestaoPublica(sugestao) {
@@ -1637,6 +1328,7 @@ function renderSugestaoPublica(sugestao) {
 async function carregarSugestoesPublicas() {
   const lista = $("lista-publica-sugestoes");
   if (!lista || !CONFIG.sugestoesAtivas) return;
+  if (tokenAdmin) return carregarSugestoesAdmin(lista);
   lista.innerHTML = '<p class="vazio-sugestoes">Carregando ideias…</p>';
   try {
     const res = await fetch("/api/suggestions");
@@ -1648,28 +1340,12 @@ async function carregarSugestoesPublicas() {
   }
 }
 
-async function abrirSugestoesAdmin() {
-  const tela = document.createElement("div");
-  tela.className = "veu";
-  tela.id = "tela-sugestoes-admin";
-  tela.innerHTML = `
-    <div class="caixa painel-sugestoes" role="dialog" aria-modal="true" aria-labelledby="painel-sugestoes-titulo">
-      <h2 id="painel-sugestoes-titulo">Jardim de ideias</h2>
-      <p class="sub">Atualize o andamento e deixe uma resposta para quem enviou a sugestão.</p>
-      <div class="lista" id="lista-sugestoes"><p class="sub">Carregando…</p></div>
-      <div class="acoes"><button class="voltar" type="button" onclick="fecharSugestoesAdmin()">Fechar</button></div>
-    </div>`;
-  tela.addEventListener("click", e => { if (e.target === tela) fecharSugestoesAdmin(); });
-  document.body.appendChild(tela);
-  document.body.style.overflow = "hidden";
-  await carregarSugestoesAdmin();
-}
-
-async function carregarSugestoesAdmin() {
-  const lista = $("lista-sugestoes");
+async function carregarSugestoesAdmin(lista = $("lista-publica-sugestoes")) {
+  if (!lista) return;
+  lista.innerHTML = '<p class="vazio-sugestoes">Carregando sugestões para gerenciar…</p>';
   try {
     const res = await fetch("/api/suggestions", { headers: { "x-admin-token": tokenAdmin || "" } });
-    if (res.status === 401) { fecharSugestoesAdmin(); sairAdmin(); alert("Sua sessão expirou."); return; }
+    if (res.status === 401) { sairAdmin(); alert("Sua sessão expirou."); return; }
     const sugestoes = await res.json();
     if (!res.ok) throw new Error();
     if (!sugestoes.length) { lista.innerHTML = `<p class="sub">Nenhuma sugestão recebida ainda.</p>`; return; }
@@ -1707,10 +1383,9 @@ async function salvarSugestaoAdmin(evento) {
       headers: { "Content-Type": "application/json", "x-admin-token": tokenAdmin || "" },
       body: JSON.stringify({ id: cartao.dataset.id, status: cartao.querySelector(".admin-status").value, resposta: cartao.querySelector(".admin-resposta").value })
     });
-    if (res.status === 401) { fecharSugestoesAdmin(); sairAdmin(); alert("Sua sessão expirou."); return; }
+    if (res.status === 401) { sairAdmin(); alert("Sua sessão expirou."); return; }
     const dados = await res.json();
     if (!res.ok) throw new Error(dados.error || "Não foi possível salvar.");
-    carregarSugestoesPublicas();
     await carregarSugestoesAdmin();
   } catch (e) {
     botao.disabled = false; botao.textContent = "Salvar atualização";
@@ -1724,15 +1399,10 @@ async function excluirSugestao(evento) {
   botao.disabled = true;
   try {
     const res = await fetch("/api/suggestions", { method: "DELETE", headers: { "Content-Type": "application/json", "x-admin-token": tokenAdmin || "" }, body: JSON.stringify({ id: botao.dataset.id }) });
-    if (res.status === 401) { fecharSugestoesAdmin(); sairAdmin(); alert("Sua sessão expirou."); return; }
+    if (res.status === 401) { sairAdmin(); alert("Sua sessão expirou."); return; }
     if (!res.ok) throw new Error();
-    carregarSugestoesPublicas();
     await carregarSugestoesAdmin();
   } catch (e) { botao.disabled = false; alert("Não foi possível excluir a sugestão."); }
-}
-
-function fecharSugestoesAdmin() {
-  fecharComAnimacao($("tela-sugestoes-admin"), () => { document.body.style.overflow = ""; });
 }
 
 /* ═══════════════════════════════════════════
@@ -1855,14 +1525,18 @@ async function entrarAdmin() {
 }
 
 function fecharPortao() {
-  fecharComAnimacao($("tela-portao"), () => { document.body.style.overflow = ""; });
+  const tela = $("tela-portao");
+  if (tela) tela.remove();
+  document.body.style.overflow = "";
 }
 
 function ligarModoAdmin() {
   $("barra-admin").hidden = false;
   $("semente").style.visibility = "hidden";
+  $("titulo-lista-sugestoes").textContent = "Gerenciar sugestões";
   atualizarNumeros();
   desenharGrade();
+  carregarSugestoesPublicas();
 }
 
 function sairAdmin() {
@@ -1870,7 +1544,9 @@ function sairAdmin() {
   try { sessionStorage.removeItem(CONFIG.chaves.sessao); } catch (e) {}
   $("barra-admin").hidden = true;
   $("semente").style.visibility = "visible";
+  $("titulo-lista-sugestoes").textContent = "Ideias da comunidade";
   desenharGrade();
+  carregarSugestoesPublicas();
 }
 
 async function alternarItem(evento) {
@@ -1915,59 +1591,11 @@ async function alternarItem(evento) {
 
     carregarItens();
     if (CONFIG.sugestoesAtivas) carregarSugestoesPublicas();
-    iniciarAtualizacaoAoVivo();
+    atualizarPresenca();
+    setInterval(atualizarPresenca, 45000);
+    document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") atualizarPresenca(); });
   });
 })();
-
-/* ═══════════════════════════════════════════
-   ATUALIZAÇÃO "AO VIVO"
-   Verifica a cada 25s se algum item mudou de
-   status (sem interromper o que a pessoa está
-   fazendo) e mostra quando foi a última checagem —
-   é uma indicação honesta de frescor dos dados,
-   não uma contagem inventada de visitantes.
-═══════════════════════════════════════════ */
-function iniciarAtualizacaoAoVivo() {
-  const contagem = $("contagem");
-  if (!contagem || contagem.querySelector(".presenca-viva")) return;
-
-  const selo = document.createElement("div");
-  selo.className = "presenca-viva";
-  selo.innerHTML = `<span class="ponto"></span><span id="presenca-texto">atualizado agora</span>`;
-  contagem.appendChild(selo);
-
-  let segundosDesdeChecagem = 0;
-  setInterval(async () => {
-    segundosDesdeChecagem += 5;
-    const texto = $("presenca-texto");
-    if (texto) {
-      texto.textContent = segundosDesdeChecagem < 60
-        ? "atualizado agora"
-        : `atualizado há ${Math.floor(segundosDesdeChecagem / 60)} min`;
-    }
-
-    if (segundosDesdeChecagem % 25 !== 0) return;
-    // Modo admin tem sua própria visão (com nomes) — não sobrescrever silenciosamente.
-    if (tokenAdmin) return;
-    try {
-      const res = await fetch("/api/products");
-      if (!res.ok) return;
-      const atualizados = await res.json();
-      const mudou = atualizados.length !== itens.length ||
-        atualizados.some(novo => {
-          const antigo = itens.find(p => String(p.id) === String(novo.id));
-          return !antigo || antigo.isClaimed !== novo.isClaimed;
-        });
-      if (mudou) {
-        itens = atualizados;
-        atualizarNumeros();
-        desenharGrade();
-      }
-      segundosDesdeChecagem = 0;
-      if (texto) texto.textContent = "atualizado agora";
-    } catch (e) { /* silencioso — tenta de novo no próximo ciclo */ }
-  }, 5000);
-}
 </script>
 </body>
 </html>

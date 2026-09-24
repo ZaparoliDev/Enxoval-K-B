@@ -6,6 +6,31 @@ const DB_NAME       = process.env.MONGODB_DB          || 'enxoval';
 const PRODUCTS_COLL = process.env.MONGODB_PRODUCTS    || 'products';
 const CLAIMED_COLL  = process.env.MONGODB_CLAIMED     || 'claimed_items';
 
+// Itens iniciais adicionados na segunda versão da lista. A semeadura é idempotente:
+// nomes que já existirem no Atlas não são duplicados.
+const INITIAL_PRODUCTS = [
+  { id: 6,  name: 'Micro-ondas', categoria: 'cozinha', emoji: '📡' },
+  { id: 7,  name: 'Forno elétrico', categoria: 'cozinha', emoji: '🔥' },
+  { id: 8,  name: 'Sanduicheira', categoria: 'cozinha', emoji: '🥪' },
+  { id: 9,  name: 'Pipoqueira elétrica', categoria: 'cozinha', emoji: '🍿' },
+  { id: 10, name: 'Jogo de jantar', categoria: 'cozinha', emoji: '🍽️' },
+  { id: 11, name: 'Jogo de copos grande', categoria: 'cozinha', emoji: '🥛' },
+  { id: 12, name: 'Panela de pressão 2 litros', categoria: 'cozinha', emoji: '🍲' },
+  { id: 13, name: 'Panela de pressão 4 litros', categoria: 'cozinha', emoji: '🍲' },
+  { id: 14, name: 'Omeleteira elétrica — 2 unidades', categoria: 'cozinha', emoji: '🍳' },
+  { id: 15, name: 'Varal de parede em alumínio — 1,20 m', categoria: 'servico', emoji: '👕' },
+  { id: 16, name: 'Porta-tempero giratório de alumínio', categoria: 'cozinha', emoji: '🧂' },
+  { id: 17, name: 'Fatiador profissional 16 em 1', categoria: 'cozinha', emoji: '🔪' },
+  { id: 18, name: 'Jogo americano decorado', categoria: 'deco', emoji: '🍽️' },
+  { id: 19, name: 'Chaleira elétrica', categoria: 'cozinha', emoji: '🫖' },
+  { id: 20, name: 'Batedeira', categoria: 'cozinha', emoji: '🥣' },
+  { id: 21, name: 'Kit de fouet', categoria: 'cozinha', emoji: '🥄' },
+  { id: 22, name: 'Kit de colheres de silicone', categoria: 'cozinha', emoji: '🥄' },
+  { id: 23, name: 'Kit de talheres', categoria: 'cozinha', emoji: '🍴' },
+  { id: 24, name: 'Boleira de vidro', categoria: 'deco', emoji: '🎂' },
+  { id: 25, name: 'Kit de toalha de mesa', categoria: 'deco', emoji: '🧺' }
+];
+
 let cachedClient = null;
 
 async function connectToDatabase() {
@@ -14,6 +39,24 @@ async function connectToDatabase() {
   await client.connect();
   cachedClient = client;
   return client;
+}
+
+function normalizarNome(nome) {
+  return String(nome || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+    .toLowerCase();
+}
+
+async function semearItensIniciais(collection, products) {
+  const nomesExistentes = new Set(products.map(product => normalizarNome(product.name || product.nome)));
+  const faltantes = INITIAL_PRODUCTS
+    .filter(product => !nomesExistentes.has(normalizarNome(product.name)))
+    .map(product => ({ ...product, created_at: new Date() }));
+
+  if (faltantes.length) await collection.insertMany(faltantes);
+  return [...products, ...faltantes];
 }
 
 module.exports = async (req, res) => {
@@ -31,22 +74,16 @@ module.exports = async (req, res) => {
     // GET — lista os produtos cruzando com os itens já reservados
     // ─────────────────────────────────────────────────────────────
     if (req.method === 'GET') {
-      const products     = await db.collection(PRODUCTS_COLL).find({}).toArray();
+      const collection = db.collection(PRODUCTS_COLL);
+      let products = await collection.find({}).toArray();
+      products = await semearItensIniciais(collection, products);
       const claimedItems = await db.collection(CLAIMED_COLL).find({}).toArray();
 
-      const claimedById = new Map(claimedItems.map(item => [String(item.item_id).trim(), item]));
-      const isAdmin = verifyToken(req.headers['x-admin-token']);
+      const claimedIds = new Set(claimedItems.map(item => String(item.item_id).trim()));
 
       const productsWithStatus = products.map(product => {
         const id = product.id || product.item_id || product._id;
-        const claimed = claimedById.get(String(id).trim());
-        const base = { ...product, id, isClaimed: !!claimed };
-        // O nome de quem presenteou só é exposto para admins autenticados.
-        if (isAdmin && claimed) {
-          base.doadorNome = claimed.doador_nome || null;
-          base.claimedAt = claimed.claimed_at || null;
-        }
-        return base;
+        return { ...product, id, isClaimed: claimedIds.has(String(id).trim()) };
       });
 
       productsWithStatus.sort((a, b) => Number(a.id) - Number(b.id));
@@ -57,7 +94,7 @@ module.exports = async (req, res) => {
     // POST — reserva de item (público) ou liberar/marcar (admin)
     // ─────────────────────────────────────────────────────────────
     if (req.method === 'POST') {
-      const { item_id, toggleAdmin, doador_nome } = req.body || {};
+      const { item_id, toggleAdmin } = req.body || {};
 
       if (!item_id) {
         return res.status(400).json({ error: 'O item_id é obrigatório.' });
@@ -82,21 +119,13 @@ module.exports = async (req, res) => {
         return res.status(200).json({ success: true, message: 'Item marcado.' });
       }
 
-      // Reserva comum: só marca o que ainda está livre, nunca desmarca.
-      // O nome de quem presenteou é opcional, mas quando enviado fica
-      // guardado só para o painel admin — nunca aparece no mural público.
-      const nomeLimpo = typeof doador_nome === 'string' ? doador_nome.trim().slice(0, 80) : '';
-
+      // Reserva comum: só marca o que ainda está livre, nunca desmarca
       const alreadyClaimed = await db.collection(CLAIMED_COLL).findOne(query);
       if (alreadyClaimed) {
-        return res.status(200).json({ success: true, message: 'Item já estava reservado.' });
+        return res.status(200).json({ success: true, alreadyClaimed: true, message: 'Item já estava reservado.' });
       }
 
-      await db.collection(CLAIMED_COLL).insertOne({
-        item_id,
-        claimed_at: new Date(),
-        doador_nome: nomeLimpo || null
-      });
+      await db.collection(CLAIMED_COLL).insertOne({ item_id, claimed_at: new Date() });
       return res.status(200).json({ success: true });
     }
 
