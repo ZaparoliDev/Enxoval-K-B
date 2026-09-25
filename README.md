@@ -46,7 +46,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 Database `enxoval` (ou o nome em `MONGODB_DB`), com três coleções:
 
-- **`products`** — `id`, `name` (ou `nome`), `categoria`, `emoji`, `preco` e `imagem` opcionais. Os itens iniciais da versão 2 são inseridos automaticamente sem duplicar nomes existentes.
+- **`products`** — `id`, `name` (ou `nome`), `categoria`, `emoji`, `preco`, `imagem` e `link` opcionais. Os itens iniciais da versão 2 são inseridos automaticamente sem duplicar nomes existentes. No modo administrador, **Enviar foto** permite escolher um arquivo JPG, PNG ou WebP, que é otimizado e guardado no MongoDB; **Link de referência** define o endereço exibido na prévia do presente.
 - **`claimed_items`** — `item_id`, `claimed_at`
 - **`suggestions`** — `nome`, `titulo`, `mensagem`, `status`, `resposta`,
   `created_at`, `updated_at` (criada automaticamente no primeiro envio)

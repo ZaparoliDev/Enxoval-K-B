@@ -22,7 +22,7 @@ const CONFIG = {
   },
 
   evento: {
-    titulo:   "Enxoval de casa nova",
+    titulo:   "Enxoval para nossa casa",
     chamada:  "A nossa casa começa aqui"
   },
 
@@ -32,7 +32,7 @@ const CONFIG = {
   },
 
   textos: {
-    subtitulo:    "Escolha um item da lista e avise a gente pelo WhatsApp. Cada presente vira um pedaço da nossa casa nova.",
+    subtitulo:    "Escolha um item da lista e avise a gente pelo WhatsApp. Cada presente vira um pedaço da nossa casa.",
     rodape:       "Feito com carinho para o nosso primeiro lar",
     pixChamada:   "Não achou na cor certa?",
     pixDetalhe:   "Você pode mandar o valor do presente no Pix.",
@@ -354,6 +354,9 @@ header { text-align: center; padding: 2.5rem 0 3rem; position: relative; }
 .botao svg { width: 14px; height: 14px; fill: currentColor; }
 .botao.admin { background: transparent; color: var(--terracota); border: 1px solid var(--terracota); }
 .botao.admin:hover { background: var(--terracota); color: var(--papel); }
+.acoes-admin-item { display: grid; gap: .45rem; }
+.arquivo-foto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+.botao.arquivo { display: inline-flex; align-items: center; justify-content: center; min-height: 34px; }
 
 .item.colhido { border-style: dashed; border-color: var(--linha-forte); }
 .item.colhido .medalha, .item.colhido .nome { opacity: .42; filter: saturate(.4); }
@@ -470,6 +473,10 @@ footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--c
   font-family: 'Fraunces', serif; font-weight: 400; font-size: 1.45rem;
   color: var(--musgo); margin-bottom: .4rem;
 }
+.caixa.previa-item { max-width: 29rem; }
+.previa-midia { width: min(100%, 14rem); aspect-ratio: 1; margin: .8rem auto 1rem; display: grid; place-items: center; overflow: hidden; border-radius: var(--raio); background: var(--papel-baixo); font-size: 4rem; }
+.previa-midia img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.05); }
+.link-referencia { display: inline-flex; margin: .15rem auto .2rem; color: var(--texto2); font-size: .84rem; text-decoration: underline; text-underline-offset: .2rem; }
 .caixa p.sub { font-size: .85rem; color: var(--texto2); line-height: 1.6; margin-bottom: 1.3rem; }
 .caixa label { display: block; margin: .9rem 0 .35rem; text-align: left; font-size: .8rem; color: var(--texto2); }
 .caixa input[type="text"], .caixa textarea {
@@ -973,13 +980,16 @@ function desenharGrade() {
     const emoji = p.emoji || "🌿";
     const imagem = p.imagem || p.image || "";
 
-    const rodapeCartao = p.isClaimed
+    const acaoReservaAdmin = p.isClaimed
       ? (tokenAdmin
           ? `<button type="button" class="botao admin" data-id="${id}" onclick="alternarItem(event)">Devolver à lista</button>`
           : `<div style="height:34px"></div>`)
       : (tokenAdmin
           ? `<button type="button" class="botao admin" data-id="${id}" onclick="alternarItem(event)">Marcar escolhido</button>`
           : `<button type="button" class="botao" data-id="${id}" onclick="irParaWhatsApp(event)">${ZAP} Quero presentear</button>`);
+    const rodapeCartao = tokenAdmin
+      ? `<div class="acoes-admin-item">${acaoReservaAdmin}<input class="arquivo-foto" id="foto-${id}" data-id="${id}" type="file" accept="image/jpeg,image/png,image/webp" onchange="editarFoto(event)" /><label class="botao admin arquivo" for="foto-${id}">Enviar foto</label><button type="button" class="botao admin" data-id="${id}" onclick="editarLinkReferencia(event)">Link de referência</button></div>`
+      : acaoReservaAdmin;
 
     return `
       <article class="item${p.isClaimed ? " colhido" : ""}">
@@ -1000,19 +1010,47 @@ function montarLink(texto) {
 
 async function irParaWhatsApp(evento) {
   evento.stopPropagation();
-  const botao = evento.currentTarget;
   const id = evento.currentTarget.dataset.id;
   const item = itens.find(p => String(p.id) === id);
   if (!item) return;
 
-  botao.disabled = true;
-  const nomePessoa = await pedirNomeParaReserva();
-  if (!nomePessoa) {
-    botao.disabled = false;
-    return;
-  }
+  abrirPreviaDoItem(item);
+}
 
-  botao.textContent = "Reservando…";
+function linkDeReferencia(item) {
+  if (item.link || item.url) return item.link || item.url;
+  return "https://www.google.com/search?tbm=isch&q=" + encodeURIComponent(nomeDe(item));
+}
+
+function abrirPreviaDoItem(item) {
+  const imagem = item.imagem || item.image || "";
+  const tela = document.createElement("div");
+  tela.className = "veu";
+  tela.innerHTML = `
+    <section class="caixa previa-item" role="dialog" aria-modal="true" aria-labelledby="titulo-previa-item">
+      <h2 id="titulo-previa-item">${escapar(nomeDe(item))}</h2>
+      <div class="previa-midia">${imagem ? `<img src="${escapar(imagem)}" alt="Foto de ${escapar(nomeDe(item))}" />` : escapar(item.emoji || "🎁")}</div>
+      <a class="link-referencia" href="${escapar(linkDeReferencia(item))}" target="_blank" rel="noopener noreferrer">Ver referência do item ↗</a>
+      <p class="sub">Confira a referência e, quando quiser, reserve este presente para o casal.</p>
+      <div class="acoes">
+        <button class="voltar" type="button">Voltar</button>
+        <button class="entrar" type="button">Quero presentear este item!</button>
+      </div>
+    </section>`;
+  const fechar = () => tela.remove();
+  tela.querySelector(".voltar").addEventListener("click", fechar);
+  tela.querySelector(".entrar").addEventListener("click", async () => {
+    fechar();
+    const nomePessoa = await pedirNomeParaReserva();
+    if (nomePessoa) reservarItem(item, nomePessoa);
+  });
+  tela.addEventListener("click", evento => { if (evento.target === tela) fechar(); });
+  document.body.appendChild(tela);
+}
+
+async function reservarItem(item, nomePessoa) {
+  const id = item.id;
+
   try {
     const res = await fetch("/api/products", {
       method: "POST",
@@ -1027,8 +1065,6 @@ async function irParaWhatsApp(evento) {
       return;
     }
   } catch (erro) {
-    botao.disabled = false;
-    botao.innerHTML = `${ZAP} Quero presentear`;
     alert(erro.message || "Não foi possível reservar agora. Tente novamente.");
     return;
   }
@@ -1569,6 +1605,105 @@ async function alternarItem(evento) {
     botao.disabled = false;
     alert("Não foi possível alterar o item. Tente de novo.");
   }
+}
+
+async function editarFoto(evento) {
+  evento.stopPropagation();
+  const campo = evento.currentTarget;
+  const arquivo = campo.files && campo.files[0];
+  const item = itens.find(p => String(p.id) === String(campo.dataset.id));
+  if (!arquivo || !item) return;
+
+  if (!/^image\/(jpeg|png|webp)$/i.test(arquivo.type)) {
+    alert("Escolha uma imagem JPG, PNG ou WebP.");
+    campo.value = "";
+    return;
+  }
+  if (arquivo.size > 10 * 1024 * 1024) {
+    alert("Escolha uma imagem de até 10 MB. O site vai otimizá-la antes de salvar.");
+    campo.value = "";
+    return;
+  }
+
+  campo.disabled = true;
+  try {
+    const imagem = await otimizarImagem(arquivo);
+    await salvarMidiaDoItem(item.id, { imagem });
+    await carregarItens();
+  } catch (erro) {
+    alert(erro.message || "Não foi possível salvar a foto. Tente outra imagem.");
+  } finally {
+    campo.disabled = false;
+    campo.value = "";
+  }
+}
+
+function otimizarImagem(arquivo) {
+  return new Promise((resolve, reject) => {
+    const leitor = new FileReader();
+    leitor.onerror = () => reject(new Error("Não foi possível ler a imagem."));
+    leitor.onload = () => {
+      const imagem = new Image();
+      imagem.onerror = () => reject(new Error("Não foi possível abrir a imagem."));
+      imagem.onload = () => {
+        const limite = 1200;
+        const escala = Math.min(1, limite / Math.max(imagem.width, imagem.height));
+        const tela = document.createElement("canvas");
+        tela.width = Math.max(1, Math.round(imagem.width * escala));
+        tela.height = Math.max(1, Math.round(imagem.height * escala));
+        tela.getContext("2d").drawImage(imagem, 0, 0, tela.width, tela.height);
+        const resultado = tela.toDataURL("image/webp", .82);
+        if (resultado.length > 3000000) {
+          reject(new Error("A imagem ficou grande demais. Use uma foto menor ou mais simples."));
+          return;
+        }
+        resolve(resultado);
+      };
+      imagem.src = leitor.result;
+    };
+    leitor.readAsDataURL(arquivo);
+  });
+}
+
+async function editarLinkReferencia(evento) {
+  evento.stopPropagation();
+  const botao = evento.currentTarget;
+  const item = itens.find(p => String(p.id) === String(botao.dataset.id));
+  if (!item) return;
+
+  const link = prompt(`Cole o link de referência de “${nomeDe(item)}”.\n\nDeixe vazio para usar a busca de referência.`, item.link || item.url || "");
+  if (link === null) return;
+
+  const url = link.trim();
+  if (url && !/^https?:\/\/\S+$/i.test(url)) {
+    alert("Use um link que comece com http:// ou https://.");
+    return;
+  }
+
+  botao.disabled = true;
+  try {
+    await salvarMidiaDoItem(item.id, { link: url });
+    await carregarItens();
+  } catch (erro) {
+    alert(erro.message || "Não foi possível salvar o link. Tente de novo.");
+  } finally {
+    botao.disabled = false;
+  }
+}
+
+async function salvarMidiaDoItem(itemId, dados) {
+  const res = await fetch("/api/products", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", "x-admin-token": tokenAdmin || "" },
+    body: JSON.stringify({ item_id: itemId, ...dados })
+  });
+  if (res.status === 401) {
+    alert("Sua sessão expirou. Entre no portão do jardim de novo.");
+    sairAdmin();
+    throw new Error("Sessão expirada.");
+  }
+  const resposta = await res.json();
+  if (!res.ok) throw new Error(resposta.error || "Não foi possível salvar a alteração.");
 }
 
 /* ═══════════════════════════════════════════
