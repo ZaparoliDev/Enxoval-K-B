@@ -22,7 +22,7 @@ const CONFIG = {
   },
 
   evento: {
-    titulo:   "Enxoval para nossa casa",
+    titulo:   "Lista de presentes",
     chamada:  "A nossa casa começa aqui"
   },
 
@@ -68,10 +68,10 @@ const CONFIG = {
 
   // Chaves de armazenamento local (troque o sufixo a cada projeto novo)
   chaves: {
-    tema:       "jardim_tema_clebson_keila",
-    sessao:     "jardim_admin_clebson_keila",
-    sugestoes:  "jardim_sugestoes_clebson_keila",
-    presenca:   "jardim_presenca_clebson_keyla"
+    tema:       "lista_tema_clebson_keyla",
+    sessao:     "lista_admin_clebson_keyla",
+    sugestoes:  "lista_sugestoes_clebson_keyla",
+    presenca:   "lista_presenca_clebson_keyla"
   }
 };
 </script>
@@ -246,12 +246,11 @@ header { text-align: center; padding: 2.5rem 0 3rem; position: relative; }
   display: block; margin-top: .3rem; font-size: .76rem;
   letter-spacing: .07em; color: var(--texto3);
 }
-.jardim-progresso { max-width: 32rem; margin: 0 auto 1.1rem; text-align: left; }
-.jardim-progresso .legenda { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: .45rem; font-size: .77rem; color: var(--texto2); }
-.jardim-progresso .legenda b { font-family: 'Fraunces', serif; font-weight: 500; color: var(--musgo); }
-.trilho-jardim { position: relative; height: 11px; overflow: hidden; border-radius: 999px; background: var(--papel-baixo); border: 1px solid var(--linha); }
-.trilho-jardim span { display: block; width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--salvia), var(--folha)); transition: width .7s cubic-bezier(.34,1.2,.64,1); }
-.trilho-jardim::after { content: '✿'; position: absolute; top: 50%; left: var(--progresso, 0%); font-size: 1.05rem; color: var(--terracota); transform: translate(-35%, -54%); transition: left .7s cubic-bezier(.34,1.2,.64,1); }
+.progresso-lista { max-width: 32rem; margin: 0 auto 1.1rem; text-align: left; }
+.progresso-lista .legenda { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: .45rem; font-size: .77rem; color: var(--texto2); }
+.progresso-lista .legenda b { font-family: 'Fraunces', serif; font-weight: 500; color: var(--musgo); }
+.trilho-progresso { position: relative; height: 11px; overflow: hidden; border-radius: 999px; background: var(--papel-baixo); border: 1px solid var(--linha); }
+.trilho-progresso span { display: block; width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--salvia), var(--folha)); transition: width .7s cubic-bezier(.34,1.2,.64,1); }
 .presenca { display: inline-flex; align-items: center; gap: .42rem; margin: .1rem auto 0; font-size: .76rem; color: var(--texto3); }
 .presenca::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--folha); box-shadow: 0 0 0 3px rgba(0,0,0,.12); }
 
@@ -479,12 +478,12 @@ footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--c
 .link-referencia { display: inline-flex; margin: .15rem auto .2rem; color: var(--texto2); font-size: .84rem; text-decoration: underline; text-underline-offset: .2rem; }
 .caixa p.sub { font-size: .85rem; color: var(--texto2); line-height: 1.6; margin-bottom: 1.3rem; }
 .caixa label { display: block; margin: .9rem 0 .35rem; text-align: left; font-size: .8rem; color: var(--texto2); }
-.caixa input[type="text"], .caixa textarea {
+.caixa input[type="text"], .caixa select, .caixa textarea {
   width: 100%; padding: .8rem 1rem; font: inherit; font-size: .92rem; color: var(--texto);
   background: var(--papel); border: 1px solid var(--linha); border-radius: var(--raio);
 }
 .caixa textarea { min-height: 8.5rem; resize: vertical; line-height: 1.5; }
-.caixa input[type="text"]:focus, .caixa textarea:focus { border-color: var(--salvia); outline: none; }
+.caixa input[type="text"]:focus, .caixa select:focus, .caixa textarea:focus { border-color: var(--salvia); outline: none; }
 .campo-isca { position: absolute !important; left: -9999px !important; }
 .contador-texto { display: block; margin-top: .35rem; text-align: right; font-size: .75rem; color: var(--texto3); }
 .retorno-sugestao { min-height: 1.2rem; margin-top: .7rem; font-size: .82rem; color: var(--texto2); }
@@ -678,37 +677,11 @@ footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--c
 </head>
 <body>
 
-<!-- ramos decorativos -->
-<div class="ramo" style="top:-10px;left:-10px;width:170px;height:170px">
-  <svg viewBox="0 0 170 170">
-    <path d="M0 8 C50 14 88 42 112 84"/>
-    <ellipse class="folha" cx="34" cy="20" rx="15" ry="7" transform="rotate(22 34 20)"/>
-    <ellipse class="folha" cx="66" cy="40" rx="15" ry="7" transform="rotate(38 66 40)"/>
-    <ellipse class="folha" cx="94" cy="66" rx="13" ry="6" transform="rotate(52 94 66)"/>
-    <path d="M0 40 C34 48 56 70 68 100"/>
-    <ellipse class="folha" cx="26" cy="48" rx="12" ry="5.5" transform="rotate(28 26 48)"/>
-  </svg>
-</div>
-<div class="ramo" style="top:-10px;right:-10px;width:170px;height:170px;transform:scaleX(-1)">
-  <svg viewBox="0 0 170 170">
-    <path d="M0 8 C50 14 88 42 112 84"/>
-    <ellipse class="folha" cx="34" cy="20" rx="15" ry="7" transform="rotate(22 34 20)"/>
-    <ellipse class="folha" cx="66" cy="40" rx="15" ry="7" transform="rotate(38 66 40)"/>
-    <ellipse class="folha" cx="94" cy="66" rx="13" ry="6" transform="rotate(52 94 66)"/>
-  </svg>
-</div>
-<div class="ramo" style="bottom:-10px;left:-10px;width:140px;height:140px;transform:scaleY(-1)">
-  <svg viewBox="0 0 140 140">
-    <path d="M0 10 C42 16 74 40 96 76"/>
-    <ellipse class="folha" cx="30" cy="20" rx="13" ry="6" transform="rotate(24 30 20)"/>
-    <ellipse class="folha" cx="60" cy="40" rx="13" ry="6" transform="rotate(40 60 40)"/>
-  </svg>
-</div>
-
 <!-- barra admin -->
 <div class="barra-admin" id="barra-admin" hidden>
-  <b>Modo jardineiro</b>
+  <b>Modo administrador</b>
   <span id="admin-resumo"></span>
+  <button type="button" onclick="abrirNovoItem()">Adicionar item</button>
   <button type="button" onclick="sairAdmin()">Sair</button>
 </div>
 
@@ -719,13 +692,6 @@ footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--c
   </div>
 
   <header>
-    <svg class="broto-hero" viewBox="0 0 54 66" aria-hidden="true">
-      <path class="caule" d="M27 64 C27 44 27 30 27 6"/>
-      <ellipse class="folha f1" cx="15" cy="44" rx="13" ry="6" transform="rotate(-22 15 44)"/>
-      <ellipse class="folha f2" cx="39" cy="33" rx="13" ry="6" transform="rotate(22 39 33)"/>
-      <ellipse class="folha f3" cx="17" cy="22" rx="11" ry="5" transform="rotate(-28 17 22)"/>
-    </svg>
-
     <p class="titulo-evento" data-cfg="evento.titulo"></p>
     <h1 class="nomes" id="nomes"></h1>
     <p class="chamada" data-cfg="evento.chamada"></p>
@@ -738,9 +704,9 @@ footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--c
       <div class="numero colhido"><b id="n-colhidos">—</b><span>já escolhidos</span></div>
     </div>
 
-    <div class="jardim-progresso" id="jardim-progresso" aria-label="Progresso do enxoval">
-      <div class="legenda"><b>Nosso jardim está crescendo</b><span id="progresso-texto">Preparando…</span></div>
-      <div class="trilho-jardim"><span id="progresso-barra"></span></div>
+    <div class="progresso-lista" id="progresso-lista" aria-label="Progresso da lista">
+      <div class="legenda"><b>Presentes escolhidos</b><span id="progresso-texto">Preparando…</span></div>
+      <div class="trilho-progresso"><span id="progresso-barra"></span></div>
     </div>
     <p class="presenca" id="presenca" aria-live="polite" hidden><span id="presenca-texto"></span></p>
 
@@ -808,14 +774,13 @@ footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--c
   </section>
 
   <footer>
-    <!-- Portão secreto: segure a semente para entrar no modo jardineiro -->
-    <button class="semente" id="semente" type="button" aria-label="Semente">
+    <button class="semente" id="semente" type="button" aria-label="Acesso administrativo">
       <svg class="anel" viewBox="0 0 46 46" aria-hidden="true">
         <circle class="trilho" cx="23" cy="23" r="21"></circle>
         <circle class="fio" cx="23" cy="23" r="21"></circle>
       </svg>
       <svg class="icone" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 21c-4.5 0-8-3.2-8-7.6C4 8.4 8.2 4 12 3c3.8 1 8 5.4 8 10.4C20 17.8 16.5 21 12 21z" opacity=".55"/>
+        <path d="M7 10V8a5 5 0 0110 0v2M6 10h12v10H6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>
     <p><span data-cfg="textos.rodape"></span><br><em id="rodape-nomes"></em></p>
@@ -931,7 +896,7 @@ function atualizarNumeros() {
   const percentual = itens.length ? Math.round((colhidos / itens.length) * 100) : 0;
   $("progresso-texto").textContent = itens.length ? `${colhidos} de ${itens.length} escolhidos · ${percentual}%` : "Sem itens por enquanto";
   $("progresso-barra").style.width = `${percentual}%`;
-  $("jardim-progresso").style.setProperty("--progresso", `${percentual}%`);
+  $("progresso-lista").style.setProperty("--progresso", `${percentual}%`);
   if (tokenAdmin) $("admin-resumo").textContent = `${colhidos} de ${itens.length} itens marcados`;
 }
 
@@ -1442,9 +1407,7 @@ async function excluirSugestao(evento) {
 }
 
 /* ═══════════════════════════════════════════
-   PORTÃO DO JARDIM — entrada do admin
-   A senha não existe no front. Ela é validada em
-   /api/auth, que devolve um token assinado de 6h.
+   ACESSO ADMINISTRATIVO
 ═══════════════════════════════════════════ */
 const SEGURAR_MS = 1200;
 let seguraTimer = null;
@@ -1476,17 +1439,7 @@ function abrirPortao() {
   tela.id = "tela-portao";
   tela.innerHTML = `
     <div class="caixa">
-      <svg class="canteiro" id="canteiro" viewBox="0 0 128 104" aria-hidden="true">
-        <path class="vaso" d="M40 76 L44 98 H84 L88 76 Z"/>
-        <path class="terra" d="M40 76 H88"/>
-        <path class="caule" id="caule" d="M64 76 C64 60 64 48 64 28"/>
-        <ellipse class="broto" data-nivel="1" cx="50" cy="66" rx="12" ry="5" transform="rotate(-20 50 66)"/>
-        <ellipse class="broto" data-nivel="2" cx="78" cy="57" rx="12" ry="5" transform="rotate(20 78 57)"/>
-        <ellipse class="broto" data-nivel="3" cx="51" cy="47" rx="11" ry="4.6" transform="rotate(-24 51 47)"/>
-        <ellipse class="broto" data-nivel="4" cx="77" cy="39" rx="11" ry="4.6" transform="rotate(24 77 39)"/>
-        <circle class="flor" cx="64" cy="26" r="7"/>
-      </svg>
-      <h2>Portão do jardim</h2>
+      <h2>Acesso administrativo</h2>
       <p class="sub">Área de ${escapar(CONFIG.casal.nomes)}. Digite a senha para cuidar da lista.</p>
       <input type="password" id="senha" inputmode="text" autocomplete="current-password" placeholder="••••••" />
       <p class="erro" id="erro-senha" hidden></p>
@@ -1501,20 +1454,7 @@ function abrirPortao() {
 
   const senha = $("senha");
   senha.focus();
-  senha.addEventListener("input", () => regarCanteiro(senha.value.length));
   senha.addEventListener("keydown", e => { if (e.key === "Enter") entrarAdmin(); });
-}
-
-/* Cada caractere digitado faz o caule subir e um broto abrir. */
-function regarCanteiro(quantidade) {
-  const canteiro = $("canteiro");
-  if (!canteiro) return;
-  const progresso = Math.min(quantidade / 8, 1);
-  canteiro.querySelector("#caule").style.strokeDashoffset = String(60 - 60 * progresso);
-  canteiro.querySelectorAll(".broto").forEach(folha => {
-    folha.classList.toggle("viva", quantidade >= Number(folha.dataset.nivel) * 2);
-  });
-  canteiro.classList.remove("murchou");
 }
 
 async function entrarAdmin() {
@@ -1538,8 +1478,6 @@ async function entrarAdmin() {
     if (!res.ok) {
       campo.classList.add("errado");
       campo.value = "";
-      regarCanteiro(0);
-      $("canteiro").classList.add("murchou");
       erro.textContent = dados.error || "Não foi possível entrar.";
       erro.hidden = false;
       botao.disabled = false;
@@ -1549,10 +1487,8 @@ async function entrarAdmin() {
     tokenAdmin = dados.token;
     try { sessionStorage.setItem(CONFIG.chaves.sessao, dados.token); } catch (e) {}
 
-    // floresce antes de fechar
-    $("canteiro").classList.add("floriu");
-    regarCanteiro(8);
-    setTimeout(() => { fecharPortao(); ligarModoAdmin(); }, 900);
+    fecharPortao();
+    ligarModoAdmin();
   } catch (e) {
     erro.textContent = "Sem conexão com o servidor.";
     erro.hidden = false;
@@ -1585,6 +1521,68 @@ function sairAdmin() {
   carregarSugestoesPublicas();
 }
 
+function abrirNovoItem() {
+  const tela = document.createElement("div");
+  tela.className = "veu";
+  tela.innerHTML = `
+    <form class="caixa" novalidate>
+      <h2>Adicionar item</h2>
+      <p class="sub">O item será incluído na lista imediatamente. Depois você poderá enviar uma foto e adicionar um link de referência.</p>
+      <label for="novo-item-nome">Nome do presente</label>
+      <input type="text" id="novo-item-nome" maxlength="100" required placeholder="Ex.: Liquidificador" />
+      <label for="novo-item-categoria">Categoria</label>
+      <select id="novo-item-categoria">${CONFIG.categorias.filter(c => c.id !== "todos").map(c => `<option value="${escapar(c.id)}">${escapar(c.label)}</option>`).join("")}</select>
+      <label for="novo-item-emoji">Ícone (opcional)</label>
+      <input type="text" id="novo-item-emoji" maxlength="12" placeholder="🎁" />
+      <p class="erro" hidden></p>
+      <div class="acoes">
+        <button class="voltar" type="button">Cancelar</button>
+        <button class="entrar" type="submit">Adicionar</button>
+      </div>
+    </form>`;
+  const fechar = () => tela.remove();
+  const form = tela.querySelector("form");
+  const campo = tela.querySelector("#novo-item-nome");
+  const erro = tela.querySelector(".erro");
+  tela.querySelector(".voltar").addEventListener("click", fechar);
+  tela.addEventListener("click", evento => { if (evento.target === tela) fechar(); });
+  form.addEventListener("submit", async evento => {
+    evento.preventDefault();
+    const nome = campo.value.trim().replace(/\s+/g, " ");
+    if (nome.length < 2) {
+      erro.textContent = "Informe o nome do item.";
+      erro.hidden = false;
+      campo.focus();
+      return;
+    }
+    const botao = form.querySelector(".entrar");
+    botao.disabled = true;
+    try {
+      const res = await fetch("/api/products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-admin-token": tokenAdmin || "" },
+        body: JSON.stringify({ createProduct: true, name: nome, categoria: tela.querySelector("#novo-item-categoria").value, emoji: tela.querySelector("#novo-item-emoji").value })
+      });
+      if (res.status === 401) {
+        fechar();
+        sairAdmin();
+        alert("Sua sessão expirou. Entre novamente.");
+        return;
+      }
+      const dados = await res.json();
+      if (!res.ok) throw new Error(dados.error || "Não foi possível adicionar o item.");
+      fechar();
+      await carregarItens();
+    } catch (erroEnvio) {
+      erro.textContent = erroEnvio.message || "Não foi possível adicionar o item.";
+      erro.hidden = false;
+      botao.disabled = false;
+    }
+  });
+  document.body.appendChild(tela);
+  campo.focus();
+}
+
 async function alternarItem(evento) {
   evento.stopPropagation();
   const botao = evento.currentTarget;
@@ -1596,7 +1594,7 @@ async function alternarItem(evento) {
       body: JSON.stringify({ item_id: botao.dataset.id, toggleAdmin: true })
     });
     if (res.status === 401) {
-      alert("Sua sessão expirou. Entre no portão do jardim de novo.");
+      alert("Sua sessão expirou. Entre novamente.");
       sairAdmin();
       return;
     }
@@ -1698,7 +1696,7 @@ async function salvarMidiaDoItem(itemId, dados) {
     body: JSON.stringify({ item_id: itemId, ...dados })
   });
   if (res.status === 401) {
-    alert("Sua sessão expirou. Entre no portão do jardim de novo.");
+    alert("Sua sessão expirou. Entre novamente.");
     sairAdmin();
     throw new Error("Sessão expirada.");
   }

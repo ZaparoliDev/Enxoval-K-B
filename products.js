@@ -152,7 +152,33 @@ module.exports = async (req, res) => {
     // POST — reserva de item (público) ou liberar/marcar (admin)
     // ─────────────────────────────────────────────────────────────
     if (req.method === 'POST') {
-      const { item_id, toggleAdmin } = req.body || {};
+      const { item_id, toggleAdmin, createProduct, name, categoria, emoji } = req.body || {};
+
+      if (createProduct) {
+        if (!verifyToken(req.headers['x-admin-token'])) {
+          return res.status(401).json({ error: 'Sessão de admin inválida ou expirada.' });
+        }
+        const nome = String(name || '').trim().replace(/\s+/g, ' ');
+        const categoriaNormalizada = String(categoria || '').trim().toLowerCase();
+        if (nome.length < 2 || !categoriaNormalizada) {
+          return res.status(400).json({ error: 'Informe o nome e a categoria do item.' });
+        }
+
+        const ultimo = await db.collection(PRODUCTS_COLL)
+          .find({ id: { $type: 'number' } })
+          .sort({ id: -1 })
+          .limit(1)
+          .toArray();
+        const novoItem = {
+          id: (ultimo[0] && Number(ultimo[0].id) || 0) + 1,
+          name: nome,
+          categoria: categoriaNormalizada,
+          emoji: String(emoji || '🎁').trim().slice(0, 12) || '🎁',
+          created_at: new Date()
+        };
+        await db.collection(PRODUCTS_COLL).insertOne(novoItem);
+        return res.status(201).json({ success: true, product: novoItem });
+      }
 
       if (!item_id) {
         return res.status(400).json({ error: 'O item_id é obrigatório.' });

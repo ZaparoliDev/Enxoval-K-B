@@ -1,6 +1,6 @@
 # Lista de presentes — Clebson & Keyla
 
-Site de lista de presentes de enxoval. Front-end estático em um único `index.html`,
+Site de lista de presentes. Front-end estático em um único `index.html`,
 API serverless na Vercel e MongoDB Atlas como banco.
 
 ## Como trocar de casal
@@ -47,6 +47,8 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 Database `enxoval` (ou o nome em `MONGODB_DB`), com três coleções:
 
 - **`products`** — `id`, `name` (ou `nome`), `categoria`, `emoji`, `preco`, `imagem` e `link` opcionais. Os itens iniciais da versão 2 são inseridos automaticamente sem duplicar nomes existentes. No modo administrador, **Enviar foto** permite escolher um arquivo JPG, PNG ou WebP, que é otimizado e guardado no MongoDB; **Link de referência** define o endereço exibido na prévia do presente.
+
+No modo administrador, o botão **Adicionar item** cadastra novos presentes diretamente pelo site, atribuindo o próximo identificador disponível no banco.
 - **`claimed_items`** — `item_id`, `claimed_at`
 - **`suggestions`** — `nome`, `titulo`, `mensagem`, `status`, `resposta`,
   `created_at`, `updated_at` (criada automaticamente no primeiro envio)
@@ -77,14 +79,14 @@ antigas briguem com a paleta nova.
 
 O módulo de sugestões é temporário e controlado por `CONFIG.sugestoesAtivas`, no
 `index.html`. O mural é público: qualquer pessoa pode ver as ideias, os status e
-as respostas. No modo jardineiro, o próprio mural passa a permitir atualizar o
+as respostas. No modo administrador, o próprio mural passa a permitir atualizar o
 andamento, responder ou excluir uma ideia. Para esconder o módulo quando o site
 estiver completo, troque o valor para `false`.
 
 ## Experiência da lista
 
-- Ao reservar um item, flores caem pela tela antes de abrir o WhatsApp.
-- A barra **Nosso jardim está crescendo** mostra o percentual de itens escolhidos.
+- Ao reservar um item, uma animação de confirmação aparece antes da opção de abrir o WhatsApp.
+- A barra **Presentes escolhidos** mostra o percentual de itens escolhidos.
 - Há ordenação por ordem da lista, mais recentes, mais baratos (quando o produto tem
   `preco`) e categoria.
 - O contador de visitantes ativos é aproximado: uma visita é considerada ativa por
@@ -107,10 +109,8 @@ Na versão anterior a senha estava no JavaScript do navegador e a API aceitava
 
 ### Entrada do painel
 
-Não existe botão de admin visível. No rodapé há uma pequena semente: **segure-a por
-1,2 s** e um anel cresce ao redor até o portão abrir. No modal, cada caractere
-digitado faz o caule subir e os brotos se abrirem; ao acertar a senha a planta
-floresce antes de o painel aparecer, e ao errar ela murcha.
+Não existe botão de admin visível. No rodapé há um ícone de acesso: **segure-o por
+1,2 s** para abrir a tela de senha.
 
 ## Rodando local
 
