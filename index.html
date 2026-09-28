@@ -395,25 +395,18 @@ footer { text-align: center; padding: 2.5rem 0 3.5rem; border-top: 1px solid var
 footer p { font-size: .85rem; color: var(--texto3); line-height: 1.7; }
 footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--casca); }
 
-.modulo-sugestoes {
-  max-width: 46rem; margin: 0 auto 2.8rem; overflow: hidden;
-  background: var(--superficie); border: 1px solid var(--linha); border-radius: var(--raio-g);
-  box-shadow: 0 12px 32px var(--sombra);
-}
-.sugestoes-destaque {
-  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 1.1rem;
-  padding: 1.5rem; background: linear-gradient(120deg, var(--papel-baixo), var(--superficie)); text-align: left;
-}
-.sugestoes-destaque .folhinha { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 50%; background: var(--superficie); font-size: 1.45rem; }
-.sugestoes-destaque h2 { font-family: 'Fraunces', serif; font-size: 1.22rem; font-weight: 500; color: var(--musgo); }
-.sugestoes-destaque p { margin-top: .28rem; font-size: .88rem; line-height: 1.55; color: var(--texto2); }
-.sugestoes-destaque button {
-  white-space: nowrap; padding: .68rem 1rem; font: 500 .84rem inherit; color: var(--papel);
-  background: var(--musgo); border: 1px solid var(--musgo); border-radius: 999px; cursor: pointer;
-}
-[data-theme="dark"] .sugestoes-destaque button { color: var(--papel-baixo); }
-.sugestoes-destaque button:hover { background: var(--folha); }
-.sugestoes-publicas { padding: 1.2rem 1.5rem 1.5rem; border-top: 1px solid var(--linha); text-align: left; }
+.atalho-sugestoes { display: flex; justify-content: center; margin: 2.25rem auto 2.8rem; }
+.botao-sugestoes { display: inline-flex; align-items: center; gap: .7rem; padding: .8rem 1.15rem; font: 500 .9rem inherit; color: var(--texto); background: var(--superficie); border: 1px solid var(--linha); border-radius: 999px; box-shadow: 0 8px 22px var(--sombra); cursor: pointer; transition: transform .2s ease, border-color .2s ease; }
+.botao-sugestoes:hover { transform: translateY(-2px); border-color: var(--linha-forte); }
+.botao-sugestoes svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.botao-sugestoes small { display: block; margin-top: .08rem; font-weight: 400; font-size: .72rem; color: var(--texto3); text-align: left; }
+.mural-sugestoes-cabecalho { display: flex; align-items: start; justify-content: space-between; gap: 1rem; text-align: left; }
+.mural-sugestoes-cabecalho h2 { margin-bottom: .25rem; }
+.mural-sugestoes-cabecalho .sub { margin: 0; }
+.mural-sugestoes-acoes { display: flex; gap: .55rem; margin-top: 1.15rem; }
+.mural-sugestoes-acoes .entrar { width: auto; }
+.painel-sugestoes-publico { width: min(46rem, calc(100vw - 2rem)); max-height: 84vh; overflow: auto; }
+.painel-sugestoes-publico .lista-publica-sugestoes { margin-top: 1rem; text-align: left; }
 .sugestoes-publicas-cabecalho { display: flex; align-items: baseline; justify-content: space-between; gap: .75rem; margin-bottom: .8rem; }
 .sugestoes-publicas h3 { font-family: 'Fraunces', serif; font-size: 1.05rem; font-weight: 500; color: var(--musgo); }
 .sugestoes-publicas-cabecalho span { font-size: .75rem; color: var(--texto3); }
@@ -425,10 +418,7 @@ footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--c
 .sugestao-publica .mensagem { margin-top: .45rem; white-space: pre-wrap; font-size: .88rem; line-height: 1.55; color: var(--texto2); }
 .sugestao-publica .resposta-casal { margin-bottom: 0; }
 .vazio-sugestoes { padding: .4rem 0; font-size: .85rem; color: var(--texto2); }
-@media (max-width: 620px) {
-  .sugestoes-destaque { grid-template-columns: auto 1fr; }
-  .sugestoes-destaque button { grid-column: 1 / -1; width: 100%; }
-}
+@media (max-width: 520px) { .mural-sugestoes-acoes { flex-direction: column-reverse; } .mural-sugestoes-acoes .entrar { width: 100%; } }
 
 .semente {
   position: relative; display: grid; place-items: center;
@@ -756,22 +746,11 @@ footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--c
     <button type="button" onclick="limparFiltros()">Ver a lista inteira</button>
   </div>
 
-  <section class="modulo-sugestoes" id="convite-sugestao" hidden aria-labelledby="titulo-sugestao">
-    <div class="sugestoes-destaque">
-      <span class="folhinha" aria-hidden="true">💡</span>
-      <div>
-        <h2 id="titulo-sugestao" data-cfg="textos.sugestaoTitulo"></h2>
-        <p data-cfg="textos.sugestaoTexto"></p>
-      </div>
-      <button type="button" onclick="abrirSugestao()">Enviar sugestão</button>
-    </div>
-    <div class="sugestoes-publicas">
-      <div class="sugestoes-publicas-cabecalho">
-        <h3 id="titulo-lista-sugestoes">Ideias da comunidade</h3>
-        <span>Veja o andamento de cada uma</span>
-      </div>
-      <div class="lista-publica-sugestoes" id="lista-publica-sugestoes" aria-live="polite"></div>
-    </div>
+  <section class="atalho-sugestoes" id="convite-sugestao" hidden aria-label="Sugestões">
+    <button class="botao-sugestoes" type="button" onclick="abrirMuralSugestoes()" aria-haspopup="dialog">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-8 7.48 8.8 8.8 0 0 1-3.25-.62L4 20l1.3-3.55A7.36 7.36 0 0 1 4 12a7.5 7.5 0 0 1 8-7.48A7.5 7.5 0 0 1 20 11.5Z"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"/></svg>
+      <span><b>Sugestões</b><small>Enviar ou acompanhar ideias</small></span>
+    </button>
   </section>
 
   <footer>
@@ -1244,6 +1223,16 @@ function statusSugestao(status) {
 function dataSugestao(data) {
   return new Date(data).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
 }
+function abrirMuralSugestoes() {
+  if ($("tela-mural-sugestoes")) return;
+  const tela = document.createElement("div");
+  tela.className = "veu"; tela.id = "tela-mural-sugestoes";
+  tela.innerHTML = `<section class="caixa painel-sugestoes-publico" role="dialog" aria-modal="true" aria-labelledby="mural-sugestoes-titulo"><div class="mural-sugestoes-cabecalho"><div><h2 id="mural-sugestoes-titulo">${tokenAdmin ? "Gerenciar sugestões" : "Sugestões"}</h2><p class="sub">${tokenAdmin ? "Atualize o andamento e responda às ideias recebidas." : "Envie uma ideia ou acompanhe as sugestões da comunidade."}</p></div><button class="voltar" type="button" onclick="fecharMuralSugestoes()">Fechar</button></div><div class="mural-sugestoes-acoes">${tokenAdmin ? "" : '<button class="entrar" type="button" onclick="abrirFormularioSugestao()">Enviar sugestão</button>'}</div><div class="lista-publica-sugestoes" id="lista-publica-sugestoes" aria-live="polite"></div></section>`;
+  tela.addEventListener("click", e => { if (e.target === tela) fecharMuralSugestoes(); });
+  document.body.appendChild(tela); document.body.style.overflow = "hidden"; carregarSugestoesPublicas();
+}
+function fecharMuralSugestoes() { const tela = $("tela-mural-sugestoes"); if (tela) tela.remove(); document.body.style.overflow = ""; }
+function abrirFormularioSugestao() { fecharMuralSugestoes(); abrirSugestao(); }
 function abrirSugestao() {
   const tela = document.createElement("div");
   tela.className = "veu";
@@ -1327,8 +1316,7 @@ function renderSugestaoPublica(sugestao) {
     </article>`;
 }
 
-async function carregarSugestoesPublicas() {
-  const lista = $("lista-publica-sugestoes");
+async function carregarSugestoesPublicas(lista = $("lista-publica-sugestoes")) {
   if (!lista || !CONFIG.sugestoesAtivas) return;
   if (tokenAdmin) return carregarSugestoesAdmin(lista);
   lista.innerHTML = '<p class="vazio-sugestoes">Carregando ideias…</p>';
@@ -1506,10 +1494,9 @@ function fecharPortao() {
 function ligarModoAdmin() {
   $("barra-admin").hidden = false;
   $("semente").style.visibility = "hidden";
-  $("titulo-lista-sugestoes").textContent = "Gerenciar sugestões";
   atualizarNumeros();
   desenharGrade();
-  carregarSugestoesPublicas();
+  if ($("tela-mural-sugestoes")) carregarSugestoesPublicas();
 }
 
 function sairAdmin() {
@@ -1517,9 +1504,8 @@ function sairAdmin() {
   try { sessionStorage.removeItem(CONFIG.chaves.sessao); } catch (e) {}
   $("barra-admin").hidden = true;
   $("semente").style.visibility = "visible";
-  $("titulo-lista-sugestoes").textContent = "Ideias da comunidade";
   desenharGrade();
-  carregarSugestoesPublicas();
+  if ($("tela-mural-sugestoes")) carregarSugestoesPublicas();
 }
 
 function abrirNovoItem() {
