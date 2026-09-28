@@ -823,6 +823,7 @@ footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--c
 ═══════════════════════════════════════════ */
 let itens = [];
 let itensProntos = false;
+let carregamentoInicio = 0;
 let categoriaAtiva = "todos";
 let tokenAdmin = null;
 let ordenacaoAtiva = "padrao";
@@ -1302,10 +1303,10 @@ function fecharBoasVindas() {
   if (!tela) return;
   try { localStorage.setItem(CONFIG.chaves.boasVindas, "vista"); } catch (e) {}
   tela.classList.add("saindo");
-  setTimeout(() => { tela.remove(); document.body.style.overflow = ""; document.body.classList.add("pagina-animada"); if (!itensProntos) abrirCarregamento(); }, 620);
+  setTimeout(() => { tela.remove(); document.body.style.overflow = ""; document.body.classList.add("pagina-animada"); abrirCarregamento(); }, 620);
 }
-function abrirCarregamento() { if (document.querySelector(".carregando-lista")) return; const tela = document.createElement("div"); tela.className = "carregando-lista"; tela.innerHTML = '<div><b>Preparando os presentes</b><span>Buscando os itens da lista…</span><div class="linha-carregando"><i></i></div></div>'; document.body.appendChild(tela); }
-function fecharCarregamento() { const tela = document.querySelector(".carregando-lista"); if (tela) tela.remove(); }
+function abrirCarregamento() { if (document.querySelector(".carregando-lista")) return; carregamentoInicio = Date.now(); const tela = document.createElement("div"); tela.className = "carregando-lista"; tela.innerHTML = '<div><b>Preparando os presentes</b><span>Buscando os itens da lista…</span><div class="linha-carregando"><i></i></div></div>'; document.body.appendChild(tela); setTimeout(() => { if (itensProntos) fecharCarregamento(); }, 850); }
+function fecharCarregamento() { const tela = document.querySelector(".carregando-lista"); if (!tela) return; const restante = Math.max(0, 850 - (Date.now() - carregamentoInicio)); setTimeout(() => { const atual = document.querySelector(".carregando-lista"); if (atual) atual.remove(); }, restante); }
 function abrirSugestao() {
   const tela = document.createElement("div");
   tela.className = "veu";
