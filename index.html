@@ -4,6 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Carregando…</title>
+<link rel="icon" href="/icon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/icon.svg" />
+<meta name="theme-color" content="#111111" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=Karla:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -405,14 +408,22 @@ footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--c
 .mural-sugestoes-cabecalho .sub { margin: 0; }
 .mural-sugestoes-acoes { display: flex; gap: .55rem; margin-top: 1.15rem; }
 .mural-sugestoes-acoes .entrar { width: auto; }
-.painel-sugestoes-publico { width: min(46rem, calc(100vw - 2rem)); max-height: 84vh; overflow: auto; }
+.painel-sugestoes-publico { width: min(46rem, calc(100vw - 2rem)); max-height: 84vh; overflow: auto; padding: 0; }
+.mural-topo { padding: 1.5rem; background: linear-gradient(135deg, var(--papel-baixo), var(--superficie)); border-bottom: 1px solid var(--linha); }
+.mural-icone { width: 42px; height: 42px; display: grid; place-items: center; float: left; margin: 0 .8rem .15rem 0; color: var(--papel); background: var(--musgo); border-radius: 13px; }
+.mural-icone svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.mural-legenda { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: 1rem; clear: both; }
+.mural-legenda span { padding: .28rem .55rem; font-size: .71rem; color: var(--texto2); background: var(--papel); border: 1px solid var(--linha); border-radius: 999px; }
+.mural-corpo { padding: 1.25rem 1.5rem 1.5rem; }
+.mural-corpo h3 { font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 500; color: var(--musgo); }
+.mural-corpo .mural-aviso { margin-top: .35rem; font-size: .8rem; line-height: 1.5; color: var(--texto3); }
 .painel-sugestoes-publico .lista-publica-sugestoes { margin-top: 1rem; text-align: left; }
 .sugestoes-publicas-cabecalho { display: flex; align-items: baseline; justify-content: space-between; gap: .75rem; margin-bottom: .8rem; }
 .sugestoes-publicas h3 { font-family: 'Fraunces', serif; font-size: 1.05rem; font-weight: 500; color: var(--musgo); }
 .sugestoes-publicas-cabecalho span { font-size: .75rem; color: var(--texto3); }
 .lista-publica-sugestoes { display: grid; gap: .7rem; }
 .lista-publica-sugestoes:empty { display: none; }
-.sugestao-publica { padding: 1rem; background: var(--papel); border: 1px solid var(--linha); border-radius: var(--raio); }
+.sugestao-publica { padding: 1rem; background: var(--papel); border: 1px solid var(--linha); border-radius: var(--raio); box-shadow: 0 3px 10px var(--sombra); }
 .sugestao-publica-topo { display: flex; align-items: center; justify-content: space-between; gap: .7rem; }
 .sugestao-publica .meta { margin-top: 0; font-size: .75rem; color: var(--texto3); }
 .sugestao-publica .mensagem { margin-top: .45rem; white-space: pre-wrap; font-size: .88rem; line-height: 1.55; color: var(--texto2); }
@@ -1227,7 +1238,7 @@ function abrirMuralSugestoes() {
   if ($("tela-mural-sugestoes")) return;
   const tela = document.createElement("div");
   tela.className = "veu"; tela.id = "tela-mural-sugestoes";
-  tela.innerHTML = `<section class="caixa painel-sugestoes-publico" role="dialog" aria-modal="true" aria-labelledby="mural-sugestoes-titulo"><div class="mural-sugestoes-cabecalho"><div><h2 id="mural-sugestoes-titulo">${tokenAdmin ? "Gerenciar sugestões" : "Sugestões"}</h2><p class="sub">${tokenAdmin ? "Atualize o andamento e responda às ideias recebidas." : "Envie uma ideia ou acompanhe as sugestões da comunidade."}</p></div><button class="voltar" type="button" onclick="fecharMuralSugestoes()">Fechar</button></div><div class="mural-sugestoes-acoes">${tokenAdmin ? "" : '<button class="entrar" type="button" onclick="abrirFormularioSugestao()">Enviar sugestão</button>'}</div><div class="lista-publica-sugestoes" id="lista-publica-sugestoes" aria-live="polite"></div></section>`;
+  tela.innerHTML = `<section class="caixa painel-sugestoes-publico" role="dialog" aria-modal="true" aria-labelledby="mural-sugestoes-titulo"><div class="mural-topo"><span class="mural-icone" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 11.5a7.5 7.5 0 0 1-8 7.48 8.8 8.8 0 0 1-3.25-.62L4 20l1.3-3.55A7.36 7.36 0 0 1 4 12a7.5 7.5 0 0 1 8-7.48A7.5 7.5 0 0 1 20 11.5Z"/></svg></span><div class="mural-sugestoes-cabecalho"><div><h2 id="mural-sugestoes-titulo">${tokenAdmin ? "Central de sugestões" : "Sugestões"}</h2><p class="sub">${tokenAdmin ? "Atualize o andamento e responda às ideias recebidas." : "Sua ideia ajuda a melhorar a nossa lista."}</p></div><button class="voltar" type="button" onclick="fecharMuralSugestoes()">Fechar</button></div><div class="mural-legenda"><span>Recebida</span><span>Em análise</span><span>Planejada</span><span>Em andamento</span><span>Concluída</span></div></div><div class="mural-corpo"><div class="mural-sugestoes-acoes">${tokenAdmin ? "" : '<button class="entrar" type="button" onclick="abrirFormularioSugestao()">Enviar uma sugestão</button>'}</div><h3>${tokenAdmin ? "Ideias recebidas" : "Acompanhe as ideias"}</h3><p class="mural-aviso">${tokenAdmin ? "Use cada sugestão para registrar uma resposta e manter todos atualizados." : "Todas as sugestões são públicas. Consulte o status e as respostas do casal aqui."}</p><div class="lista-publica-sugestoes" id="lista-publica-sugestoes" aria-live="polite"></div></div></section>`;
   tela.addEventListener("click", e => { if (e.target === tela) fecharMuralSugestoes(); });
   document.body.appendChild(tela); document.body.style.overflow = "hidden"; carregarSugestoesPublicas();
 }
