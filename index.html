@@ -74,6 +74,7 @@ const CONFIG = {
   chaves: {
     tema:       "lista_tema_clebson_keyla",
     sessao:     "lista_admin_clebson_keyla",
+    boasVindas: "lista_boas_vindas_clebson_keyla",
     sugestoes:  "lista_sugestoes_clebson_keyla",
     presenca:   "lista_presenca_clebson_keyla"
   }
@@ -452,12 +453,20 @@ footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--c
 .boas-vindas .eyebrow { font-size: .74rem; letter-spacing: .2em; text-transform: uppercase; color: #bbb; }
 .boas-vindas h1 { margin: .55rem 0 .8rem; font-family: 'Fraunces', serif; font-size: clamp(2.6rem, 11vw, 5.4rem); font-weight: 400; line-height: .98; }
 .boas-vindas p { max-width: 29rem; margin: 0 auto 1.6rem; color: #cfcfcf; line-height: 1.65; }
+.boas-passos { display: flex; justify-content: center; gap: .45rem; flex-wrap: wrap; margin: -.55rem auto 1.5rem; }
+.boas-passos span { padding: .38rem .62rem; font-size: .74rem; color: #ddd; border: 1px solid rgba(255,255,255,.22); border-radius: 999px; animation: pulsoPasso 2.4s infinite; }
+.boas-passos span:nth-child(2) { animation-delay: .3s; }.boas-passos span:nth-child(3) { animation-delay: .6s; }
+.boas-dica { margin-top: 1rem !important; font-size: .74rem; color: #9e9e9e !important; }
 .boas-vindas button { padding: .85rem 1.3rem; font: 500 .9rem inherit; color: #111; background: #fff; border: 1px solid #fff; border-radius: 999px; cursor: pointer; transition: transform .2s ease, background .2s ease; }
 .boas-vindas button:hover { transform: translateY(-2px); background: #ddd; }
 .boas-vindas.saindo { animation: telaSai .65s both cubic-bezier(.7,0,1,.45); }
 @keyframes boasChegam { from { opacity: 0; transform: translateY(24px) scale(.98); } to { opacity: 1; transform: none; } }
 @keyframes telaSai { to { opacity: 0; transform: scale(1.04); } }
 @keyframes orbita { to { transform: translate(-18%, -17%) scale(1.12); } }
+@keyframes pulsoPasso { 50% { border-color: rgba(255,255,255,.65); transform: translateY(-2px); } }
+.carregando-lista { position: fixed; z-index: 99; inset: 0; display: grid; place-items: center; color: var(--texto); background: var(--papel); }
+.carregando-lista div { text-align: center; }.carregando-lista b { display: block; font-family: 'Fraunces',serif; font-size: 1.5rem; font-weight: 400; }.carregando-lista span { display: block; margin-top: .45rem; font-size: .84rem; color: var(--texto3); }
+.linha-carregando { width: 154px; height: 3px; margin: 1rem auto 0; overflow: hidden; background: var(--papel-baixo); border-radius: 999px; }.linha-carregando i { display: block; width: 42%; height: 100%; background: var(--musgo); border-radius: inherit; animation: linhaCarrega 1s ease-in-out infinite; }@keyframes linhaCarrega { from { transform: translateX(-110%); } to { transform: translateX(350%); } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; } }
 
 .semente {
@@ -813,6 +822,7 @@ footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--c
    ESTADO
 ═══════════════════════════════════════════ */
 let itens = [];
+let itensProntos = false;
 let categoriaAtiva = "todos";
 let tokenAdmin = null;
 let ordenacaoAtiva = "padrao";
@@ -865,9 +875,13 @@ async function carregarItens() {
     atualizarNumeros();
     desenharCategorias();
     desenharGrade();
+    itensProntos = true;
+    fecharCarregamento();
   } catch (err) {
     $("esqueleto").hidden = true;
     $("rotulo-contagem").textContent = "Não foi possível carregar a lista. Atualize a página.";
+    itensProntos = true;
+    fecharCarregamento();
   }
 }
 
@@ -1278,7 +1292,7 @@ function abrirBoasVindas() {
   tela.className = "boas-vindas";
   tela.setAttribute("role", "dialog");
   tela.setAttribute("aria-modal", "true");
-  tela.innerHTML = `<div class="boas-vindas-conteudo"><span class="marca" aria-hidden="true">⌂</span><p class="eyebrow">Seja bem-vindo</p><h1>Lista de<br>presentes</h1><p>Escolha um presente com carinho para <b>${escapar(CONFIG.casal.nomes)}</b>. Cada escolha torna esta lista ainda mais especial.</p><button type="button" onclick="fecharBoasVindas()">Explorar a lista <span aria-hidden="true">→</span></button></div>`;
+  tela.innerHTML = `<div class="boas-vindas-conteudo"><span class="marca" aria-hidden="true">⌂</span><p class="eyebrow">Um convite especial</p><h1>Você faz<br>parte disso.</h1><p>Um presente não é apenas um item: é uma lembrança que entra na casa de <b>${escapar(CONFIG.casal.nomes)}</b>. Encontre algo que tenha a sua cara e deixe seu carinho marcado neste novo capítulo.</p><div class="boas-passos"><span>Explore a lista</span><span>Escolha com carinho</span><span>Reserve seu presente</span></div><button type="button" onclick="fecharBoasVindas()">Quero fazer parte <span aria-hidden="true">→</span></button><p class="boas-dica">Leva menos de um minuto — e evita presentes repetidos.</p></div>`;
   document.body.appendChild(tela);
   document.body.style.overflow = "hidden";
   tela.querySelector("button").focus();
@@ -1286,9 +1300,12 @@ function abrirBoasVindas() {
 function fecharBoasVindas() {
   const tela = document.querySelector(".boas-vindas");
   if (!tela) return;
+  try { localStorage.setItem(CONFIG.chaves.boasVindas, "vista"); } catch (e) {}
   tela.classList.add("saindo");
-  setTimeout(() => { tela.remove(); document.body.style.overflow = ""; document.body.classList.add("pagina-animada"); }, 620);
+  setTimeout(() => { tela.remove(); document.body.style.overflow = ""; document.body.classList.add("pagina-animada"); if (!itensProntos) abrirCarregamento(); }, 620);
 }
+function abrirCarregamento() { if (document.querySelector(".carregando-lista")) return; const tela = document.createElement("div"); tela.className = "carregando-lista"; tela.innerHTML = '<div><b>Preparando os presentes</b><span>Buscando os itens da lista…</span><div class="linha-carregando"><i></i></div></div>'; document.body.appendChild(tela); }
+function fecharCarregamento() { const tela = document.querySelector(".carregando-lista"); if (tela) tela.remove(); }
 function abrirSugestao() {
   const tela = document.createElement("div");
   tela.className = "veu";
@@ -1755,7 +1772,7 @@ async function salvarMidiaDoItem(itemId, dados) {
   try { tema = localStorage.getItem(CONFIG.chaves.tema) || "light"; } catch (e) {}
 
   document.addEventListener("DOMContentLoaded", () => {
-    abrirBoasVindas();
+    try { if (localStorage.getItem(CONFIG.chaves.boasVindas) !== "vista") abrirBoasVindas(); else document.body.classList.add("pagina-animada"); } catch (e) { abrirBoasVindas(); }
     hidratar();
     aplicarTema(tema);
     desenharCategorias();
