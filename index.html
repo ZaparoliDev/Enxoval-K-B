@@ -350,7 +350,7 @@ header { text-align: center; padding: 2.5rem 0 3rem; position: relative; }
   border-radius: 50%; display: grid; place-items: center;
   font-size: 1.6rem; line-height: 1;
 }
-.item .medalha img { width: 62px; height: 62px; min-width: 0; min-height: 0; max-width: 62px; max-height: 62px; object-fit: cover; border-radius: inherit; display: block; filter: grayscale(1) contrast(1.05); }
+.item .medalha img { width: 62px; height: 62px; min-width: 0; min-height: 0; max-width: 62px; max-height: 62px; object-fit: cover; border-radius: inherit; display: block; }
 .item .nome {
   font-family: 'Fraunces', serif; font-weight: 400;
   font-size: .98rem; line-height: 1.35; color: var(--texto);
@@ -374,7 +374,7 @@ header { text-align: center; padding: 2.5rem 0 3rem; position: relative; }
 .botao.arquivo { display: inline-flex; align-items: center; justify-content: center; min-height: 34px; }
 
 .item.colhido { border-style: dashed; border-color: var(--linha-forte); }
-.item.colhido .medalha, .item.colhido .nome { opacity: .42; filter: saturate(.4); }
+.item.colhido .medalha, .item.colhido .nome { opacity: .42; }
 .selo {
   position: absolute; top: .7rem; right: .7rem;
   display: inline-flex; align-items: center; gap: .3rem;
@@ -467,6 +467,9 @@ footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--c
 .carregando-lista { position: fixed; z-index: 99; inset: 0; display: grid; place-items: center; color: var(--texto); background: var(--papel); }
 .carregando-lista div { text-align: center; }.carregando-lista b { display: block; font-family: 'Fraunces',serif; font-size: 1.5rem; font-weight: 400; }.carregando-lista span { display: block; margin-top: .45rem; font-size: .84rem; color: var(--texto3); }
 .linha-carregando { width: 154px; height: 3px; margin: 1rem auto 0; overflow: hidden; background: var(--papel-baixo); border-radius: 999px; }.linha-carregando i { display: block; width: 42%; height: 100%; background: var(--musgo); border-radius: inherit; animation: linhaCarrega 1s ease-in-out infinite; }@keyframes linhaCarrega { from { transform: translateX(-110%); } to { transform: translateX(350%); } }
+.aguarde-foto { position: fixed; z-index: 110; inset: 0; display: grid; place-items: center; padding: 1.25rem; background: rgba(5,7,11,.72); backdrop-filter: blur(7px); }
+.aguarde-foto .caixa-aguarde { width: min(22rem, 100%); padding: 1.7rem; text-align: center; color: #EEF5FC; background: #0D1622; border: 1px solid rgba(169,199,228,.35); border-radius: 20px; box-shadow: 0 20px 48px rgba(0,0,0,.45); }
+.aguarde-foto b { display: block; font-family: 'Fraunces',serif; font-size: 1.35rem; font-weight: 400; }.aguarde-foto p { margin-top: .5rem; font-size: .86rem; line-height: 1.55; color: #ADC0D2; }.aguarde-foto .linha-carregando { margin-bottom: 0; background: #193A5A; }.aguarde-foto .linha-carregando i { background: #A9C7E4; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; } }
 
 .semente {
@@ -514,7 +517,7 @@ footer p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--c
 }
 .caixa.previa-item { max-width: 29rem; }
 .previa-midia { width: min(100%, 14rem); aspect-ratio: 1; margin: .8rem auto 1rem; display: grid; place-items: center; overflow: hidden; border-radius: var(--raio); background: var(--papel-baixo); font-size: 4rem; }
-.previa-midia img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.05); }
+.previa-midia img { width: 100%; height: 100%; object-fit: cover; }
 .link-referencia { display: inline-flex; margin: .15rem auto .2rem; color: var(--texto2); font-size: .84rem; text-decoration: underline; text-underline-offset: .2rem; }
 .caixa p.sub { font-size: .85rem; color: var(--texto2); line-height: 1.6; margin-bottom: 1.3rem; }
 .caixa label { display: block; margin: .9rem 0 .35rem; text-align: left; font-size: .8rem; color: var(--texto2); }
@@ -1685,6 +1688,7 @@ async function editarFoto(evento) {
   }
 
   campo.disabled = true;
+  abrirAguardeFoto();
   try {
     const imagem = await otimizarImagem(arquivo);
     await salvarMidiaDoItem(item.id, { imagem });
@@ -1692,10 +1696,20 @@ async function editarFoto(evento) {
   } catch (erro) {
     alert(erro.message || "Não foi possível salvar a foto. Tente outra imagem.");
   } finally {
+    fecharAguardeFoto();
     campo.disabled = false;
     campo.value = "";
   }
 }
+
+function abrirAguardeFoto() {
+  if (document.querySelector(".aguarde-foto")) return;
+  const tela = document.createElement("div");
+  tela.className = "aguarde-foto";
+  tela.innerHTML = '<div class="caixa-aguarde" role="status" aria-live="polite"><b>Preparando a foto</b><p>Aguarde enquanto otimizamos e salvamos a imagem do presente.</p><div class="linha-carregando"><i></i></div></div>';
+  document.body.appendChild(tela);
+}
+function fecharAguardeFoto() { const tela = document.querySelector(".aguarde-foto"); if (tela) tela.remove(); }
 
 function otimizarImagem(arquivo) {
   return new Promise((resolve, reject) => {
