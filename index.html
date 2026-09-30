@@ -991,7 +991,7 @@ function desenharGrade() {
           ? `<button type="button" class="botao admin" data-id="${id}" onclick="alternarItem(event)">Marcar escolhido</button>`
           : `<button type="button" class="botao" data-id="${id}" onclick="irParaWhatsApp(event)">${ZAP} Quero presentear</button>`);
     const rodapeCartao = tokenAdmin
-      ? `<div class="acoes-admin-item">${acaoReservaAdmin}<input class="arquivo-foto" id="foto-${id}" data-id="${id}" type="file" accept="image/jpeg,image/png,image/webp" onchange="editarFoto(event)" /><label class="botao admin arquivo" for="foto-${id}">Enviar foto</label><button type="button" class="botao admin" data-id="${id}" onclick="editarLinkReferencia(event)">Link de referência</button></div>`
+      ? `<div class="acoes-admin-item">${acaoReservaAdmin}<input class="arquivo-foto" id="foto-${id}" data-id="${id}" type="file" accept="image/jpeg,image/png,image/webp" onchange="editarFoto(event)" /><label class="botao admin arquivo" for="foto-${id}">Enviar foto</label><button type="button" class="botao admin" data-id="${id}" onclick="editarLinkReferencia(event)">Link de referência</button><button type="button" class="botao admin" data-id="${id}" onclick="excluirItemAdmin(event)">Excluir item</button></div>`
       : acaoReservaAdmin;
 
     return `
@@ -1621,6 +1621,7 @@ function abrirNovoItem() {
     }
     const botao = form.querySelector(".entrar");
     botao.disabled = true;
+    abrirAguarde("Adicionando item", "Aguarde enquanto incluímos o presente na lista.");
     try {
       const res = await fetch("/api/products", {
         method: "POST",
@@ -1641,6 +1642,8 @@ function abrirNovoItem() {
       erro.textContent = erroEnvio.message || "Não foi possível adicionar o item.";
       erro.hidden = false;
       botao.disabled = false;
+    } finally {
+      fecharAguarde();
     }
   });
   document.body.appendChild(tela);
@@ -1703,13 +1706,33 @@ async function editarFoto(evento) {
 }
 
 function abrirAguardeFoto() {
+  abrirAguarde("Preparando a foto", "Aguarde enquanto otimizamos e salvamos a imagem do presente.");
+}
+function abrirAguarde(titulo, mensagem) {
   if (document.querySelector(".aguarde-foto")) return;
   const tela = document.createElement("div");
   tela.className = "aguarde-foto";
-  tela.innerHTML = '<div class="caixa-aguarde" role="status" aria-live="polite"><b>Preparando a foto</b><p>Aguarde enquanto otimizamos e salvamos a imagem do presente.</p><div class="linha-carregando"><i></i></div></div>';
+  tela.innerHTML = `<div class="caixa-aguarde" role="status" aria-live="polite"><b>${escapar(titulo)}</b><p>${escapar(mensagem)}</p><div class="linha-carregando"><i></i></div></div>`;
   document.body.appendChild(tela);
 }
-function fecharAguardeFoto() { const tela = document.querySelector(".aguarde-foto"); if (tela) tela.remove(); }
+function fecharAguardeFoto() { fecharAguarde(); }
+function fecharAguarde() { const tela = document.querySelector(".aguarde-foto"); if (tela) tela.remove(); }
+
+async function excluirItemAdmin(evento) {
+  const botao = evento.currentTarget;
+  const item = itens.find(p => String(p.id) === String(botao.dataset.id));
+  if (!item || !confirm(`Excluir “${nomeDe(item)}” da lista?`)) return;
+  botao.disabled = true;
+  abrirAguarde("Excluindo item", "Aguarde enquanto removemos o presente da lista.");
+  try {
+    const res = await fetch("/api/products", { method: "DELETE", headers: { "Content-Type": "application/json", "x-admin-token": tokenAdmin || "" }, body: JSON.stringify({ item_id: item.id }) });
+    if (res.status === 401) { sairAdmin(); alert("Sua sessão expirou. Entre novamente."); return; }
+    const dados = await res.json();
+    if (!res.ok) throw new Error(dados.error || "Não foi possível excluir o item.");
+    await carregarItens();
+  } catch (erro) { alert(erro.message || "Não foi possível excluir o item."); botao.disabled = false; }
+  finally { fecharAguarde(); }
+}
 
 function otimizarImagem(arquivo) {
   return new Promise((resolve, reject) => {

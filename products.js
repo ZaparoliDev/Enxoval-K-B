@@ -149,6 +149,24 @@ module.exports = async (req, res) => {
     }
 
     // ─────────────────────────────────────────────────────────────
+    // DELETE — remove um item e sua reserva (admin)
+    // ─────────────────────────────────────────────────────────────
+    if (req.method === 'DELETE') {
+      if (!verifyToken(req.headers['x-admin-token'])) {
+        return res.status(401).json({ error: 'Sessão de admin inválida ou expirada.' });
+      }
+      const { item_id } = req.body || {};
+      if (item_id === undefined || item_id === null || item_id === '') {
+        return res.status(400).json({ error: 'O item_id é obrigatório.' });
+      }
+      const produtoQuery = { $or: [{ id: Number(item_id) }, { id: String(item_id) }] };
+      const resultado = await db.collection(PRODUCTS_COLL).deleteOne(produtoQuery);
+      if (!resultado.deletedCount) return res.status(404).json({ error: 'Item não encontrado.' });
+      await db.collection(CLAIMED_COLL).deleteMany({ $or: [{ item_id: Number(item_id) }, { item_id: String(item_id) }] });
+      return res.status(200).json({ success: true });
+    }
+
+    // ─────────────────────────────────────────────────────────────
     // POST — reserva de item (público) ou liberar/marcar (admin)
     // ─────────────────────────────────────────────────────────────
     if (req.method === 'POST') {
